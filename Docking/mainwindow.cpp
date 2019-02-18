@@ -36,6 +36,17 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(_uiMain->actionOpen_Project,SIGNAL(triggered()),this,SLOT(openProject()));
     connect(_uiMain->actionSave_Project,SIGNAL(triggered()),this,SLOT(saveProject()));
     connect(_uiMain->actionExit,SIGNAL(triggered()),qApp,SLOT(quit()));
+
+    //Exit message box
+    QMessageBox::StandardButton exit_button = QMessageBox::question(_uiMain->menuBar->find("actionExit"),"Exit Application","Do you want to exit the application widouth saving the project?");
+    if(exit_button == QMessageBox::Yes)
+    {
+        printf("Exit");
+    }
+    else
+    {
+        printf("No exit");
+    }
 }
 
 MainWindow::~MainWindow()
