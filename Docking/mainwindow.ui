@@ -31,9 +31,19 @@
      <x>0</x>
      <y>0</y>
      <width>589</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuOpen_Project">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionOpen_Project"/>
+    <addaction name="actionSave_Project"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
+   </widget>
+   <addaction name="menuOpen_Project"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -80,6 +90,21 @@
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_12"/>
   </widget>
+  <action name="actionOpen_Project">
+   <property name="text">
+    <string>Open Project</string>
+   </property>
+  </action>
+  <action name="actionSave_Project">
+   <property name="text">
+    <string>Save Project</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>

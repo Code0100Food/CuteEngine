@@ -32,10 +32,24 @@ MainWindow::MainWindow(QWidget *parent) :
     this->addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, dockWidget);
     tabifyDockWidget(_uiMain->Rendering,dockWidget);
 
+    //Conect action signals to slots
+    connect(_uiMain->actionOpen_Project,SIGNAL(triggered()),this,SLOT(openProject()));
+    connect(_uiMain->actionSave_Project,SIGNAL(triggered()),this,SLOT(saveProject()));
+    connect(_uiMain->actionExit,SIGNAL(triggered()),qApp,SLOT(quit()));
 }
 
 MainWindow::~MainWindow()
 {
     delete _uiMain;
     delete _uiRendering;
+}
+
+void MainWindow::openProject()
+{
+    std::printf("Open project");
+}
+
+void MainWindow::saveProject()
+{
+    std::printf("Save project");
 }
