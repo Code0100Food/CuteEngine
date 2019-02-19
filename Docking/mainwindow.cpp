@@ -35,18 +35,7 @@ MainWindow::MainWindow(QWidget *parent) :
     //Conect action signals to slots
     connect(_uiMain->actionOpen_Project,SIGNAL(triggered()),this,SLOT(openProject()));
     connect(_uiMain->actionSave_Project,SIGNAL(triggered()),this,SLOT(saveProject()));
-    connect(_uiMain->actionExit,SIGNAL(triggered()),qApp,SLOT(quit()));
-
-    //Exit message box
-    /*QMessageBox::StandardButton exit_button = QMessageBox::question(_uiMain->menuBar->find("actionExit"),"Exit Application","Do you want to exit the application widouth saving the project?");
-    if(exit_button == QMessageBox::Yes)
-    {
-        printf("Exit");
-    }
-    else
-    {
-        printf("No exit");
-    }*/
+    connect(_uiMain->actionExit,SIGNAL(triggered()),this,SLOT(customExit()));
 }
 
 MainWindow::~MainWindow()
@@ -58,9 +47,29 @@ MainWindow::~MainWindow()
 void MainWindow::openProject()
 {
     std::printf("Open project");
+    QString path = QFileDialog::getOpenFileName(this,"Open Project");
+    if(!path.isEmpty())
+    {
+        //printf(path.toStdString());
+    }
 }
 
 void MainWindow::saveProject()
 {
     std::printf("Save project");
+}
+
+void MainWindow::customExit()
+{
+    //Exit message box
+    QMessageBox::StandardButton exit_button = QMessageBox::question(this,"Exit Application","Do you want to exit the application widouth saving the project?");
+    if(exit_button == QMessageBox::Yes)
+    {
+        printf("Exit");
+        qApp->quit();
+    }
+    else
+    {
+        printf("No exit");
+    }
 }

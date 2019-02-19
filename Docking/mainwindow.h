@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QMessageBox>
+#include <QFileDialog>
 
 namespace Ui
 {
@@ -20,6 +21,7 @@ public slots:
 
     void openProject();
     void saveProject();
+    void customExit();
 
 public:
 
