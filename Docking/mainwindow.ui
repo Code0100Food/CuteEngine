@@ -19,7 +19,7 @@
      <rect>
       <x>-10</x>
       <y>0</y>
-      <width>441</width>
+      <width>41</width>
       <height>451</height>
      </rect>
     </property>
@@ -71,24 +71,6 @@
     <number>2</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_10"/>
-  </widget>
-  <widget class="QDockWidget" name="Rendering">
-   <property name="windowTitle">
-    <string>Rendering</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>2</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents_11"/>
-  </widget>
-  <widget class="QDockWidget" name="Project_2">
-   <property name="windowTitle">
-    <string>Project</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>8</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents_12"/>
   </widget>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
