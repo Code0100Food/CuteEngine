@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <list>
 
 class qt_Application;
 
@@ -16,6 +17,8 @@ class Entity
         name = "Entity_";
         name += buffer;
     }
+    Entity(const Entity& other_entity) {}
+    ~Entity(){}
 
     int id;
     std::string name;
@@ -25,11 +28,15 @@ class MainScene
 {
 public:
     MainScene();
+    ~MainScene();
 
-    void SetApp(qt_Application& _app);
-    std::vector<Entity*> entities;
+    void AddEntity(Entity* new_entity);
+    void RemoveEntities(std::list<std::string> entities_to_remove);
+
+    void SetApp(qt_Application *_app);
 
 private:
+    std::list<Entity*> entities;
     qt_Application* app = nullptr;
 
 };

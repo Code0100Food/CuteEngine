@@ -1,7 +1,7 @@
 #include "hierarchywidget.h"
+#include "mainwindow.h"
+#include "mainscene.h"
 #include "QVBoxLayout"
-
-int id = 0;
 
 HierarchyWidget::HierarchyWidget(QWidget* parent) : QWidget(parent)
 {
@@ -44,14 +44,13 @@ void HierarchyWidget::Start()
 
 void HierarchyWidget::AddEntity()
 {
-    std::string test = "Entity_";
-    char buffer[10];
-    itoa(id, buffer, 10);
-    std::string tes_1t = buffer;
+    //Add Entity to the Logic List
+    Entity* new_entity = new Entity(id);
+    app.GetMainScene()->AddEntity(new_entity);
 
-    test += tes_1t;
 
-    widget_entity_list->addItem(test.c_str());
+    //Add entity to the UI List
+    widget_entity_list->addItem("new_entity->name.c_str()");
     id++;
 }
 

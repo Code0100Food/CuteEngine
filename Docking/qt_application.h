@@ -12,6 +12,7 @@ public:
 
     void Start();
 
+    MainScene* GetMainScene() {return scene; }
 private:
     MainWindow* window;
     MainScene* scene;

@@ -13,6 +13,8 @@ public:
     ~HierarchyWidget();
 
 private:
+    int id = 0;
+
     void Start();
 
     QListWidget* widget_entity_list = nullptr;

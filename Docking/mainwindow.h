@@ -4,8 +4,9 @@
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QFileDialog>
+#include "qt_application.h"
 
-class qt_Application;
+static qt_Application app;
 
 namespace Ui
 {
@@ -27,10 +28,10 @@ public slots:
 
 public:
 
-    explicit MainWindow(QWidget *parent = 0);
+    explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-    void SetApp(qt_Application& _app);
+    void SetApp(qt_Application* _app);
 
 private:
     qt_Application* app = nullptr;

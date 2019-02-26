@@ -4,8 +4,7 @@
 
 qt_Application::qt_Application()
 {
-    window = new MainWindow();
-    scene = new MainScene();
+
 }
 
 qt_Application::~qt_Application()
@@ -16,5 +15,11 @@ qt_Application::~qt_Application()
 
 void qt_Application::Start()
 {
+    window = new MainWindow();
+    scene = new MainScene();
+
+    window->SetApp(this);
+    scene->SetApp(this);
+
     window->show();
 }
