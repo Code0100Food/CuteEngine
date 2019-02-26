@@ -31,14 +31,16 @@ SOURCES += \
     inspector.cpp \
     myopenglwidget.cpp \
     hierarchywidget.cpp \
-    mainscene.cpp
+    mainscene.cpp \
+    qt_application.cpp
 
 HEADERS += \
         mainwindow.h \
     inspector.h \
     myopenglwidget.h \
     hierarchywidget.h \
-    mainscene.h
+    mainscene.h \
+    qt_application.h
 
 FORMS += \
         mainwindow.ui \

@@ -90,3 +90,9 @@ void MainWindow::customExit()
         printf("No exit");
     }
 }
+
+void MainWindow::SetApp(qt_Application& _app)
+{
+    app = &_app;
+}
+

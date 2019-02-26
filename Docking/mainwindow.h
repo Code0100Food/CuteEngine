@@ -5,6 +5,8 @@
 #include <QMessageBox>
 #include <QFileDialog>
 
+class qt_Application;
+
 namespace Ui
 {
 class MainWindow;
@@ -28,7 +30,10 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    void SetApp(qt_Application& _app);
+
 private:
+    qt_Application* app = nullptr;
 
     Ui::MainWindow* _uiMain;
     Ui::Rendering* _uiRendering;
