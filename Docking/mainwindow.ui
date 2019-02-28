@@ -475,13 +475,13 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
 }</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="myopenglwidget" name="openGLWidget">
+   <widget class="CircleWidget" name="widget" native="true">
     <property name="geometry">
      <rect>
-      <x>-10</x>
-      <y>0</y>
-      <width>41</width>
-      <height>451</height>
+      <x>20</x>
+      <y>10</y>
+      <width>351</width>
+      <height>341</height>
      </rect>
     </property>
    </widget>
@@ -570,9 +570,10 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>myopenglwidget</class>
-   <extends>QOpenGLWidget</extends>
-   <header>myopenglwidget.h</header>
+   <class>CircleWidget</class>
+   <extends>QWidget</extends>
+   <header>circlewidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>

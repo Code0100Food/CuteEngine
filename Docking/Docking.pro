@@ -31,7 +31,8 @@ SOURCES += \
     myopenglwidget.cpp \
     hierarchywidget.cpp \
     mainscene.cpp \
-    qt_application.cpp
+    qt_application.cpp \
+    circlewidget.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -39,7 +40,8 @@ HEADERS += \
     myopenglwidget.h \
     hierarchywidget.h \
     mainscene.h \
-    qt_application.h
+    qt_application.h \
+    circlewidget.h
 
 FORMS += \
         mainwindow.ui \
