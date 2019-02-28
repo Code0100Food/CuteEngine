@@ -1,7 +1,5 @@
 #include "myopenglwidget.h"
 
-#pragma comment(lib, "OpenGL32.lib")
-
 myopenglwidget::myopenglwidget(QWidget* parent) : QOpenGLWidget(parent)
 {
 

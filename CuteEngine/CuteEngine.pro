@@ -21,6 +21,11 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # In order to do so, uncomment the following line.
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
+
+QT += opengl
+
+LIBS += -lopengl32
+
 RESOURCES += \
     icons.qrc
 
@@ -32,7 +37,8 @@ SOURCES += \
     hierarchywidget.cpp \
     mainscene.cpp \
     qt_application.cpp \
-    circlewidget.cpp
+    circlewidget.cpp \
+    entity.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -41,7 +47,8 @@ HEADERS += \
     hierarchywidget.h \
     mainscene.h \
     qt_application.h \
-    circlewidget.h
+    circlewidget.h \
+    entity.h
 
 FORMS += \
         mainwindow.ui \

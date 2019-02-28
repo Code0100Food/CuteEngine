@@ -2,6 +2,7 @@
 #define CIRCLEWIDGET_H
 
 #include <QWidget>
+#include "entity.h"
 
 class CircleWidget : public QWidget
 {

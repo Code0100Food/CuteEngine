@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>589</width>
-    <height>531</height>
+    <width>838</width>
+    <height>651</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -475,13 +475,13 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
 }</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="CircleWidget" name="widget" native="true">
+   <widget class="QWidget" name="widget" native="true">
     <property name="geometry">
      <rect>
       <x>20</x>
       <y>10</y>
-      <width>351</width>
-      <height>341</height>
+      <width>601</width>
+      <height>421</height>
      </rect>
     </property>
    </widget>
@@ -491,7 +491,7 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>589</width>
+     <width>838</width>
      <height>21</height>
     </rect>
    </property>
@@ -568,14 +568,6 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
- <customwidgets>
-  <customwidget>
-   <class>CircleWidget</class>
-   <extends>QWidget</extends>
-   <header>circlewidget.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <resources>
   <include location="icons.qrc"/>
  </resources>

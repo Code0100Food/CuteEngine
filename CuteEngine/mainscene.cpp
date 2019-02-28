@@ -1,5 +1,6 @@
 #include "mainscene.h"
 #include "qt_application.h"
+#include "entity.h"
 
 MainScene::MainScene()
 {

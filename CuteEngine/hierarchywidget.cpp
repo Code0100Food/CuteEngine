@@ -2,6 +2,7 @@
 #include "mainwindow.h"
 #include "mainscene.h"
 #include "QVBoxLayout"
+#include "entity.h"
 
 HierarchyWidget::HierarchyWidget(QWidget* parent) : QWidget(parent)
 {

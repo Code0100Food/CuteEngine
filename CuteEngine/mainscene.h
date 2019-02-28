@@ -6,23 +6,7 @@
 #include <list>
 
 class qt_Application;
-
-class Entity
-{
-   public:
-    Entity(int _id):id(_id)
-    {
-        char buffer[10];
-        itoa(_id, buffer, 10);
-        name = "Entity_";
-        name += buffer;
-    }
-    Entity(const Entity& other_entity) {}
-    ~Entity(){}
-
-    int id;
-    std::string name;
-};
+class Entity;
 
 class MainScene
 {
