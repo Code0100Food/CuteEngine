@@ -25,7 +25,7 @@ void MainScene::AddEntity(Entity *new_entity)
     if (new_entity != nullptr)
         entities.push_front(new_entity);
 
-
+    std::cout<<entities.size()<<std::endl;
 }
 
  void MainScene::RemoveEntities(std::list<std::string> entities_to_remove)

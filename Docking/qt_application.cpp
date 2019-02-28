@@ -2,7 +2,7 @@
 #include "mainwindow.h"
 #include "mainscene.h"
 
-qt_Application::qt_Application()
+qt_Application::qt_Application(int &argc, char **argv) : QApplication(argc, argv)
 {
 
 }
@@ -17,9 +17,6 @@ void qt_Application::Start()
 {
     window = new MainWindow();
     scene = new MainScene();
-
-    window->SetApp(this);
-    scene->SetApp(this);
 
     window->show();
 }
