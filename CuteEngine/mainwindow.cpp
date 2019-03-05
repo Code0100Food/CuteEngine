@@ -91,8 +91,3 @@ void MainWindow::customExit()
     }
 }
 
-void MainWindow::SetApp(qt_Application* _app)
-{
-    app = _app;
-}
-

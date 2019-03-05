@@ -11,6 +11,8 @@ public:
     Entity(const Entity& _entity);
     ~Entity(){}
 
+    std::string GetName()const;
+
 private:
     int id;
     std::string name;

@@ -17,3 +17,8 @@ Entity::Entity(const Entity& _entity) : id(_entity.id), name(_entity.name)
 {
 
 }
+
+std::string Entity::GetName() const
+{
+    return name;
+}

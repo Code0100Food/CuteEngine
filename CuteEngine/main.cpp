@@ -4,9 +4,9 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    qt_Application app(argc, argv);
     app.Start();
 
 
-    return a.exec();
+    return app.exec();
 }

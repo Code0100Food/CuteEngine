@@ -3,6 +3,7 @@
 #include "mainscene.h"
 #include "QVBoxLayout"
 #include "entity.h"
+#include "qt_application.h"
 
 HierarchyWidget::HierarchyWidget(QWidget* parent) : QWidget(parent)
 {
@@ -47,11 +48,13 @@ void HierarchyWidget::AddEntity()
 {
     //Add Entity to the Logic List
     Entity* new_entity = new Entity(id);
-    app.GetMainScene()->AddEntity(new_entity);
+    customApp->GetMainScene()->AddEntity(new_entity);
+
+    //app.GetMainScene()->AddEntity(new_entity);
 
 
     //Add entity to the UI List
-    widget_entity_list->addItem("new_entity->name.c_str()");
+    widget_entity_list->addItem(new_entity->GetName().c_str());
     id++;
 }
 
@@ -59,7 +62,12 @@ void HierarchyWidget::RemoveEntity()
 {
     QList<QListWidgetItem*> selected_items = widget_entity_list->selectedItems();
 
-    foreach (QListWidgetItem* item, selected_items) {
+    foreach (QListWidgetItem* item, selected_items)
+    {
+        std::string entity_name = item->text().toUtf8();
+        std::cout<<entity_name<<std::endl;
+        customApp->GetMainScene()->RemoveEntity(entity_name);
+
         widget_entity_list->removeItemWidget(item);
         delete item;
     }
