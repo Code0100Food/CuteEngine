@@ -1,4 +1,5 @@
 #include "entity.h"
+#include "component.h"
 
 Entity::Entity(int _id) : id(_id)
 {
