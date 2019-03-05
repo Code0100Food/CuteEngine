@@ -20,6 +20,12 @@ public:
 private:
 
     Ui::inspector *ui;
+
+    void CreateTransformation();
+    void CreateBasicPrimitive();
+
+private slots:
+    void on_AddComponentComboBox_currentIndexChanged(const QString &arg1);
 };
 
 #endif // INSPECTOR_H

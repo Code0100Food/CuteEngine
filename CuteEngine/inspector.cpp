@@ -12,3 +12,23 @@ inspector::~inspector()
 {
     delete ui;
 }
+
+void inspector::CreateTransformation()
+{
+
+    ui->AddComponentComboBox->setCurrentIndex(0);
+}
+
+void inspector::CreateBasicPrimitive()
+{
+
+    ui->AddComponentComboBox->setCurrentIndex(0);
+}
+
+void inspector::on_AddComponentComboBox_currentIndexChanged(const QString &string)
+{
+    if (string == "Transform")
+        CreateTransformation();
+    else if (string == "Basic Primitive")
+        CreateBasicPrimitive();
+}
