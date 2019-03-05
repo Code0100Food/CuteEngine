@@ -1,4 +1,5 @@
 #include "myopenglwidget.h"
+#include "qt_application.h"
 #include <iostream>
 
 #pragma comment(lib, "OpenGL32.lib")
@@ -19,8 +20,17 @@ void myopenglwidget::initializeGL()
     initializeOpenGLFunctions();
 
     program.create();
-    program.addShaderFromSourceFile(QOpenGLShader::Vertex, ":/shaders/shader1_vert");
-    program.addShaderFromSourceFile(QOpenGLShader::Fragment, ":/shaders/shader1_frag");
+
+    std::string vertex_shader_path = qApp->applicationDirPath().toUtf8();
+    std::cout<< vertex_shader_path << std::endl;
+    vertex_shader_path += "/../../Docking/Resources/Shaders/shader1_vert.vert.txt";
+
+    std::string fragment_shader_path = qApp->applicationDirPath().toUtf8();
+    std::cout<< fragment_shader_path << std::endl;
+    fragment_shader_path += "/../../Docking/Resources/Shaders/shader1_frag.frag.txt";
+
+    program.addShaderFromSourceFile(QOpenGLShader::Vertex, vertex_shader_path.c_str());
+    program.addShaderFromSourceFile(QOpenGLShader::Fragment, fragment_shader_path.c_str());
     program.link();
     program.bind();
 
