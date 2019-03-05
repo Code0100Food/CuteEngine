@@ -38,7 +38,9 @@ SOURCES += \
     mainscene.cpp \
     qt_application.cpp \
     circlewidget.cpp \
-    entity.cpp
+    entity.cpp \
+    basicprimitive.cpp \
+    component.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -48,7 +50,9 @@ HEADERS += \
     mainscene.h \
     qt_application.h \
     circlewidget.h \
-    entity.h
+    entity.h \
+    basicprimitive.h \
+    component.h
 
 FORMS += \
         mainwindow.ui \

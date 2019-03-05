@@ -2,6 +2,9 @@
 #define ENTITY_H
 
 #include <string>
+#include <vector>
+
+class Component;
 
 class Entity
 {
@@ -16,6 +19,7 @@ public:
 private:
     int id;
     std::string name;
+    std::vector<Component*> components;
 };
 
 #endif // ENTITY_H
