@@ -58,7 +58,12 @@ void HierarchyWidget::RemoveEntity()
 {
     QList<QListWidgetItem*> selected_items = widget_entity_list->selectedItems();
 
-    foreach (QListWidgetItem* item, selected_items) {
+    foreach (QListWidgetItem* item, selected_items)
+    {
+        std::string entity_name = item->text().toUtf8();
+        std::cout<<entity_name<<std::endl;
+        customApp->GetMainScene()->RemoveEntity(entity_name);
+
         widget_entity_list->removeItemWidget(item);
         delete item;
     }
