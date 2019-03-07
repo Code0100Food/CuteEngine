@@ -4,6 +4,7 @@
 #include "QVBoxLayout"
 #include "entity.h"
 #include "qt_application.h"
+#include "inspector.h"
 
 HierarchyWidget::HierarchyWidget(QWidget* parent) : QWidget(parent)
 {
@@ -26,6 +27,8 @@ void HierarchyWidget::Start()
    //Entity list
    widget_entity_list = new QListWidget();
    widget_entity_list->setSelectionMode(QAbstractItemView::ExtendedSelection);
+
+   connect(widget_entity_list, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(SelectedEntity()));
 
    //Add/Remove Entity
    add_entity = new QPushButton("Add Entity");
@@ -64,7 +67,7 @@ void HierarchyWidget::RemoveEntity()
 
     foreach (QListWidgetItem* item, selected_items)
     {
-        std::string entity_name = item->text().toUtf8();
+        std::string entity_name = item->text().toStdString();
         std::cout<<entity_name<<std::endl;
         customApp->main_scene()->RemoveEntity(entity_name);
 
@@ -78,4 +81,21 @@ QList<QListWidgetItem*> HierarchyWidget::GetSelectedItems() const
     return widget_entity_list->selectedItems();
 }
 
+void HierarchyWidget::SelectedEntity()
+{
+    QList<QListWidgetItem*> selected_items = widget_entity_list->selectedItems();
+    customApp->main_window()->_inspector->SetName(selected_items[0]->text());
 
+    customApp->main_scene()->SetSelectedEntity(selected_items[0]->text().toStdString());
+}
+
+QListWidgetItem* HierarchyWidget::FindEntity(std::string entity_name)
+{
+    for(int i = 0; i < widget_entity_list->count(); i++)
+    {
+        if(widget_entity_list->item(i)->text().toStdString() == entity_name)
+          return widget_entity_list->item(i);
+    }
+
+    return nullptr;
+}

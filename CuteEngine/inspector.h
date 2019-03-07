@@ -4,6 +4,7 @@
 #include <QWidget>
 
 class QVBoxLayout;
+class QTextEdit;
 class QComboBox;
 
 class Inspector : public QWidget
@@ -15,10 +16,12 @@ public:
     ~Inspector();
 
     void Start();
+    void SetName(QString entity_name);
 
 private:
 
     QVBoxLayout* layout = nullptr;
+    QTextEdit* name_display = nullptr;
     QComboBox* add_component_button = nullptr;
 
 public slots:
@@ -26,6 +29,7 @@ public slots:
     void AddComponent();
     void CreateTransformation();
     void CreateBasicPrimitive();
+    void Rename();
 
 };
 

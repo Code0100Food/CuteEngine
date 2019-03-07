@@ -25,9 +25,11 @@ public slots:
 
     void AddEntity();
     void RemoveEntity();
+    void SelectedEntity();
 
 public:
 
+    QListWidgetItem* FindEntity(std::string entity_name);
     QList<QListWidgetItem*> GetSelectedItems() const;
 };
 

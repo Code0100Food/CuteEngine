@@ -69,3 +69,37 @@ void MainScene::AddEntity(Entity *new_entity)
     }
     return selected_entities;
  }
+
+ void MainScene::SetSelectedEntity(std::string entity_name)
+ {
+    Entity* tmp = FindEntity(entity_name);
+
+    if(tmp)
+        selected_entity = tmp;
+    else std::cout<<"Entity selected is null"<<std::endl;
+
+ }
+
+ Entity* MainScene::FindEntity(std::string entity_name)
+ {
+     for(std::list<Entity*>::iterator item = entities.begin(); item != entities.end(); item++)
+     {
+         if((*item)->GetName() == entity_name)
+             return(*item);
+     }
+
+     return nullptr;
+ }
+
+ void MainScene::RenameSelectedEntity(std::string new_entity_name)
+ {
+     if(selected_entity)
+     {
+         customApp->main_window()->hierarchy()->FindEntity(selected_entity->GetName())->setText(new_entity_name.c_str());
+         selected_entity->SetName(new_entity_name);
+     }
+ }
+
+
+
+

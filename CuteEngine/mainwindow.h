@@ -34,13 +34,14 @@ private:
 
     Ui::MainWindow* _uiMain = nullptr;
     Ui::Rendering* _uiRendering = nullptr;
-    Inspector* _inspector = nullptr;
+
     HierarchyWidget* _hierarchy = nullptr;
 
 public:
 
     Ui::MainWindow* uiMain(){return _uiMain;}
     HierarchyWidget* hierarchy(){return _hierarchy;}
+    Inspector* _inspector = nullptr;
 };
 
 #endif // MAINWINDOW_H

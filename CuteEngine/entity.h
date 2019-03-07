@@ -24,6 +24,7 @@ private:
 public:
 
     std::string GetName()const;
+    void SetName(std::string new_entity_name) { name = new_entity_name; }
 
     void AddComponent(Component* new_component);
     Component* FindComponent(COMPONENT_TYPE target_type)const;

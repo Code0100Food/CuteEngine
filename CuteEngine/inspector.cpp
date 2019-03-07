@@ -6,6 +6,9 @@
 #include "entity.h"
 #include "transform.h"
 #include "basicprimitive.h"
+#include <QTextEdit>
+#include <QSplitter>
+#include "mainwindow.h"
 
 Inspector::Inspector(QWidget* parent) : QWidget(parent)
 {
@@ -21,6 +24,14 @@ void Inspector::Start()
 {
     layout = new QVBoxLayout();
 
+    //Entity Name Display
+    name_display = new QTextEdit();
+    name_display->setMaximumHeight(30);
+    name_display->setFontPointSize(12);
+
+    connect(name_display, SIGNAL(textChanged()), this, SLOT(Rename()));
+
+    //Combo Box Settings
     add_component_button = new QComboBox();
     add_component_button->addItem("Add Component");
     add_component_button->addItem("Transform");
@@ -28,9 +39,18 @@ void Inspector::Start()
 
     connect(add_component_button,SIGNAL(currentIndexChanged(int)),this,SLOT(AddComponent()));
 
+    QSplitter* tmp = new QSplitter();
+
+    layout->addWidget(name_display);
     layout->addWidget(add_component_button);
+    layout->addWidget(tmp);
 
     setLayout(layout);
+}
+
+void Inspector::SetName(QString entity_name)
+{
+    name_display->setText(entity_name);
 }
 
 void Inspector::AddComponent()
@@ -65,6 +85,19 @@ void Inspector::CreateTransformation()
 
 void Inspector::CreateBasicPrimitive()
 {
-
     add_component_button->setCurrentIndex(0);
+} 
+
+void Inspector::Rename()
+{
+    std::string tmp = name_display->toPlainText().toStdString();
+
+    if(tmp.size() > 0 && tmp.at(tmp.size() - 1) == '\n')
+    {
+       name_display->setText(tmp.substr(0, tmp.size()-1).c_str());
+       std::cout<<name_display->toPlainText().toStdString()<<std::endl;
+
+       customApp->main_scene()->RenameSelectedEntity(name_display->toPlainText().toStdString());
+    }
 }
+
