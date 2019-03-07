@@ -40,7 +40,9 @@ SOURCES += \
     circlewidget.cpp \
     entity.cpp \
     basicprimitive.cpp \
-    component.cpp
+    component.cpp \
+    transform.cpp \
+    inspector.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -52,7 +54,9 @@ HEADERS += \
     circlewidget.h \
     entity.h \
     basicprimitive.h \
-    component.h
+    component.h \
+    transform.h \
+    inspector.h
 
 FORMS += \
         mainwindow.ui \

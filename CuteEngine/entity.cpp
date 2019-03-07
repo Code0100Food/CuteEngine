@@ -23,3 +23,14 @@ std::string Entity::GetName() const
 {
     return name;
 }
+
+void Entity::AddComponent(Component* new_component)
+{
+    components.push_back(new_component);
+}
+
+Component* Entity::FindComponent(COMPONENT_TYPE target_type)const
+{
+    //TODO
+    return nullptr;
+}

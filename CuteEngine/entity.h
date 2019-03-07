@@ -5,6 +5,7 @@
 #include <vector>
 
 class Component;
+enum COMPONENT_TYPE;
 
 class Entity
 {
@@ -14,12 +15,18 @@ public:
     Entity(const Entity& _entity);
     ~Entity(){}
 
-    std::string GetName()const;
-
 private:
+
     int id;
     std::string name;
     std::vector<Component*> components;
+
+public:
+
+    std::string GetName()const;
+
+    void AddComponent(Component* new_component);
+    Component* FindComponent(COMPONENT_TYPE target_type)const;
 };
 
 #endif // ENTITY_H

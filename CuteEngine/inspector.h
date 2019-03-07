@@ -3,30 +3,30 @@
 
 #include <QWidget>
 
-namespace Ui
-{
-class inspector;
-}
+class QVBoxLayout;
+class QComboBox;
 
-class inspector : public QWidget
+class Inspector : public QWidget
 {
-    Q_OBJECT
-
+Q_OBJECT
 public:
 
-    explicit inspector(QWidget *parent = 0);
-    ~inspector();
+    Inspector(QWidget* parent = nullptr);
+    ~Inspector();
+
+    void Start();
 
 private:
 
-    Ui::inspector *ui = nullptr;
+    QVBoxLayout* layout = nullptr;
+    QComboBox* add_component_button = nullptr;
 
+public slots:
+
+    void AddComponent();
     void CreateTransformation();
     void CreateBasicPrimitive();
 
-private slots:
-
-    void on_AddComponentComboBox_currentIndexChanged(const QString &arg1);
 };
 
 #endif // INSPECTOR_H

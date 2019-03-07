@@ -1,46 +1,70 @@
 #include "inspector.h"
-#include "ui_inspector.h"
 #include "qt_application.h"
 #include "mainscene.h"
+#include <QVBoxLayout>
+#include <QComboBox>
 #include "entity.h"
+#include "transform.h"
+#include "basicprimitive.h"
 
-inspector::inspector(QWidget *parent) :
-    QWidget(parent),
-    ui(new Ui::inspector)
+Inspector::Inspector(QWidget* parent) : QWidget(parent)
 {
-    ui->setupUi(this);
+    Start();
 }
 
-inspector::~inspector()
+Inspector::~Inspector()
 {
-    delete ui;
+
 }
 
-void inspector::CreateTransformation()
+void Inspector::Start()
+{
+    layout = new QVBoxLayout();
+
+    add_component_button = new QComboBox();
+    add_component_button->addItem("Add Component");
+    add_component_button->addItem("Transform");
+    add_component_button->addItem("Basic Primitive");
+
+    connect(add_component_button,SIGNAL(currentIndexChanged(int)),this,SLOT(AddComponent()));
+
+    layout->addWidget(add_component_button);
+
+    setLayout(layout);
+}
+
+void Inspector::AddComponent()
+{
+    int index = add_component_button->currentIndex();
+
+    switch (index)
+    {
+    case 1:
+        CreateTransformation();
+        break;
+    case 2:
+        CreateBasicPrimitive();
+        break;
+    }
+}
+
+void Inspector::CreateTransformation()
 {
     std::list<Entity*> selected = customApp->main_scene()->GetSelectedEntities();
     for(std::list<Entity*>::const_iterator entity_item = selected.begin(); entity_item != selected.end(); entity_item++)
     {
+        Transform* transform = new Transform();
+        (*entity_item)->AddComponent(transform);
+        layout->addWidget(transform);
+
         std::cout<<(*entity_item)->GetName()<<std::endl;
     }
 
-    ui->AddComponentComboBox->setCurrentIndex(0);
+    add_component_button->setCurrentIndex(0);
 }
 
-void inspector::CreateBasicPrimitive()
+void Inspector::CreateBasicPrimitive()
 {
 
-    ui->AddComponentComboBox->setCurrentIndex(0);
-}
-
-void inspector::on_AddComponentComboBox_currentIndexChanged(const QString &string)
-{
-    if (string == "Transform")
-    {
-        CreateTransformation();
-    }
-    else if (string == "Basic Primitive")
-    {
-        CreateBasicPrimitive();
-    }
+    add_component_button->setCurrentIndex(0);
 }

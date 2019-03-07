@@ -40,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setTabPosition(Qt::AllDockWidgetAreas,QTabWidget::TabPosition::North);
 
     //Set Inspector
-    _inspector = new inspector();
+    _inspector = new Inspector();
     _uiMain->Inspector->setWidget(_inspector);
     _uiMain->Inspector->setMinimumSize(250,300);
     _uiMain->Inspector->setMaximumSize(300,300);

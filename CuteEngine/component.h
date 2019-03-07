@@ -3,6 +3,13 @@
 
 #include <QWidget>
 
+enum COMPONENT_TYPE
+{
+    UNDEFINED_COMPONENT = 0,
+    COMPONENT_TRANSFORM,
+    COMPONENT_PRIMITIVE
+};
+
 class Component : public QWidget
 {
     Q_OBJECT
@@ -17,8 +24,7 @@ public:
 private:
 
     std::string name = "undef";
-
-
+    COMPONENT_TYPE type = COMPONENT_TYPE::UNDEFINED_COMPONENT;
 
 public:
 };

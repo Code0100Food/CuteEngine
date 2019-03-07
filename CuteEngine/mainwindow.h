@@ -12,7 +12,7 @@ class MainWindow;
 class Rendering;
 }
 
-class inspector;
+class Inspector;
 class HierarchyWidget;
 
 class MainWindow : public QMainWindow
@@ -34,7 +34,7 @@ private:
 
     Ui::MainWindow* _uiMain = nullptr;
     Ui::Rendering* _uiRendering = nullptr;
-    inspector* _inspector = nullptr;
+    Inspector* _inspector = nullptr;
     HierarchyWidget* _hierarchy = nullptr;
 
 public:
