@@ -1,6 +1,6 @@
 #include "basicprimitive.h"
 
-BasicPrimitive::BasicPrimitive(E_PRIMITIVE_TYPE _type) : Component(), primitive_type(_type)
+BasicPrimitive::BasicPrimitive(E_PRIMITIVE_TYPE _type, QWidget* parent) : Component(parent), primitive_type(_type)
 {
 
 }

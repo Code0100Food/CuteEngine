@@ -16,8 +16,13 @@ enum E_PRIMITIVE_TYPE
 class BasicPrimitive : public Component
 {
 public:
-    BasicPrimitive(E_PRIMITIVE_TYPE _type);
+
+    BasicPrimitive(E_PRIMITIVE_TYPE _type, QWidget* parent = nullptr);
     ~BasicPrimitive();
+
+    virtual void paintEvent(QPaintEvent* _event) = 0;
+
+public:
 
     void SetX(int _x);
     void SetY(int _y);
@@ -43,8 +48,6 @@ private:
     int height;
     QColor color;
     E_PRIMITIVE_TYPE primitive_type;
-
-    virtual void paintEvent(QPaintEvent* _event) = 0;
 };
 
 #endif // BASICPRIMITIVE_H

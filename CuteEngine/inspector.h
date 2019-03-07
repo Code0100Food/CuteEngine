@@ -19,12 +19,13 @@ public:
 
 private:
 
-    Ui::inspector *ui;
+    Ui::inspector *ui = nullptr;
 
     void CreateTransformation();
     void CreateBasicPrimitive();
 
 private slots:
+
     void on_AddComponentComboBox_currentIndexChanged(const QString &arg1);
 };
 

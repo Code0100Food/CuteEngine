@@ -46,8 +46,8 @@ MainWindow::MainWindow(QWidget *parent) :
     _uiMain->Inspector->setMaximumSize(300,300);
 
     //Set Hierarchy
-    HierarchyWidget* hierarchy = new HierarchyWidget();
-    _uiMain->Hierarchy->setWidget(hierarchy);
+    _hierarchy = new HierarchyWidget();
+    _uiMain->Hierarchy->setWidget(_hierarchy);
 
     //Conect action signals to slots
     connect(_uiMain->actionOpen_Project,SIGNAL(triggered()),this,SLOT(openProject()));

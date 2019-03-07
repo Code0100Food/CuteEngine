@@ -1,6 +1,9 @@
 #include "mainscene.h"
 #include "qt_application.h"
 #include "entity.h"
+#include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include "hierarchywidget.h"
 
 MainScene::MainScene()
 {
@@ -47,3 +50,22 @@ void MainScene::AddEntity(Entity *new_entity)
           }
       }
   }
+
+ std::list<Entity*> MainScene::GetSelectedEntities()const
+ {
+    std::list<Entity*> selected_entities;
+
+     QList<QListWidgetItem*> selected_items = customApp->main_window()->hierarchy()->GetSelectedItems();
+
+    foreach (QListWidgetItem* item, selected_items)
+    {
+        for(std::list<Entity*>::const_iterator entity_item = entities.begin(); entity_item != entities.end(); entity_item++)
+        {
+            if((*entity_item)->GetName() == item->text().toStdString())
+            {
+                selected_entities.push_back(*entity_item);
+            }
+        }
+    }
+    return selected_entities;
+ }

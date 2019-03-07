@@ -1,6 +1,18 @@
 #include "component.h"
+#include <QPainter>
 
-Component::Component()
+Component::Component(QWidget* parent) : QWidget(parent)
 {
 // TODO: Create a transform (must component)
 }
+
+Component::~Component()
+{
+
+}
+
+void Component::paintEvent(QPaintEvent* aEvent)
+{
+
+}
+

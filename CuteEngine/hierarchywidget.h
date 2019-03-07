@@ -22,9 +22,13 @@ private:
     QPushButton* remove_entity = nullptr;
 
 public slots:
+
     void AddEntity();
     void RemoveEntity();
 
+public:
+
+    QList<QListWidgetItem*> GetSelectedItems() const;
 };
 
 #endif // HIERARCHYWIDGET_H

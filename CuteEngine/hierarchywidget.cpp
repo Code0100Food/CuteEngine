@@ -48,7 +48,7 @@ void HierarchyWidget::AddEntity()
 {
     //Add Entity to the Logic List
     Entity* new_entity = new Entity(id);
-    customApp->GetMainScene()->AddEntity(new_entity);
+    customApp->main_scene()->AddEntity(new_entity);
 
     //app.GetMainScene()->AddEntity(new_entity);
 
@@ -66,9 +66,16 @@ void HierarchyWidget::RemoveEntity()
     {
         std::string entity_name = item->text().toUtf8();
         std::cout<<entity_name<<std::endl;
-        customApp->GetMainScene()->RemoveEntity(entity_name);
+        customApp->main_scene()->RemoveEntity(entity_name);
 
         widget_entity_list->removeItemWidget(item);
         delete item;
     }
 }
+
+QList<QListWidgetItem*> HierarchyWidget::GetSelectedItems() const
+{
+    return widget_entity_list->selectedItems();
+}
+
+

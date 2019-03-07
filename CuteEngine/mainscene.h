@@ -11,14 +11,19 @@ class Entity;
 class MainScene
 {
 public:
+
     MainScene();
     ~MainScene();
+
+public:
 
     void AddEntity(Entity* new_entity);
     void RemoveEntities();
     void RemoveEntity(std::string entity_to_remove);
+    std::list<Entity*> GetSelectedEntities()const;
 
 private:
+
     std::list<Entity*> entities;
     qt_Application* app = nullptr;
 
