@@ -4,6 +4,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "hierarchywidget.h"
+#include "inspector.h"
 
 MainScene::MainScene()
 {
@@ -88,10 +89,12 @@ void MainScene::AddEntity(Entity *new_entity)
 
         selected_entity = cur_select;
         selected_entity->Select();
+        customApp->main_window()->inspector()->ShowUI();
         std::cout<<selected_entity->GetName() + " selected!"<<std::endl;
     }
     else
     {
+        customApp->main_window()->inspector()->HideUI();
         std::cout<<"Entity selected is null"<<std::endl;
     }
 

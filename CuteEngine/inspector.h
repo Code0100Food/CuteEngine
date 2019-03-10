@@ -15,8 +15,13 @@ public:
     Inspector(QWidget* parent = nullptr);
     ~Inspector();
 
+public:
+
     void Start();
     void SetName(QString entity_name);
+
+    void ShowUI();
+    void HideUI();
 
 private:
 

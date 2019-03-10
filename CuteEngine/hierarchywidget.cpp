@@ -84,7 +84,7 @@ QList<QListWidgetItem*> HierarchyWidget::GetSelectedItems() const
 void HierarchyWidget::SelectedEntity()
 {
     QList<QListWidgetItem*> selected_items = widget_entity_list->selectedItems();
-    customApp->main_window()->_inspector->SetName(selected_items[0]->text());
+    customApp->main_window()->inspector()->SetName(selected_items[0]->text());
 
     customApp->main_scene()->SetSelectedEntity(selected_items[0]->text().toStdString());
 }

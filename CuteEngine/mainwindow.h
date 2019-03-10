@@ -36,12 +36,14 @@ private:
     Ui::Rendering* _uiRendering = nullptr;
 
     HierarchyWidget* _hierarchy = nullptr;
+    Inspector* _inspector = nullptr;
 
 public:
 
     Ui::MainWindow* uiMain(){return _uiMain;}
     HierarchyWidget* hierarchy(){return _hierarchy;}
-    Inspector* _inspector = nullptr;
+    Inspector* inspector() {return _inspector;}
+
 };
 
 #endif // MAINWINDOW_H

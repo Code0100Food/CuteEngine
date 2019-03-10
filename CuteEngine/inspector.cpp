@@ -17,7 +17,9 @@ Inspector::Inspector(QWidget* parent) : QWidget(parent)
 
 Inspector::~Inspector()
 {
-
+    delete add_component_button;
+    delete name_display;
+    delete layout;
 }
 
 void Inspector::Start()
@@ -46,11 +48,25 @@ void Inspector::Start()
     layout->addWidget(tmp);
 
     setLayout(layout);
+
+    HideUI();
 }
 
 void Inspector::SetName(QString entity_name)
 {
     name_display->setText(entity_name);
+}
+
+void Inspector::ShowUI()
+{
+    name_display->show();
+    add_component_button->show();
+}
+
+void Inspector::HideUI()
+{
+    name_display->hide();
+    add_component_button->hide();
 }
 
 void Inspector::AddComponent()
