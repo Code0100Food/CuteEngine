@@ -89,6 +89,8 @@ void Inspector::CreateTransformation()
     std::list<Entity*> selected = customApp->main_scene()->GetSelectedEntities();
     for(std::list<Entity*>::const_iterator entity_item = selected.begin(); entity_item != selected.end(); entity_item++)
     {
+        if((*entity_item)->FindComponent(COMPONENT_TYPE::COMPONENT_TRANSFORM))continue;
+
         Transform* transform = new Transform();
         (*entity_item)->AddComponent(transform);
         layout->addWidget(transform);

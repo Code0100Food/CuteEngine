@@ -26,6 +26,8 @@ protected:
 
 public:
 
+    COMPONENT_TYPE GetType()const;
+
     void ShowUI();
     void HideUI();
 

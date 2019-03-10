@@ -43,7 +43,14 @@ void Entity::AddComponent(Component* new_component)
 
 Component* Entity::FindComponent(COMPONENT_TYPE target_type)const
 {
-    //TODO
+    size_t len = components.size();
+    for(size_t k = 0; k < len; k++)
+    {
+        if(components[k]->GetType() == target_type)
+        {
+            return components[k];
+        }
+    }
     return nullptr;
 }
 
