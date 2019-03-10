@@ -2,7 +2,7 @@
 
 BasicPrimitive::BasicPrimitive(E_PRIMITIVE_TYPE _type, QWidget* parent) : Component(parent), primitive_type(_type)
 {
-
+    type = COMPONENT_TYPE::COMPONENT_PRIMITIVE;
 }
 
 BasicPrimitive::~BasicPrimitive()

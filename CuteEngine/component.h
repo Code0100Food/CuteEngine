@@ -19,14 +19,20 @@ public:
     explicit Component(QWidget* parent = nullptr);
     ~Component();
 
+public:
+
     void paintEvent(QPaintEvent* aEvent) override;
 
-private:
+protected:
 
     std::string name = "undef";
     COMPONENT_TYPE type = COMPONENT_TYPE::UNDEFINED_COMPONENT;
 
 public:
+
+    void ShowUI();
+    void HideUI();
+
 };
 
 #endif // COMPONENT_H

@@ -28,6 +28,9 @@ public:
 
     void AddComponent(Component* new_component);
     Component* FindComponent(COMPONENT_TYPE target_type)const;
+
+    void Select();
+    void Deselect();
 };
 
 #endif // ENTITY_H

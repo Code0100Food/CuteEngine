@@ -16,3 +16,12 @@ void Component::paintEvent(QPaintEvent* aEvent)
 
 }
 
+void Component::ShowUI()
+{
+    setVisible(true);
+}
+
+void Component::HideUI()
+{
+    hide();
+}

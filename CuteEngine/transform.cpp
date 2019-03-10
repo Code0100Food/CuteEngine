@@ -4,7 +4,9 @@
 
 Transform::Transform(QWidget *aParent) : Component(aParent)
 {
-    setAutoFillBackground(true);
+    type = COMPONENT_TYPE::COMPONENT_TRANSFORM;
+
+    //setAutoFillBackground(true);
 
     QVBoxLayout* layout = new QVBoxLayout();
 

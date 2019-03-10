@@ -70,13 +70,30 @@ void MainScene::AddEntity(Entity *new_entity)
     return selected_entities;
  }
 
+ Entity* MainScene::GetSelectedEntity()const
+ {
+     return selected_entity;
+ }
+
  void MainScene::SetSelectedEntity(std::string entity_name)
  {
-    Entity* tmp = FindEntity(entity_name);
+    Entity* cur_select = FindEntity(entity_name);
 
-    if(tmp)
-        selected_entity = tmp;
-    else std::cout<<"Entity selected is null"<<std::endl;
+    if(cur_select)
+    {
+        if(selected_entity != nullptr)
+        {
+            selected_entity->Deselect();
+        }
+
+        selected_entity = cur_select;
+        selected_entity->Select();
+        std::cout<<selected_entity->GetName() + " selected!"<<std::endl;
+    }
+    else
+    {
+        std::cout<<"Entity selected is null"<<std::endl;
+    }
 
  }
 

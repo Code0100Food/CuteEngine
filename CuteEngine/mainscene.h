@@ -20,7 +20,9 @@ public:
     void AddEntity(Entity* new_entity);
     void RemoveEntities();
     void RemoveEntity(std::string entity_to_remove);
+
     std::list<Entity*> GetSelectedEntities()const;
+    Entity* GetSelectedEntity()const;
 
     void SetSelectedEntity(std::string entity_name);
     void RenameSelectedEntity(std::string new_entity_name);
