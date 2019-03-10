@@ -17,11 +17,7 @@ class Component : public QWidget
 public:
 
     explicit Component(QWidget* parent = nullptr);
-    ~Component();
-
-public:
-
-    void paintEvent(QPaintEvent* aEvent) override;
+    ~Component() override;
 
 protected:
 

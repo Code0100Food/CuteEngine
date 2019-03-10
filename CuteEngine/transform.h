@@ -8,9 +8,7 @@ class Transform : public Component
 public:   
 
     explicit Transform(QWidget *aParent = nullptr);
-
-    void paintEvent(QPaintEvent* aEvent) override;
-
+    ~Transform()override;
 };
 
 #endif // TRANSFORM_H

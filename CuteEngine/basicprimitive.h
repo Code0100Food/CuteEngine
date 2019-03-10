@@ -18,9 +18,9 @@ class BasicPrimitive : public Component
 public:
 
     BasicPrimitive(E_PRIMITIVE_TYPE _type, QWidget* parent = nullptr);
-    ~BasicPrimitive();
+    ~BasicPrimitive() override;
 
-    virtual void paintEvent(QPaintEvent* _event) = 0;
+    void paintEvent(QPaintEvent* _event)override;
 
 public:
 
@@ -38,7 +38,7 @@ public:
     const QColor GetColor() const;
 
     void ChangePrimitive(E_PRIMITIVE_TYPE _type);
-    const E_PRIMITIVE_TYPE GetPrimitiveType() const;
+    E_PRIMITIVE_TYPE GetPrimitiveType() const;
 
 private:
 

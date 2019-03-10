@@ -10,6 +10,11 @@ BasicPrimitive::~BasicPrimitive()
 
 }
 
+void BasicPrimitive::paintEvent(QPaintEvent* _event)
+{
+
+}
+
 void BasicPrimitive::SetX(int _x)
 {
     x = _x;
@@ -70,7 +75,7 @@ void BasicPrimitive::ChangePrimitive(E_PRIMITIVE_TYPE _type)
     }
 }
 
-const E_PRIMITIVE_TYPE BasicPrimitive::GetPrimitiveType() const
+E_PRIMITIVE_TYPE BasicPrimitive::GetPrimitiveType() const
 {
     return primitive_type;
 }

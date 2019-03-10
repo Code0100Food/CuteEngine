@@ -59,6 +59,4 @@ HEADERS += \
     inspector.h
 
 FORMS += \
-        mainwindow.ui \
-    rendering.ui \
-    inspector.ui
+        mainwindow.ui

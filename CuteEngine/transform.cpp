@@ -1,6 +1,7 @@
 #include "transform.h"
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <iostream>
 
 Transform::Transform(QWidget *aParent) : Component(aParent)
 {
@@ -16,7 +17,7 @@ Transform::Transform(QWidget *aParent) : Component(aParent)
     setLayout(layout);
 }
 
-void Transform::paintEvent(QPaintEvent* aEvent)
+Transform::~Transform()
 {
 
 }

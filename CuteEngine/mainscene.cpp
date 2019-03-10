@@ -80,7 +80,7 @@ void MainScene::AddEntity(Entity *new_entity)
  {
     Entity* cur_select = FindEntity(entity_name);
 
-    if(cur_select)
+    if(cur_select != nullptr)
     {
         if(selected_entity != nullptr)
         {
