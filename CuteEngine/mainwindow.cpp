@@ -1,13 +1,11 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "ui_rendering.h"
 #include "inspector.h"
 #include "hierarchywidget.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    _uiMain(new Ui::MainWindow),
-    _uiRendering(new Ui::Rendering)
+    _uiMain(new Ui::MainWindow)
 {
     //_uiMain->setupUi(this);
     //

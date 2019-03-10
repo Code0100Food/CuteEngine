@@ -10,6 +10,10 @@ Transform::Transform(QWidget *aParent) : Component(aParent)
 {
     type = COMPONENT_TYPE::COMPONENT_TRANSFORM;
 
+    //Data initialization
+    transform_matrix.setToIdentity();
+
+    //UI initialization
     QVBoxLayout* main_layout = new QVBoxLayout();
 
     //Window title
@@ -50,6 +54,11 @@ Transform::Transform(QWidget *aParent) : Component(aParent)
     grid->addWidget(position_y,0,4);
     grid->addWidget(position_label_z,0,5);
     grid->addWidget(position_z,0,6);
+    //Position connections
+    connect(position_x,SIGNAL(valueChanged(double)),this,SLOT(SetXPosition(double)));
+    connect(position_y,SIGNAL(valueChanged(double)),this,SLOT(SetYPosition(double)));
+    connect(position_z,SIGNAL(valueChanged(double)),this,SLOT(SetZPosition(double)));
+
     //Rotation
     grid->addWidget(rotation_label,1,0);
     grid->addWidget(rotation_label_x,1,1);
@@ -75,4 +84,19 @@ Transform::Transform(QWidget *aParent) : Component(aParent)
 Transform::~Transform()
 {
 
+}
+
+void Transform::SetXPosition(double value)
+{
+    std::cout<<"X"<<std::endl;
+}
+
+void Transform::SetYPosition(double value)
+{
+    std::cout<<"Y"<<std::endl;
+}
+
+void Transform::SetZPosition(double value)
+{
+    std::cout<<"Z"<<std::endl;
 }
