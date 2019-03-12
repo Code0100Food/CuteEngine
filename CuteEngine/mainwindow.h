@@ -30,6 +30,7 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void AddWidgetToRender(QWidget* form);
 private:
 
     Ui::MainWindow* _uiMain = nullptr;

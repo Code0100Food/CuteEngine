@@ -2,6 +2,8 @@
 #include "ui_mainwindow.h"
 #include "inspector.h"
 #include "hierarchywidget.h"
+#include "QLayout"
+#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -47,6 +49,8 @@ MainWindow::MainWindow(QWidget *parent) :
     _hierarchy = new HierarchyWidget();
     _uiMain->Hierarchy->setWidget(_hierarchy);
 
+    //_uiMain->Scene_Render->sizePolicy().setHorizontalPolicy(QSizePolicy::);
+
     //Conect action signals to slots
     connect(_uiMain->actionOpen_Project,SIGNAL(triggered()),this,SLOT(openProject()));
     connect(_uiMain->actionSave_Project,SIGNAL(triggered()),this,SLOT(saveProject()));
@@ -87,5 +91,10 @@ void MainWindow::customExit()
     {
         printf("No exit");
     }
+}
+
+void MainWindow::AddWidgetToRender(QWidget* form)
+{
+    _uiMain->Scene_Render->findChild<QVBoxLayout*>("verticalLayout")->addWidget(form);   //layout()->addWidget(form);
 }
 
