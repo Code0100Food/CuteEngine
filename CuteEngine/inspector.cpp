@@ -103,6 +103,18 @@ void Inspector::CreateTransformation()
 
 void Inspector::CreateBasicPrimitive()
 {
+    std::list<Entity*> selected = customApp->main_scene()->GetSelectedEntities();
+    for(std::list<Entity*>::const_iterator entity_item = selected.begin(); entity_item != selected.end(); entity_item++)
+    {
+        if((*entity_item)->FindComponent(COMPONENT_TYPE::COMPONENT_PRIMITIVE))continue;
+
+        BasicPrimitive* primitive = new BasicPrimitive();
+        (*entity_item)->AddComponent(primitive);
+        layout->addWidget(primitive);
+
+        std::cout<<(*entity_item)->GetName()<<std::endl;
+    }
+
     add_component_button->setCurrentIndex(0);
 } 
 

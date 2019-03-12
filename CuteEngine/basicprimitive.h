@@ -4,6 +4,7 @@
 #include "component.h"
 #include <QColor>
 class QPaintEvent;
+class QComboBox;
 
 enum E_PRIMITIVE_TYPE
 {
@@ -17,7 +18,7 @@ class BasicPrimitive : public Component
 {
 public:
 
-    BasicPrimitive(E_PRIMITIVE_TYPE _type, QWidget* parent = nullptr);
+    BasicPrimitive(E_PRIMITIVE_TYPE _type = PT_CIRCLE, QWidget* parent = nullptr);
     ~BasicPrimitive() override;
 
     void paintEvent(QPaintEvent* _event)override;
@@ -37,7 +38,7 @@ public:
     void SetColor(QColor _color);
     const QColor GetColor() const;
 
-    void ChangePrimitive(E_PRIMITIVE_TYPE _type);
+    //void ChangePrimitive(E_PRIMITIVE_TYPE _type);
     E_PRIMITIVE_TYPE GetPrimitiveType() const;
 
 private:
@@ -48,6 +49,12 @@ private:
     int height;
     QColor color;
     E_PRIMITIVE_TYPE primitive_type;
+    BasicPrimitive* primitive;
+
+    QComboBox* select_primitive_box;
+
+public slots:
+    void ChangePrimitive();
 };
 
 #endif // BASICPRIMITIVE_H
