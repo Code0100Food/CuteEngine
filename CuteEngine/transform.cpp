@@ -88,15 +88,64 @@ Transform::~Transform()
 
 void Transform::SetXPosition(double value)
 {
-    std::cout<<"X"<<std::endl;
+    transform_matrix.translate(value, 0.0f, 0.0f);
+    position = transform_matrix.column(3).toVector3D();
+    /*transform
+    QVector4D pos = transform_matrix.column(3);
+    pos[0] = value;
+    transform_matrix.setColumn(3,pos);
+    position = pos.toVector3D();*/
 }
 
 void Transform::SetYPosition(double value)
 {
-    std::cout<<"Y"<<std::endl;
+    transform_matrix.translate(0.0f, value, 0.0f);
+    position = transform_matrix.column(3).toVector3D();
+
+    /*QVector4D pos = transform_matrix.column(3);
+    pos[1] = value;
+    transform_matrix.setColumn(3,pos);
+    position = pos.toVector3D();*/
 }
 
 void Transform::SetZPosition(double value)
 {
-    std::cout<<"Z"<<std::endl;
+    transform_matrix.translate(0.0f, 0.0f, value);
+    position = transform_matrix.column(3).toVector3D();
+
+    /*QVector4D pos = transform_matrix.column(3);
+    pos[2] = value;
+    transform_matrix.setColumn(3,pos);
+    position = pos.toVector3D();*/
+}
+
+void Transform::SetXRotation(double value)
+{
+    transform_matrix.rotate(value, 0.0f, 0.0f);
+    //rotation_euler_angles = transform_matrix.
+}
+
+void Transform::SetYRotation(double value)
+{
+    transform_matrix.rotate(0.0f, value, 0.0f);
+}
+
+void Transform::SetZRotation(double value)
+{
+    transform_matrix.rotate(0.0f, 0.0f, value);
+}
+
+void Transform::SetXScale(double value)
+{
+
+}
+
+void Transform::SetYScale(double value)
+{
+
+}
+
+void Transform::SetZScale(double value)
+{
+
 }

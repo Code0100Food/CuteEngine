@@ -26,12 +26,17 @@ private:
 
     QMatrix4x4 inherited_transform;
 
-
 public slots:
 
     void SetXPosition(double value);
     void SetYPosition(double value);
     void SetZPosition(double value);
+    void SetXRotation(double value);
+    void SetYRotation(double value);
+    void SetZRotation(double value);
+    void SetXScale(double value);
+    void SetYScale(double value);
+    void SetZScale(double value);
 
 };
 
