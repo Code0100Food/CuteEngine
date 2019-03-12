@@ -10,8 +10,15 @@ enum E_PRIMITIVE_TYPE
 {
     PT_CIRCLE = 0,
     PT_RECTANGLE,
-    PT_STAR,
     PT_MAX_PRIMITIVE
+};
+
+enum E_LINE_TYPE
+{
+    LT_SOLID = 0,
+    LT_DASH,
+    LT_DOT,
+    LT_MAX
 };
 
 class BasicPrimitive : public Component
@@ -38,7 +45,10 @@ public:
     void SetColor(QColor _color);
     const QColor GetColor() const;
 
-    //void ChangePrimitive(E_PRIMITIVE_TYPE _type);
+    void SetLineType(E_LINE_TYPE _type);
+    E_LINE_TYPE GetLineType() const;
+    Qt::PenStyle QtGetLineType() const;
+
     E_PRIMITIVE_TYPE GetPrimitiveType() const;
 
 private:
@@ -49,7 +59,7 @@ private:
     int height;
     QColor color;
     E_PRIMITIVE_TYPE primitive_type;
-    BasicPrimitive* primitive;
+    E_LINE_TYPE line_type;
 
     QComboBox* select_primitive_box;
 
