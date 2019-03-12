@@ -62,6 +62,7 @@ private:
     E_LINE_TYPE line_type;
 
     QComboBox* select_primitive_box;
+    QComboBox* select_line_type_box;
 
 public slots:
     void ChangePrimitive();
