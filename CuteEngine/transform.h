@@ -6,6 +6,8 @@
 #include <QMatrix4x4>
 #include <QQuaternion>
 
+class QDoubleSpinBox;
+
 class Transform : public Component
 {
     Q_OBJECT
@@ -25,6 +27,32 @@ private:
     QVector3D scale;
 
     QMatrix4x4 inherited_transform;
+
+private:
+
+    QDoubleSpinBox* position_x = nullptr;
+    QDoubleSpinBox* position_y = nullptr;
+    QDoubleSpinBox* position_z = nullptr;
+    QDoubleSpinBox* rotation_x = nullptr;
+    QDoubleSpinBox* rotation_y = nullptr;
+    QDoubleSpinBox* rotation_z = nullptr;
+    QDoubleSpinBox* scale_x = nullptr;
+    QDoubleSpinBox* scale_y = nullptr;
+    QDoubleSpinBox* scale_z = nullptr;
+
+public:
+
+    const QDoubleSpinBox* GetPositionXButton() const { return position_x;}
+    QDoubleSpinBox* GetPositionYButton(){ return position_y;}
+    QDoubleSpinBox* GetPositionZButton(){ return position_z;}
+
+    QDoubleSpinBox* GetRotationXButton(){ return rotation_x;}
+    QDoubleSpinBox* GetRotationYButton(){ return rotation_y;}
+    QDoubleSpinBox* GetRotationZButton(){ return rotation_z;}
+
+    QDoubleSpinBox* GetScaleXButton(){ return scale_x;}
+    QDoubleSpinBox* GetScaleYButton(){ return scale_y;}
+    QDoubleSpinBox* GetScaleZButton(){ return scale_z;}
 
 public slots:
 

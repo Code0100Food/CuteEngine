@@ -5,6 +5,8 @@
 #include <QComboBox>
 #include <iostream>
 #include <QPainter>
+#include <transform.h>
+#include <QDoubleSpinBox>
 
 BasicPrimitive::BasicPrimitive(E_PRIMITIVE_TYPE _type, QWidget* parent) : Component(parent), primitive_type(_type), line_type(LT_SOLID)
 {
@@ -15,11 +17,8 @@ BasicPrimitive::BasicPrimitive(E_PRIMITIVE_TYPE _type, QWidget* parent) : Compon
     QVBoxLayout* layout = new QVBoxLayout();
 
     //Window title
-    QLabel* title = new QLabel("Basic Primitive");
+    title = new QLabel("Basic Primitive");
     layout->addWidget(title);
-
-    //Grid
-    QGridLayout* grid = new QGridLayout();
 
     //Combo Box Settings
     select_primitive_box = new QComboBox();
@@ -30,9 +29,6 @@ BasicPrimitive::BasicPrimitive(E_PRIMITIVE_TYPE _type, QWidget* parent) : Compon
 
     select_line_type_box = new QComboBox();
     select_line_type_box->addItem("Solid Line");
-    //select_line_type_box->addItem()
-
-    layout->addLayout(grid);
 
     setLayout(layout);
 }
@@ -58,7 +54,7 @@ void BasicPrimitive::paintEvent(QPaintEvent* _event)
     painter.setPen(Pen);
 
     // Draw
-    QRect Rect(GetX(), GetY(), GetWidth(), GetHeight());
+    QRect Rect(x,y,10.0f,10.0f);
     switch (primitive_type)
     {
         case  PT_CIRCLE:
@@ -157,6 +153,36 @@ Qt::PenStyle BasicPrimitive::QtGetLineType() const
     return ret;
 }
 
+E_PRIMITIVE_TYPE BasicPrimitive::GetPrimitiveType() const
+{
+    return primitive_type;
+}
+
+void BasicPrimitive::Connect(Transform* target_trans)
+{
+    //connect(select_primitive_box, SIGNAL(currentIndexChanged(int)), this, SLOT(ChangePrimitive()));
+
+    //SetXPosition()
+
+    connect(target_trans->GetPositionXButton(),SIGNAL(valueChanged(double)),this,SLOT(SetXPosition(double)));
+}
+
+void BasicPrimitive::ShowUI()
+{
+    title->show();
+    select_primitive_box->show();
+}
+void BasicPrimitive::HideUI()
+{
+    title->hide();
+    select_primitive_box->hide();
+}
+
+void BasicPrimitive::SetXPosition(double value)
+{
+    x = static_cast<float>(value);
+}
+
 void BasicPrimitive::ChangePrimitive()
 {
     int index = select_primitive_box->currentIndex();
@@ -166,8 +192,4 @@ void BasicPrimitive::ChangePrimitive()
     }
 }
 
-E_PRIMITIVE_TYPE BasicPrimitive::GetPrimitiveType() const
-{
-    return primitive_type;
-}
 

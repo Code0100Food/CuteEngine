@@ -3,8 +3,11 @@
 
 #include "component.h"
 #include <QColor>
+
 class QPaintEvent;
 class QComboBox;
+class QLabel;
+class Transform;
 
 enum E_PRIMITIVE_TYPE
 {
@@ -23,6 +26,8 @@ enum E_LINE_TYPE
 
 class BasicPrimitive : public Component
 {
+    Q_OBJECT
+
 public:
 
     BasicPrimitive(E_PRIMITIVE_TYPE _type = PT_CIRCLE, QWidget* parent = nullptr);
@@ -51,21 +56,32 @@ public:
 
     E_PRIMITIVE_TYPE GetPrimitiveType() const;
 
+    void Connect(Transform* target_trans);
+
+    void ShowUI() override;
+    void HideUI() override;
+
 private:
 
-    int x;
-    int y;
-    int width;
-    int height;
+    float x = 0.0f;
+    float y = 0.0f;
+    float width = 1.0f;
+    float height = 1.0f;
+
     QColor color;
     E_PRIMITIVE_TYPE primitive_type;
     E_LINE_TYPE line_type;
 
-    QComboBox* select_primitive_box;
-    QComboBox* select_line_type_box;
+    QLabel* title = nullptr;
+    QComboBox* select_primitive_box = nullptr;
+    QComboBox* select_line_type_box = nullptr;
 
 public slots:
+
+    void SetXPosition(double x_pos);
+
     void ChangePrimitive();
+
 };
 
 #endif // BASICPRIMITIVE_H

@@ -569,7 +569,7 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
        <height>431</height>
       </rect>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout"/>
+     <layout class="QVBoxLayout" name="scene_layout"/>
     </widget>
    </widget>
   </widget>

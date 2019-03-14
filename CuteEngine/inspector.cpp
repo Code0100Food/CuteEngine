@@ -111,6 +111,8 @@ void Inspector::CreateBasicPrimitive()
         BasicPrimitive* primitive = new BasicPrimitive();
         (*entity_item)->AddComponent(primitive);
         layout->addWidget(primitive);
+        customApp->main_window()->scene_render()->addWidget(primitive);
+        primitive->Connect(dynamic_cast<Transform*>((*entity_item)->FindComponent(COMPONENT_TYPE::COMPONENT_TRANSFORM)));
 
         std::cout<<(*entity_item)->GetName()<<std::endl;
     }

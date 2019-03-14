@@ -33,6 +33,6 @@ void CircleWidget::paintEvent(QPaintEvent* aEvent)
     painter.setPen(Pen);
 
     // Draw circle    
-    QRect CircleRect(GetX(), GetY(), GetWidth(), GetHeight());
+    QRect CircleRect(0.0f,10.0f,10.0f,5.0f);
     painter.drawEllipse(CircleRect);
 }

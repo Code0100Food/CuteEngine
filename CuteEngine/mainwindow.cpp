@@ -98,3 +98,8 @@ void MainWindow::AddWidgetToRender(QWidget* form)
     _uiMain->Scene_Render->findChild<QVBoxLayout*>("verticalLayout")->addWidget(form);   //layout()->addWidget(form);
 }
 
+QVBoxLayout* MainWindow::scene_render()
+{
+    return _uiMain->Scene_Render->findChild<QVBoxLayout*>("scene_layout");
+}
+

@@ -28,8 +28,8 @@ public:
 
     COMPONENT_TYPE GetType()const;
 
-    void ShowUI();
-    void HideUI();
+    virtual void ShowUI();
+    virtual void HideUI();
 
 };
 

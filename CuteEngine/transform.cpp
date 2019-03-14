@@ -36,15 +36,15 @@ Transform::Transform(QWidget *aParent) : Component(aParent)
     QLabel* scale_label_y = new QLabel("Y");
     QLabel* scale_label_z = new QLabel("Z");
     //Spin boxes
-    QDoubleSpinBox* position_x = new QDoubleSpinBox();
-    QDoubleSpinBox* position_y = new QDoubleSpinBox();
-    QDoubleSpinBox* position_z = new QDoubleSpinBox();
-    QDoubleSpinBox* rotation_x = new QDoubleSpinBox();
-    QDoubleSpinBox* rotation_y = new QDoubleSpinBox();
-    QDoubleSpinBox* rotation_z = new QDoubleSpinBox();
-    QDoubleSpinBox* scale_x = new QDoubleSpinBox();
-    QDoubleSpinBox* scale_y = new QDoubleSpinBox();
-    QDoubleSpinBox* scale_z = new QDoubleSpinBox();
+    position_x = new QDoubleSpinBox();
+    position_y = new QDoubleSpinBox();
+    position_z = new QDoubleSpinBox();
+    rotation_x = new QDoubleSpinBox();
+    rotation_y = new QDoubleSpinBox();
+    rotation_z = new QDoubleSpinBox();
+    scale_x = new QDoubleSpinBox();
+    scale_y = new QDoubleSpinBox();
+    scale_z = new QDoubleSpinBox();
 
     //Position
     grid->addWidget(position_label,0,0);
@@ -88,35 +88,20 @@ Transform::~Transform()
 
 void Transform::SetXPosition(double value)
 {
-    transform_matrix.translate(value, 0.0f, 0.0f);
+    transform_matrix.translate(static_cast<float>(value), 0.0f, 0.0f);
     position = transform_matrix.column(3).toVector3D();
-    /*transform
-    QVector4D pos = transform_matrix.column(3);
-    pos[0] = value;
-    transform_matrix.setColumn(3,pos);
-    position = pos.toVector3D();*/
 }
 
 void Transform::SetYPosition(double value)
 {
     transform_matrix.translate(0.0f, value, 0.0f);
     position = transform_matrix.column(3).toVector3D();
-
-    /*QVector4D pos = transform_matrix.column(3);
-    pos[1] = value;
-    transform_matrix.setColumn(3,pos);
-    position = pos.toVector3D();*/
 }
 
 void Transform::SetZPosition(double value)
 {
     transform_matrix.translate(0.0f, 0.0f, value);
     position = transform_matrix.column(3).toVector3D();
-
-    /*QVector4D pos = transform_matrix.column(3);
-    pos[2] = value;
-    transform_matrix.setColumn(3,pos);
-    position = pos.toVector3D();*/
 }
 
 void Transform::SetXRotation(double value)
@@ -137,15 +122,15 @@ void Transform::SetZRotation(double value)
 
 void Transform::SetXScale(double value)
 {
-
+    transform_matrix.scale(value,scale_y->value(),scale_z->value());
 }
 
 void Transform::SetYScale(double value)
 {
-
+    transform_matrix.scale(scale_x->value(),value,scale_z->value());
 }
 
 void Transform::SetZScale(double value)
 {
-
+    transform_matrix.scale(scale_x->value(),scale_y->value(),value);
 }

@@ -14,6 +14,7 @@ class Rendering;
 
 class Inspector;
 class HierarchyWidget;
+class QVBoxLayout;
 
 class MainWindow : public QMainWindow
 {
@@ -42,6 +43,7 @@ private:
 public:
 
     Ui::MainWindow* uiMain(){return _uiMain;}
+    QVBoxLayout* scene_render();
     HierarchyWidget* hierarchy(){return _hierarchy;}
     Inspector* inspector() {return _inspector;}
 
