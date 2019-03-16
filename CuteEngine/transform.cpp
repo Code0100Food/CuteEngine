@@ -46,6 +46,9 @@ Transform::Transform(QWidget *aParent) : Component(aParent)
     scale_y = new QDoubleSpinBox();
     scale_z = new QDoubleSpinBox();
 
+    scale_x->setValue(1.0);
+    scale_y->setValue(1.0);
+
     //Position
     grid->addWidget(position_label,0,0);
     grid->addWidget(position_label_x,0,1);

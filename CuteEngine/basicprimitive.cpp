@@ -197,12 +197,12 @@ void BasicPrimitive::SetYPosition(double value)
 
 void BasicPrimitive::SetXScale(double value)
 {
-   width = static_cast<float>(value);
+   width = 2 * static_cast<float>(value);
 }
 
 void BasicPrimitive::SetYScale(double value)
 {
-   height = static_cast<float>(value);
+   height = 2 * static_cast<float>(value);
 }
 
 void BasicPrimitive::ChangePrimitive()
