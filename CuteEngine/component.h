@@ -3,6 +3,8 @@
 
 #include <QWidget>
 
+class QVBoxLayout;
+
 enum COMPONENT_TYPE
 {
     UNDEFINED_COMPONENT = 0,
@@ -28,6 +30,7 @@ public:
 
     COMPONENT_TYPE GetType()const;
 
+    virtual void GoToInspector(QVBoxLayout*){};
     virtual void ShowUI();
     virtual void HideUI();
 

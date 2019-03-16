@@ -108,10 +108,13 @@ void Inspector::CreateBasicPrimitive()
     {
         if((*entity_item)->FindComponent(COMPONENT_TYPE::COMPONENT_PRIMITIVE))continue;
 
-        BasicPrimitive* primitive = new BasicPrimitive();
+        BasicPrimitive* primitive = new BasicPrimitive(E_PRIMITIVE_TYPE::PT_CIRCLE, customApp->main_window()->scene_render());
         (*entity_item)->AddComponent(primitive);
-        layout->addWidget(primitive);
-        customApp->main_window()->scene_render()->addWidget(primitive);
+        primitive->GoToInspector(layout);
+
+        primitive->show();
+
+
         primitive->Connect(dynamic_cast<Transform*>((*entity_item)->FindComponent(COMPONENT_TYPE::COMPONENT_TRANSFORM)));
 
         std::cout<<(*entity_item)->GetName()<<std::endl;

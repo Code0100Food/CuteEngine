@@ -43,7 +43,7 @@ private:
 public:
 
     Ui::MainWindow* uiMain(){return _uiMain;}
-    QVBoxLayout* scene_render();
+    QWidget* scene_render();
     HierarchyWidget* hierarchy(){return _hierarchy;}
     Inspector* inspector() {return _inspector;}
 

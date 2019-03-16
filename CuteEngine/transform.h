@@ -43,15 +43,15 @@ private:
 public:
 
     const QDoubleSpinBox* GetPositionXButton() const { return position_x;}
-    QDoubleSpinBox* GetPositionYButton(){ return position_y;}
+    const QDoubleSpinBox* GetPositionYButton() const { return position_y;}
     QDoubleSpinBox* GetPositionZButton(){ return position_z;}
 
     QDoubleSpinBox* GetRotationXButton(){ return rotation_x;}
     QDoubleSpinBox* GetRotationYButton(){ return rotation_y;}
     QDoubleSpinBox* GetRotationZButton(){ return rotation_z;}
 
-    QDoubleSpinBox* GetScaleXButton(){ return scale_x;}
-    QDoubleSpinBox* GetScaleYButton(){ return scale_y;}
+    const QDoubleSpinBox* GetScaleXButton() const { return scale_x;}
+    const QDoubleSpinBox* GetScaleYButton() const { return scale_y;}
     QDoubleSpinBox* GetScaleZButton(){ return scale_z;}
 
 public slots:

@@ -8,6 +8,7 @@ class QPaintEvent;
 class QComboBox;
 class QLabel;
 class Transform;
+class QVBoxLayout;
 
 enum E_PRIMITIVE_TYPE
 {
@@ -58,6 +59,7 @@ public:
 
     void Connect(Transform* target_trans);
 
+    void GoToInspector(QVBoxLayout* inspector_layout) override;
     void ShowUI() override;
     void HideUI() override;
 
@@ -73,12 +75,17 @@ private:
     E_LINE_TYPE line_type;
 
     QLabel* title = nullptr;
+    QVBoxLayout* layout = nullptr;
     QComboBox* select_primitive_box = nullptr;
     QComboBox* select_line_type_box = nullptr;
 
 public slots:
 
     void SetXPosition(double x_pos);
+    void SetYPosition(double y_pos);
+
+    void SetXScale(double x_pos);
+    void SetYScale(double y_pos);
 
     void ChangePrimitive();
 

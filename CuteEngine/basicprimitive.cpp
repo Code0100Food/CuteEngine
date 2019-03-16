@@ -14,7 +14,7 @@ BasicPrimitive::BasicPrimitive(E_PRIMITIVE_TYPE _type, QWidget* parent) : Compon
     std::cout << "Basic Primitive component created" << std::endl;
 
     //UI initialization
-    QVBoxLayout* layout = new QVBoxLayout();
+    layout = new QVBoxLayout();
 
     //Window title
     title = new QLabel("Basic Primitive");
@@ -30,7 +30,7 @@ BasicPrimitive::BasicPrimitive(E_PRIMITIVE_TYPE _type, QWidget* parent) : Compon
     select_line_type_box = new QComboBox();
     select_line_type_box->addItem("Solid Line");
 
-    setLayout(layout);
+    //setLayout(layout);
 }
 
 BasicPrimitive::~BasicPrimitive()
@@ -54,7 +54,7 @@ void BasicPrimitive::paintEvent(QPaintEvent* _event)
     painter.setPen(Pen);
 
     // Draw
-    QRect Rect(x,y,10.0f,10.0f);
+    QRect Rect(x,y,width,height);
     switch (primitive_type)
     {
         case  PT_CIRCLE:
@@ -160,11 +160,18 @@ E_PRIMITIVE_TYPE BasicPrimitive::GetPrimitiveType() const
 
 void BasicPrimitive::Connect(Transform* target_trans)
 {
-    //connect(select_primitive_box, SIGNAL(currentIndexChanged(int)), this, SLOT(ChangePrimitive()));
-
-    //SetXPosition()
-
+    //Transform Conections
     connect(target_trans->GetPositionXButton(),SIGNAL(valueChanged(double)),this,SLOT(SetXPosition(double)));
+    connect(target_trans->GetPositionYButton(),SIGNAL(valueChanged(double)),this,SLOT(SetYPosition(double)));
+    connect(target_trans->GetScaleXButton(),SIGNAL(valueChanged(double)),this,SLOT(SetXScale(double)));
+    connect(target_trans->GetScaleYButton(),SIGNAL(valueChanged(double)),this,SLOT(SetYScale(double)));
+}
+
+void BasicPrimitive::GoToInspector(QVBoxLayout *inspector_layout)
+{
+    inspector_layout->addWidget(title);
+    inspector_layout->addWidget(select_primitive_box);
+    inspector_layout->addWidget(select_line_type_box);
 }
 
 void BasicPrimitive::ShowUI()
@@ -181,6 +188,21 @@ void BasicPrimitive::HideUI()
 void BasicPrimitive::SetXPosition(double value)
 {
     x = static_cast<float>(value);
+}
+
+void BasicPrimitive::SetYPosition(double value)
+{
+   y = static_cast<float>(value);
+}
+
+void BasicPrimitive::SetXScale(double value)
+{
+   width = static_cast<float>(value);
+}
+
+void BasicPrimitive::SetYScale(double value)
+{
+   height = static_cast<float>(value);
 }
 
 void BasicPrimitive::ChangePrimitive()
