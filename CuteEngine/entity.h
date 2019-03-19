@@ -15,6 +15,8 @@ public:
     Entity(const Entity& _entity);
     ~Entity();
 
+    void Update();
+
 private:
 
     int id;

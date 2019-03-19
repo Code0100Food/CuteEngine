@@ -15,6 +15,9 @@ class Rendering;
 class Inspector;
 class HierarchyWidget;
 class QVBoxLayout;
+class QTimer;
+
+#define UPDATE_DT 16
 
 class MainWindow : public QMainWindow
 {
@@ -22,6 +25,7 @@ class MainWindow : public QMainWindow
 
 public slots:
 
+    void Update();
     void openProject();
     void saveProject();
     void customExit();
@@ -39,6 +43,7 @@ private:
 
     HierarchyWidget* _hierarchy = nullptr;
     Inspector* _inspector = nullptr;
+    QTimer* timer = nullptr;
 
 public:
 

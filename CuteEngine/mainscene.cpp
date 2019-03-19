@@ -20,6 +20,14 @@ MainScene::~MainScene()
     entities.clear();
 }
 
+void MainScene::Update()
+{
+    for(std::list<Entity*>::iterator item = entities.begin(); item != entities.end(); item++)
+    {
+        item._Ptr->_Myval->Update();
+    }
+}
+
 void MainScene::AddEntity(Entity *new_entity)
 {
     if (new_entity != nullptr)

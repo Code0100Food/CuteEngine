@@ -4,6 +4,8 @@
 #include "hierarchywidget.h"
 #include "QLayout"
 #include <iostream>
+#include <QTimer>
+#include "mainscene.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -55,12 +57,22 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(_uiMain->actionOpen_Project,SIGNAL(triggered()),this,SLOT(openProject()));
     connect(_uiMain->actionSave_Project,SIGNAL(triggered()),this,SLOT(saveProject()));
     connect(_uiMain->actionExit,SIGNAL(triggered()),this,SLOT(customExit()));
+
+    timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(Update()));
+    timer->start(UPDATE_DT);
 }
 
 MainWindow::~MainWindow()
 {
     delete _uiMain;
     delete _uiRendering;
+    delete timer;
+}
+
+void MainWindow::Update()
+{
+    customApp->main_scene()->Update();
 }
 
 void MainWindow::openProject()

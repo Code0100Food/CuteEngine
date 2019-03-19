@@ -34,6 +34,7 @@ public:
     BasicPrimitive(E_PRIMITIVE_TYPE _type = PT_CIRCLE, QWidget* parent = nullptr);
     ~BasicPrimitive() override;
 
+    void Update() override;
     void paintEvent(QPaintEvent* _event)override;
 
 public:

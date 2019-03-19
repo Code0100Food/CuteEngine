@@ -17,6 +17,8 @@ public:
 
 public:
 
+    void Update();
+
     void AddEntity(Entity* new_entity);
     void RemoveEntities();
     void RemoveEntity(std::string entity_to_remove);

@@ -21,6 +21,8 @@ public:
     explicit Component(QWidget* parent = nullptr);
     ~Component() override;
 
+    virtual void Update();
+
 protected:
 
     std::string name = "undef";

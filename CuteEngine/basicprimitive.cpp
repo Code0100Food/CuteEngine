@@ -39,6 +39,11 @@ BasicPrimitive::~BasicPrimitive()
     delete select_line_type_box;
 }
 
+void BasicPrimitive::Update()
+{
+
+}
+
 void BasicPrimitive::paintEvent(QPaintEvent* _event)
 {
     QPainter painter(this);

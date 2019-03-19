@@ -31,6 +31,14 @@ Entity::~Entity()
     name.clear();
 }
 
+void Entity::Update()
+{
+    for(size_t i = 0; i < components.size(); i++)
+    {
+        components[i]->Update();
+    }
+}
+
 std::string Entity::GetName() const
 {
     return name;
