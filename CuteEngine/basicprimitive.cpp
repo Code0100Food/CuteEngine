@@ -7,6 +7,7 @@
 #include <QPainter>
 #include <transform.h>
 #include <QDoubleSpinBox>
+#include <QPushButton>
 
 BasicPrimitive::BasicPrimitive(E_PRIMITIVE_TYPE _type, QWidget* parent) : Component(parent), primitive_type(_type), line_type(LT_SOLID)
 {
@@ -29,8 +30,16 @@ BasicPrimitive::BasicPrimitive(E_PRIMITIVE_TYPE _type, QWidget* parent) : Compon
 
     select_line_type_box = new QComboBox();
     select_line_type_box->addItem("Solid Line");
+    select_line_type_box->addItem("Dash Line");
+    select_line_type_box->addItem("Dot Line");
+    connect(select_line_type_box, SIGNAL(currentIndexChanged(int)), this, SLOT(SetLineType()));
+    layout->addWidget(select_line_type_box);
 
-    //setLayout(layout);
+    pick_color_btn = new QPushButton("Pick Color");
+    connect(pick_color_btn, SIGNAL(clicked(bool)), this, SLOT(SetColorFromColorPicker()));
+    layout->addWidget(pick_color_btn);
+
+    setLayout(layout);
 }
 
 BasicPrimitive::~BasicPrimitive()
@@ -41,7 +50,7 @@ BasicPrimitive::~BasicPrimitive()
 
 void BasicPrimitive::Update()
 {
-
+    this->update();
 }
 
 void BasicPrimitive::paintEvent(QPaintEvent* _event)
@@ -59,7 +68,7 @@ void BasicPrimitive::paintEvent(QPaintEvent* _event)
     painter.setPen(Pen);
 
     // Draw
-    QRect Rect(x,y,width,height);
+    QRect Rect(x, y, width, height);
     switch (primitive_type)
     {
         case  PT_CIRCLE:
@@ -183,11 +192,15 @@ void BasicPrimitive::ShowUI()
 {
     title->show();
     select_primitive_box->show();
+    select_line_type_box->show();
+    pick_color_btn->show();
 }
 void BasicPrimitive::HideUI()
 {
     title->hide();
     select_primitive_box->hide();
+    select_line_type_box->hide();
+    pick_color_btn->hide();
 }
 
 void BasicPrimitive::SetXPosition(double value)
@@ -217,6 +230,12 @@ void BasicPrimitive::ChangePrimitive()
     {
         primitive_type = (E_PRIMITIVE_TYPE)index;
     }
+}
+
+void BasicPrimitive::SetColorFromColorPicker()
+{
+    ColorDialog color_dialog;
+    SetColor(color_dialog.PickColor());
 }
 
 

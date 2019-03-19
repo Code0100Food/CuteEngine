@@ -3,12 +3,14 @@
 
 #include "component.h"
 #include <QColor>
+#include <QColorDialog>
 
 class QPaintEvent;
 class QComboBox;
 class QLabel;
 class Transform;
 class QVBoxLayout;
+class QPushButton;
 
 enum E_PRIMITIVE_TYPE
 {
@@ -23,6 +25,19 @@ enum E_LINE_TYPE
     LT_DASH,
     LT_DOT,
     LT_MAX
+};
+
+class ColorDialog : public QWidget
+{
+public:
+    QColor PickColor()
+    {
+        QColor color = QColorDialog::getColor(Qt::yellow, this );
+        if(color.isValid())
+        {
+            return color;
+        }
+    }
 };
 
 class BasicPrimitive : public Component
@@ -79,6 +94,7 @@ private:
     QVBoxLayout* layout = nullptr;
     QComboBox* select_primitive_box = nullptr;
     QComboBox* select_line_type_box = nullptr;
+    QPushButton* pick_color_btn = nullptr;
 
 public slots:
 
@@ -89,6 +105,7 @@ public slots:
     void SetYScale(double y_pos);
 
     void ChangePrimitive();
+    void SetColorFromColorPicker();
 
 };
 
