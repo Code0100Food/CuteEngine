@@ -108,7 +108,7 @@ void Inspector::CreateBasicPrimitive()
     {
         if((*entity_item)->FindComponent(COMPONENT_TYPE::COMPONENT_PRIMITIVE))continue;
 
-        BasicPrimitive* primitive = new BasicPrimitive(E_PRIMITIVE_TYPE::PT_CIRCLE, customApp->main_window()->scene_render());
+        BasicPrimitive* primitive = new BasicPrimitive(E_PRIMITIVE_TYPE::PT_CIRCLE);
         (*entity_item)->AddComponent(primitive);
         primitive->GoToInspector(layout);
 

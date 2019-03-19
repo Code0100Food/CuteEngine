@@ -9,7 +9,7 @@
 #include <QDoubleSpinBox>
 #include <QPushButton>
 
-BasicPrimitive::BasicPrimitive(E_PRIMITIVE_TYPE _type, QWidget* parent) : Component(parent), primitive_type(_type), line_type(LT_SOLID)
+BasicPrimitive::BasicPrimitive(E_PRIMITIVE_TYPE _type) : primitive_type(_type), line_type(LT_SOLID)
 {
     type = COMPONENT_TYPE::COMPONENT_PRIMITIVE;
     std::cout << "Basic Primitive component created" << std::endl;
@@ -51,37 +51,6 @@ BasicPrimitive::~BasicPrimitive()
 void BasicPrimitive::Update()
 {
     this->update();
-}
-
-void BasicPrimitive::paintEvent(QPaintEvent* _event)
-{
-    QPainter painter(this);
-
-    QBrush Brush;
-    QPen Pen;
-
-    // Brush/Pen configuration
-    Brush.setColor(GetColor());
-    Brush.setStyle(Qt::BrushStyle::SolidPattern);
-    Pen.setStyle(QtGetLineType());
-    painter.setBrush(Brush);
-    painter.setPen(Pen);
-
-    // Draw
-    QRect Rect(x, y, width, height);
-    switch (primitive_type)
-    {
-        case  PT_CIRCLE:
-            painter.drawEllipse(Rect);
-            break;
-        case PT_RECTANGLE:
-            painter.drawRect(Rect);
-            break;
-        case PT_MAX_PRIMITIVE:
-            std::cout << "Type primitive ERROR" << std::endl;
-            break;
-    }
-
 }
 
 void BasicPrimitive::SetX(int _x)

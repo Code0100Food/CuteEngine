@@ -24,17 +24,19 @@ public:
     void RemoveEntity(std::string entity_to_remove);
 
     std::list<Entity*> GetSelectedEntities()const;
+    const std::list<Entity*> GetEntities()const { return entities; }
     Entity* GetSelectedEntity()const;
+
+    Entity* FindEntity(std::string entity_name);
 
     void SetSelectedEntity(std::string entity_name);
     void RenameSelectedEntity(std::string new_entity_name);
+
 private:
 
     std::list<Entity*> entities;
     Entity* selected_entity = nullptr;
     qt_Application* app = nullptr;
-
-    Entity* FindEntity(std::string entity_name);
 
 };
 

@@ -2,7 +2,7 @@
 #include <QPainter>
 #include <iostream>
 
-CircleWidget::CircleWidget(QWidget *aParent) : BasicPrimitive(PT_CIRCLE,aParent)
+CircleWidget::CircleWidget(QWidget *aParent) : BasicPrimitive(PT_CIRCLE)
 {
     setAutoFillBackground(true);
 }

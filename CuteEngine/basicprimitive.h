@@ -46,11 +46,10 @@ class BasicPrimitive : public Component
 
 public:
 
-    BasicPrimitive(E_PRIMITIVE_TYPE _type = PT_CIRCLE, QWidget* parent = nullptr);
+    BasicPrimitive(E_PRIMITIVE_TYPE _type = PT_CIRCLE);
     ~BasicPrimitive() override;
 
     void Update() override;
-    void paintEvent(QPaintEvent* _event)override;
 
 public:
 

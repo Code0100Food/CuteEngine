@@ -105,13 +105,8 @@ void MainWindow::customExit()
     }
 }
 
-void MainWindow::AddWidgetToRender(QWidget* form)
-{
-    _uiMain->Scene_Render->findChild<QVBoxLayout*>("verticalLayout")->addWidget(form);   //layout()->addWidget(form);
-}
-
 QWidget *MainWindow::scene_render()
 {
-    return _uiMain->Scene_Render->findChild<QWidget*>("dockWidgetContents_7");
+    return _uiMain->centralWidget->findChild<QWidget*>("viewport");
 }
 

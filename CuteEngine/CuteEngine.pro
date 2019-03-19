@@ -42,7 +42,8 @@ SOURCES += \
     basicprimitive.cpp \
     component.cpp \
     transform.cpp \
-    inspector.cpp
+    inspector.cpp \
+    viewport.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -56,7 +57,8 @@ HEADERS += \
     basicprimitive.h \
     component.h \
     transform.h \
-    inspector.h
+    inspector.h \
+    viewport.h
 
 FORMS += \
         mainwindow.ui
