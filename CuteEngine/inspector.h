@@ -23,6 +23,8 @@ public:
     void ShowUI();
     void HideUI();
 
+    QVBoxLayout* GetLayout() const {return layout;}
+
 private:
 
     QVBoxLayout* layout = nullptr;

@@ -5,6 +5,8 @@
 #include "ui_mainwindow.h"
 #include "hierarchywidget.h"
 #include "inspector.h"
+#include "component.h"
+#include <QVBoxLayout>
 
 MainScene::MainScene()
 {
@@ -31,7 +33,10 @@ void MainScene::Update()
 void MainScene::AddEntity(Entity *new_entity)
 {
     if (new_entity != nullptr)
+    {
         entities.push_back(new_entity);
+        SetSelectedEntity(new_entity->GetName());
+    }
 
     std::cout<<entities.size()<<std::endl;
 }
@@ -95,7 +100,7 @@ void MainScene::AddEntity(Entity *new_entity)
             selected_entity->Deselect();
         }
 
-        selected_entity = cur_select;
+        selected_entity = cur_select;        
         selected_entity->Select();
         customApp->main_window()->inspector()->ShowUI();
         std::cout<<selected_entity->GetName() + " selected!"<<std::endl;

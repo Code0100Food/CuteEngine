@@ -1,5 +1,11 @@
 #include "entity.h"
 #include "component.h"
+#include "transform.h"
+#include "qt_application.h"
+#include "inspector.h"
+#include "mainwindow.h"
+#include "mainscene.h"
+#include <QVBoxLayout>
 
 Entity::Entity(int _id) : id(_id)
 {
@@ -7,16 +13,35 @@ Entity::Entity(int _id) : id(_id)
     _itoa_s(id, buffer, 10);
     name = "Entity_";
     name += buffer;
+
+    Transform* transform = new Transform();
+    AddComponent(transform);
+
+    customApp->main_window()->inspector()->SetName(name.c_str());
+    customApp->main_window()->inspector()->GetLayout()->addWidget(transform);
+    customApp->main_scene()->SetSelectedEntity(name);
+
 }
 
 Entity::Entity(int _id, const std::string _name) : id(_id), name(_name)
 {
+    Transform* transform = new Transform();
+   AddComponent(transform);
+
+   customApp->main_window()->inspector()->SetName(name.c_str());
+   customApp->main_window()->inspector()->GetLayout()->addWidget(transform);
+   customApp->main_scene()->SetSelectedEntity(name);
 
 }
 
 Entity::Entity(const Entity& _entity) : id(_entity.id), name(_entity.name)
 {
+    Transform* transform = new Transform();
+    AddComponent(transform);
 
+    customApp->main_window()->inspector()->SetName(name.c_str());
+    customApp->main_window()->inspector()->GetLayout()->addWidget(transform);
+    customApp->main_scene()->SetSelectedEntity(name);
 }
 
 Entity::~Entity()

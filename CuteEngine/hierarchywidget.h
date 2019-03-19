@@ -21,6 +21,8 @@ private:
     QPushButton* add_entity = nullptr;
     QPushButton* remove_entity = nullptr;
 
+    void SetNewEntitySelected(std::string name);
+
 public slots:
 
     void AddEntity();

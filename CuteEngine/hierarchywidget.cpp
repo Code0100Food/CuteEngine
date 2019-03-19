@@ -53,11 +53,9 @@ void HierarchyWidget::AddEntity()
     Entity* new_entity = new Entity(id);
     customApp->main_scene()->AddEntity(new_entity);
 
-    //app.GetMainScene()->AddEntity(new_entity);
-
-
     //Add entity to the UI List
     widget_entity_list->addItem(new_entity->GetName().c_str());
+    SetNewEntitySelected(new_entity->GetName());
     id++;
 }
 
@@ -99,3 +97,32 @@ QListWidgetItem* HierarchyWidget::FindEntity(std::string entity_name)
 
     return nullptr;
 }
+
+void HierarchyWidget::SetNewEntitySelected(std::string name)
+{
+    for(int i = 0; i < widget_entity_list->count(); i++)
+    {
+        widget_entity_list->setItemSelected(widget_entity_list->item(i), false);
+    }
+    widget_entity_list->setItemSelected(FindEntity(name), true);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
