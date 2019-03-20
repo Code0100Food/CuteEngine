@@ -32,7 +32,7 @@ BasicPrimitive::BasicPrimitive(E_PRIMITIVE_TYPE _type) : primitive_type(_type), 
     select_line_type_box->addItem("Solid Line");
     select_line_type_box->addItem("Dash Line");
     select_line_type_box->addItem("Dot Line");
-    connect(select_line_type_box, SIGNAL(currentIndexChanged(int)), this, SLOT(SetLineType()));
+    connect(select_line_type_box, SIGNAL(currentIndexChanged(int)), this, SLOT(SetLineTypeComboBox()));
     layout->addWidget(select_line_type_box);
 
     pick_color_btn = new QPushButton("Pick Color");
@@ -46,6 +46,7 @@ BasicPrimitive::~BasicPrimitive()
 {
     delete select_primitive_box;
     delete select_line_type_box;
+    delete pick_color_btn;
 }
 
 void BasicPrimitive::Update()
@@ -107,6 +108,14 @@ void BasicPrimitive::SetLineType(E_LINE_TYPE _type)
 {
     line_type = _type;
 }
+void BasicPrimitive::SetLineTypeComboBox()
+{
+    int index = select_line_type_box->currentIndex();
+    if (line_type != index)
+    {
+        line_type = (E_LINE_TYPE)index;
+    }
+}
 
 E_LINE_TYPE BasicPrimitive::GetLineType() const
 {
@@ -155,6 +164,7 @@ void BasicPrimitive::GoToInspector(QVBoxLayout *inspector_layout)
     inspector_layout->addWidget(title);
     inspector_layout->addWidget(select_primitive_box);
     inspector_layout->addWidget(select_line_type_box);
+    inspector_layout->addWidget(pick_color_btn);
 }
 
 void BasicPrimitive::ShowUI()
