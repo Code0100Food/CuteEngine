@@ -37,8 +37,17 @@ void Viewport::PaintPrimitive(const BasicPrimitive *target)
     // Brush/Pen configuration
     Brush.setColor(target->GetColor());
     Brush.setStyle(Qt::BrushStyle::SolidPattern);
-    Pen.setStyle(target->QtGetLineType());
-    Pen.setWidth(target->GetEdgeWidth());
+    int edge_width = target->GetEdgeWidth();
+    if(edge_width <= 0)
+    {
+        Pen.setStyle(Qt::PenStyle::NoPen);
+    }
+    else
+    {
+        Pen.setStyle(target->QtGetLineType());
+        Pen.setWidth(edge_width);
+    }
+
     painter.setBrush(Brush);
     painter.setPen(Pen);
 

@@ -60,6 +60,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(Update()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(update()));
     timer->start(UPDATE_DT);
 }
 
