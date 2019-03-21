@@ -49,7 +49,9 @@ BasicPrimitive::BasicPrimitive(E_PRIMITIVE_TYPE _type) : primitive_type(_type), 
 }
 
 BasicPrimitive::~BasicPrimitive()
-{
+{      
+    delete layout;
+    delete title;
     delete select_primitive_box;
     delete select_line_type_box;
     delete edge_width_label;

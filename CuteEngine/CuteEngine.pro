@@ -38,7 +38,6 @@ SOURCES += \
     hierarchywidget.cpp \
     mainscene.cpp \
     qt_application.cpp \
-    circlewidget.cpp \
     entity.cpp \
     basicprimitive.cpp \
     component.cpp \
@@ -53,7 +52,6 @@ HEADERS += \
     hierarchywidget.h \
     mainscene.h \
     qt_application.h \
-    circlewidget.h \
     entity.h \
     basicprimitive.h \
     component.h \
