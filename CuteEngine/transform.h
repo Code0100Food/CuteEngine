@@ -44,15 +44,19 @@ public:
 
     const QDoubleSpinBox* GetPositionXButton() const { return position_x;}
     const QDoubleSpinBox* GetPositionYButton() const { return position_y;}
-    QDoubleSpinBox* GetPositionZButton(){ return position_z;}
+    const QDoubleSpinBox* GetPositionZButton(){ return position_z;}
 
-    QDoubleSpinBox* GetRotationXButton(){ return rotation_x;}
-    QDoubleSpinBox* GetRotationYButton(){ return rotation_y;}
-    QDoubleSpinBox* GetRotationZButton(){ return rotation_z;}
+    const QDoubleSpinBox* GetRotationXButton(){ return rotation_x;}
+    const QDoubleSpinBox* GetRotationYButton(){ return rotation_y;}
+    const QDoubleSpinBox* GetRotationZButton(){ return rotation_z;}
 
     const QDoubleSpinBox* GetScaleXButton() const { return scale_x;}
     const QDoubleSpinBox* GetScaleYButton() const { return scale_y;}
-    QDoubleSpinBox* GetScaleZButton(){ return scale_z;}
+    const QDoubleSpinBox* GetScaleZButton(){ return scale_z;}
+
+    const QVector3D* GetPosition(){ return &position; }
+    const QVector3D* GetRotation(){ return &rotation_euler_angles; }
+    const QVector3D* GetScale(){ return &scale; }
 
 public slots:
 

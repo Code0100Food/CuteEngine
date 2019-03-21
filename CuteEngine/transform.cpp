@@ -37,14 +37,20 @@ Transform::Transform(QWidget *aParent) : Component(aParent)
     QLabel* scale_label_z = new QLabel("Z");
     //Spin boxes
     position_x = new QDoubleSpinBox();
+    position_x->setRange(0.0f,1000.0f);
     position_y = new QDoubleSpinBox();
+    position_y->setRange(0.0f,1000.0f);
     position_z = new QDoubleSpinBox();
+    position_z->setRange(0.0f,1000.0f);
     rotation_x = new QDoubleSpinBox();
     rotation_y = new QDoubleSpinBox();
     rotation_z = new QDoubleSpinBox();
     scale_x = new QDoubleSpinBox();
+    scale_x->setRange(0.0f,1000.0f);
     scale_y = new QDoubleSpinBox();
+    scale_y->setRange(0.0f,1000.0f);
     scale_z = new QDoubleSpinBox();
+    scale_z->setRange(0.0f,1000.0f);
 
     scale_x->setValue(1.0);
     scale_y->setValue(1.0);

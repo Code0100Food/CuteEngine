@@ -112,10 +112,9 @@ void Inspector::CreateBasicPrimitive()
         (*entity_item)->AddComponent(primitive);
         primitive->GoToInspector(layout);
 
-        primitive->show();
-
-
-        primitive->Connect(dynamic_cast<Transform*>((*entity_item)->FindComponent(COMPONENT_TYPE::COMPONENT_TRANSFORM)));
+        Transform* target_trans = dynamic_cast<Transform*>((*entity_item)->FindComponent(COMPONENT_TYPE::COMPONENT_TRANSFORM));
+        primitive->Connect(target_trans);
+        primitive->SetTransformValues(target_trans);
 
         std::cout<<(*entity_item)->GetName()<<std::endl;
     }

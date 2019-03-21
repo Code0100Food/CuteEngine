@@ -75,6 +75,7 @@ public:
     E_PRIMITIVE_TYPE GetPrimitiveType() const;
 
     void Connect(Transform* target_trans);
+    void SetTransformValues(Transform* target_trans);
 
     void GoToInspector(QVBoxLayout* inspector_layout) override;
     void ShowUI() override;

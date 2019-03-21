@@ -164,6 +164,15 @@ void BasicPrimitive::Connect(Transform* target_trans)
     connect(target_trans->GetScaleYButton(),SIGNAL(valueChanged(double)),this,SLOT(SetYScale(double)));
 }
 
+void BasicPrimitive::SetTransformValues(Transform *target_trans)
+{
+    this->x = target_trans->GetPosition()->x();
+    this->y = target_trans->GetPosition()->y();
+
+    this->width = PRIMITIVE_SIZE * target_trans->GetScale()->x();
+    this->height = PRIMITIVE_SIZE * target_trans->GetScale()->y();
+}
+
 void BasicPrimitive::GoToInspector(QVBoxLayout *inspector_layout)
 {
     inspector_layout->addWidget(title);
@@ -205,12 +214,12 @@ void BasicPrimitive::SetYPosition(double value)
 
 void BasicPrimitive::SetXScale(double value)
 {
-   width = 2 * static_cast<float>(value);
+   width = PRIMITIVE_SIZE * static_cast<float>(value);
 }
 
 void BasicPrimitive::SetYScale(double value)
 {
-   height = 2 * static_cast<float>(value);
+   height = PRIMITIVE_SIZE * static_cast<float>(value);
 }
 
 void BasicPrimitive::ChangePrimitive()
