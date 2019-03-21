@@ -108,14 +108,6 @@ void BasicPrimitive::SetLineType(E_LINE_TYPE _type)
 {
     line_type = _type;
 }
-void BasicPrimitive::SetLineTypeComboBox()
-{
-    int index = select_line_type_box->currentIndex();
-    if (line_type != index)
-    {
-        line_type = (E_LINE_TYPE)index;
-    }
-}
 
 E_LINE_TYPE BasicPrimitive::GetLineType() const
 {
@@ -208,6 +200,15 @@ void BasicPrimitive::ChangePrimitive()
     if (primitive_type != index)
     {
         primitive_type = (E_PRIMITIVE_TYPE)index;
+    }
+}
+
+void BasicPrimitive::SetLineTypeComboBox()
+{
+    int index = select_line_type_box->currentIndex();
+    if (line_type != index)
+    {
+        line_type = (E_LINE_TYPE)index;
     }
 }
 

@@ -67,7 +67,6 @@ public:
     const QColor GetColor() const;
 
     void SetLineType(E_LINE_TYPE _type);
-    void SetLineTypeComboBox();
     E_LINE_TYPE GetLineType() const;
     Qt::PenStyle QtGetLineType() const;
 
@@ -105,6 +104,7 @@ public slots:
     void SetYScale(double y_pos);
 
     void ChangePrimitive();
+    void SetLineTypeComboBox();
     void SetColorFromColorPicker();
 
 };
