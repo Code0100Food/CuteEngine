@@ -16,6 +16,7 @@ class Inspector;
 class HierarchyWidget;
 class QVBoxLayout;
 class QTimer;
+class QScrollArea;
 
 #define UPDATE_DT 16
 
@@ -43,6 +44,7 @@ private:
 
     HierarchyWidget* _hierarchy = nullptr;
     Inspector* _inspector = nullptr;
+    QScrollArea* _scroll = nullptr;
     QTimer* timer = nullptr;
 
 public:

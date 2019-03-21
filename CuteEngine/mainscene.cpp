@@ -17,7 +17,10 @@ MainScene::~MainScene()
 {
     for(std::list<Entity*>::iterator item = entities.begin(); item != entities.end(); item++)
     {
-        delete (*item);
+        if(*item != nullptr)
+        {
+            delete (*item);
+        }
     }
     entities.clear();
 }

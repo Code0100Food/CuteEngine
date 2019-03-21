@@ -9,6 +9,7 @@
 #include <QTextEdit>
 #include <QSplitter>
 #include "mainwindow.h"
+#include <qscrollarea.h>
 
 Inspector::Inspector(QWidget* parent) : QWidget(parent)
 {
@@ -24,6 +25,8 @@ Inspector::~Inspector()
 
 void Inspector::Start()
 {
+    //QScrollArea* scroll = new QScrollArea(this);
+
     layout = new QVBoxLayout();
 
     //Entity Name Display

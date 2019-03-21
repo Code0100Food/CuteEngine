@@ -46,11 +46,6 @@ Entity::Entity(const Entity& _entity) : id(_entity.id), name(_entity.name)
 
 Entity::~Entity()
 {
-    size_t len = components.size();
-    for(size_t k = 0; k < len; k++)
-    {
-        delete components[k];
-    }
     components.clear();
 
     name.clear();
