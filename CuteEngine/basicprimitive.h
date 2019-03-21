@@ -11,6 +11,7 @@ class QLabel;
 class Transform;
 class QVBoxLayout;
 class QPushButton;
+class QSpinBox;
 
 enum E_PRIMITIVE_TYPE
 {
@@ -69,6 +70,7 @@ public:
     void SetLineType(E_LINE_TYPE _type);
     E_LINE_TYPE GetLineType() const;
     Qt::PenStyle QtGetLineType() const;
+    int GetEdgeWidth()const;
 
     E_PRIMITIVE_TYPE GetPrimitiveType() const;
 
@@ -88,11 +90,14 @@ private:
     QColor color;
     E_PRIMITIVE_TYPE primitive_type;
     E_LINE_TYPE line_type;
+    int edge_width;
 
     QLabel* title = nullptr;
     QVBoxLayout* layout = nullptr;
     QComboBox* select_primitive_box = nullptr;
     QComboBox* select_line_type_box = nullptr;
+    QLabel* edge_width_label = nullptr;
+    QSpinBox* edge_width_spin_box = nullptr;
     QPushButton* pick_color_btn = nullptr;
 
 public slots:
@@ -105,6 +110,7 @@ public slots:
 
     void ChangePrimitive();
     void SetLineTypeComboBox();
+    void SetEdgeWidth(int value);
     void SetColorFromColorPicker();
 
 };

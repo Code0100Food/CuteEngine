@@ -38,6 +38,7 @@ void Viewport::PaintPrimitive(const BasicPrimitive *target)
     Brush.setColor(target->GetColor());
     Brush.setStyle(Qt::BrushStyle::SolidPattern);
     Pen.setStyle(target->QtGetLineType());
+    Pen.setWidth(target->GetEdgeWidth());
     painter.setBrush(Brush);
     painter.setPen(Pen);
 

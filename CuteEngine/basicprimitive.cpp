@@ -6,7 +6,7 @@
 #include <iostream>
 #include <QPainter>
 #include <transform.h>
-#include <QDoubleSpinBox>
+#include <QSpinBox>
 #include <QPushButton>
 
 BasicPrimitive::BasicPrimitive(E_PRIMITIVE_TYPE _type) : primitive_type(_type), line_type(LT_SOLID)
@@ -35,6 +35,12 @@ BasicPrimitive::BasicPrimitive(E_PRIMITIVE_TYPE _type) : primitive_type(_type), 
     connect(select_line_type_box, SIGNAL(currentIndexChanged(int)), this, SLOT(SetLineTypeComboBox()));
     layout->addWidget(select_line_type_box);
 
+    edge_width_label = new QLabel("Edge Width:");
+    layout->addWidget(edge_width_label);
+    edge_width_spin_box = new QSpinBox();
+    connect(edge_width_spin_box, SIGNAL(valueChanged(int)), this, SLOT(SetEdgeWidth(int)));
+    layout->addWidget(edge_width_spin_box);
+
     pick_color_btn = new QPushButton("Pick Color");
     connect(pick_color_btn, SIGNAL(clicked(bool)), this, SLOT(SetColorFromColorPicker()));
     layout->addWidget(pick_color_btn);
@@ -46,6 +52,8 @@ BasicPrimitive::~BasicPrimitive()
 {
     delete select_primitive_box;
     delete select_line_type_box;
+    delete edge_width_label;
+    delete edge_width_spin_box;
     delete pick_color_btn;
 }
 
@@ -137,6 +145,11 @@ Qt::PenStyle BasicPrimitive::QtGetLineType() const
     return ret;
 }
 
+int BasicPrimitive::GetEdgeWidth() const
+{
+    return edge_width;
+}
+
 E_PRIMITIVE_TYPE BasicPrimitive::GetPrimitiveType() const
 {
     return primitive_type;
@@ -156,6 +169,8 @@ void BasicPrimitive::GoToInspector(QVBoxLayout *inspector_layout)
     inspector_layout->addWidget(title);
     inspector_layout->addWidget(select_primitive_box);
     inspector_layout->addWidget(select_line_type_box);
+    inspector_layout->addWidget(edge_width_label);
+    inspector_layout->addWidget(edge_width_spin_box);
     inspector_layout->addWidget(pick_color_btn);
 }
 
@@ -164,6 +179,8 @@ void BasicPrimitive::ShowUI()
     title->show();
     select_primitive_box->show();
     select_line_type_box->show();
+    edge_width_label->show();
+    edge_width_spin_box->show();
     pick_color_btn->show();
 }
 void BasicPrimitive::HideUI()
@@ -171,6 +188,8 @@ void BasicPrimitive::HideUI()
     title->hide();
     select_primitive_box->hide();
     select_line_type_box->hide();
+    edge_width_label->hide();
+    edge_width_spin_box->hide();
     pick_color_btn->hide();
 }
 
@@ -218,4 +237,7 @@ void BasicPrimitive::SetColorFromColorPicker()
     SetColor(color_dialog.PickColor());
 }
 
-
+void BasicPrimitive::SetEdgeWidth(int value)
+{
+    edge_width = value;
+}
