@@ -45,6 +45,10 @@ BasicPrimitive::BasicPrimitive(E_PRIMITIVE_TYPE _type) : primitive_type(_type), 
     connect(pick_color_btn, SIGNAL(clicked(bool)), this, SLOT(SetColorFromColorPicker()));
     layout->addWidget(pick_color_btn);
 
+    pick_edge_color_btn = new QPushButton("Pick Edge Color");
+    connect(pick_edge_color_btn, SIGNAL(clicked(bool)), this, SLOT(SetEdgeColorFromColorPicker()));
+    layout->addWidget(pick_edge_color_btn);
+
     setLayout(layout);
 }
 
@@ -57,6 +61,7 @@ BasicPrimitive::~BasicPrimitive()
     delete edge_width_label;
     delete edge_width_spin_box;
     delete pick_color_btn;
+    delete pick_edge_color_btn;
 }
 
 void BasicPrimitive::Update()
@@ -109,9 +114,19 @@ void BasicPrimitive::SetColor(QColor _color)
     color = _color;
 }
 
+void BasicPrimitive::SetEdgeColor(QColor _edge_color)
+{
+    edge_color = _edge_color;
+}
+
 const QColor BasicPrimitive::GetColor() const
 {
     return color;
+}
+
+const QColor BasicPrimitive::GetEdgeColor() const
+{
+    return edge_color;
 }
 
 void BasicPrimitive::SetLineType(E_LINE_TYPE _type)
@@ -185,6 +200,7 @@ void BasicPrimitive::GoToInspector(QVBoxLayout *inspector_layout)
     inspector_layout->addWidget(edge_width_label);
     inspector_layout->addWidget(edge_width_spin_box);
     inspector_layout->addWidget(pick_color_btn);
+    inspector_layout->addWidget(pick_edge_color_btn);
 }
 
 void BasicPrimitive::ShowUI()
@@ -195,6 +211,7 @@ void BasicPrimitive::ShowUI()
     edge_width_label->show();
     edge_width_spin_box->show();
     pick_color_btn->show();
+    pick_edge_color_btn->show();
 }
 void BasicPrimitive::HideUI()
 {
@@ -204,6 +221,7 @@ void BasicPrimitive::HideUI()
     edge_width_label->hide();
     edge_width_spin_box->hide();
     pick_color_btn->hide();
+    pick_edge_color_btn->hide();
 }
 
 void BasicPrimitive::SetXPosition(double value)
@@ -248,6 +266,12 @@ void BasicPrimitive::SetColorFromColorPicker()
 {
     ColorDialog color_dialog;
     SetColor(color_dialog.PickColor());
+}
+
+void BasicPrimitive::SetEdgeColorFromColorPicker()
+{
+    ColorDialog color_dialog;
+    SetEdgeColor(color_dialog.PickColor());
 }
 
 void BasicPrimitive::SetEdgeWidth(int value)

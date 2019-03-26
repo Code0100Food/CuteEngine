@@ -46,6 +46,7 @@ void Viewport::PaintPrimitive(const BasicPrimitive *target)
     {
         Pen.setStyle(target->QtGetLineType());
         Pen.setWidth(edge_width);
+        Pen.setColor(target->GetEdgeColor());
     }
 
     painter.setBrush(Brush);

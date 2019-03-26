@@ -65,7 +65,9 @@ public:
     int GetHeight()const;
 
     void SetColor(QColor _color);
+    void SetEdgeColor(QColor _edge_color);
     const QColor GetColor() const;
+    const QColor GetEdgeColor() const;
 
     void SetLineType(E_LINE_TYPE _type);
     E_LINE_TYPE GetLineType() const;
@@ -89,6 +91,7 @@ private:
     float height = 1.0f;
 
     QColor color;
+    QColor edge_color;
     E_PRIMITIVE_TYPE primitive_type;
     E_LINE_TYPE line_type;
     int edge_width;
@@ -99,6 +102,7 @@ private:
     QComboBox* select_line_type_box = nullptr;
     QLabel* edge_width_label = nullptr;
     QSpinBox* edge_width_spin_box = nullptr;
+    QPushButton* pick_edge_color_btn = nullptr;
     QPushButton* pick_color_btn = nullptr;
 
 public slots:
@@ -113,6 +117,7 @@ public slots:
     void SetLineTypeComboBox();
     void SetEdgeWidth(int value);
     void SetColorFromColorPicker();
+    void SetEdgeColorFromColorPicker();
 
 };
 
