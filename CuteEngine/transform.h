@@ -24,7 +24,7 @@ private:
     QVector3D position;
     QVector3D rotation_euler_angles;
     QQuaternion rotation_quaternion;
-    QVector3D scale;
+    QVector3D scale = QVector3D(1.0f,1.0f,1.0f);
 
     QMatrix4x4 inherited_transform;
 

@@ -162,8 +162,10 @@ void BasicPrimitive::Connect(Transform* target_trans)
     //Transform Conections
     connect(target_trans->GetPositionXButton(),SIGNAL(valueChanged(double)),this,SLOT(SetXPosition(double)));
     connect(target_trans->GetPositionYButton(),SIGNAL(valueChanged(double)),this,SLOT(SetYPosition(double)));
+    connect(target_trans->GetPositionZButton(),SIGNAL(valueChanged(double)),this,SLOT(SetZPosition(double)));
     connect(target_trans->GetScaleXButton(),SIGNAL(valueChanged(double)),this,SLOT(SetXScale(double)));
     connect(target_trans->GetScaleYButton(),SIGNAL(valueChanged(double)),this,SLOT(SetYScale(double)));
+    connect(target_trans->GetScaleZButton(),SIGNAL(valueChanged(double)),this,SLOT(SetZScale(double)));
 }
 
 void BasicPrimitive::SetTransformValues(Transform *target_trans)

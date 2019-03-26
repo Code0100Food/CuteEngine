@@ -63,6 +63,7 @@ Transform::Transform(QWidget *aParent) : Component(aParent)
     grid->addWidget(position_y,0,4);
     grid->addWidget(position_label_z,0,5);
     grid->addWidget(position_z,0,6);
+
     //Position connections
     connect(position_x,SIGNAL(valueChanged(double)),this,SLOT(SetXPosition(double)));
     connect(position_y,SIGNAL(valueChanged(double)),this,SLOT(SetYPosition(double)));
@@ -76,6 +77,12 @@ Transform::Transform(QWidget *aParent) : Component(aParent)
     grid->addWidget(rotation_y,1,4);
     grid->addWidget(rotation_label_z,1,5);
     grid->addWidget(rotation_z,1,6);
+
+    //Rotation connections
+    connect(rotation_x,SIGNAL(valueChanged(double)),this,SLOT(SetXRotation(double)));
+    connect(rotation_y,SIGNAL(valueChanged(double)),this,SLOT(SetYRotation(double)));
+    connect(rotation_z,SIGNAL(valueChanged(double)),this,SLOT(SetZRotation(double)));
+
     //Scale
     grid->addWidget(scale_label,2,0);
     grid->addWidget(scale_label_x,2,1);
@@ -84,6 +91,11 @@ Transform::Transform(QWidget *aParent) : Component(aParent)
     grid->addWidget(scale_y,2,4);
     grid->addWidget(scale_label_z,2,5);
     grid->addWidget(scale_z,2,6);
+
+    //Scale connections
+    connect(scale_x,SIGNAL(valueChanged(double)),this,SLOT(SetXScale(double)));
+    connect(scale_y,SIGNAL(valueChanged(double)),this,SLOT(SetYScale(double)));
+    connect(scale_z,SIGNAL(valueChanged(double)),this,SLOT(SetZScale(double)));
 
     main_layout->addLayout(grid);
 

@@ -93,7 +93,7 @@ void MainScene::AddEntity(Entity *new_entity)
  }
 
  void MainScene::SetSelectedEntity(std::string entity_name)
- {
+ {   
     Entity* cur_select = FindEntity(entity_name);
 
     if(cur_select != nullptr)
@@ -103,10 +103,13 @@ void MainScene::AddEntity(Entity *new_entity)
             selected_entity->Deselect();
         }
 
-        selected_entity = cur_select;        
-        selected_entity->Select();
-        customApp->main_window()->inspector()->ShowUI();
-        std::cout<<selected_entity->GetName() + " selected!"<<std::endl;
+        selected_entity = cur_select;
+        if(selected_entity != nullptr)
+        {
+            selected_entity->Select();
+            customApp->main_window()->inspector()->ShowUI();
+            std::cout<<selected_entity->GetName() + " selected!"<<std::endl;
+        }
     }
     else
     {
