@@ -87,5 +87,6 @@ A simple editor of scenes made of vector shapes.
   - void SetYScale(double value);
   - void SetZScale(double value);
 
-### Color Dialog
-- QColorDialog::getColor(...);
+### Dialogs
+- Color Dialog
+  - QColorDialog::getColor(...);
