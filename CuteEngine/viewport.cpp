@@ -52,9 +52,15 @@ void Viewport::PaintPrimitive(const BasicPrimitive *target)
     painter.setBrush(Brush);
     painter.setPen(Pen);
 
+    painter.save();
+
+    painter.translate(target->GetX() + target->GetWidth() * 0.5, target->GetY() + target->GetHeight() * 0.5);
+
+    painter.rotate(static_cast<double>(target->GetRotation()));
+
     // Draw
-    QRect Rect(target->GetX(),target->GetY(),target->GetWidth(),target->GetHeight());
-    painter.drawEllipse(Rect);
+    QRect Rect(- target->GetWidth() * 0.5, - target->GetHeight() * 0.5,target->GetWidth(),target->GetHeight());
+
     switch (target->GetPrimitiveType())
     {
         case  PT_CIRCLE:
@@ -67,5 +73,7 @@ void Viewport::PaintPrimitive(const BasicPrimitive *target)
             std::cout << "Type primitive ERROR" << std::endl;
             break;
     }
+
+    painter.restore();
 }
 

@@ -42,16 +42,21 @@ Transform::Transform(QWidget *aParent) : Component(aParent)
     position_y->setRange(0.0f,1000.0f);
     position_z = new QDoubleSpinBox();
     position_z->setRange(0.0f,1000.0f);
+    position_z->setEnabled(false);
     rotation_x = new QDoubleSpinBox();
+    rotation_x->setEnabled(false);
     rotation_y = new QDoubleSpinBox();
+    rotation_y->setEnabled(false);
     rotation_z = new QDoubleSpinBox();
+    rotation_z->setRange(-360.0f,360.0f);
     scale_x = new QDoubleSpinBox();
     scale_x->setRange(0.0f,1000.0f);
     scale_y = new QDoubleSpinBox();
     scale_y->setRange(0.0f,1000.0f);
     scale_z = new QDoubleSpinBox();
     scale_z->setRange(0.0f,1000.0f);
-
+    scale_z->setEnabled(false);
+    //Initial values
     scale_x->setValue(1.0);
     scale_y->setValue(1.0);
 

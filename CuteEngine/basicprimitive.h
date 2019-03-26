@@ -63,6 +63,7 @@ public:
     int GetY()const;
     int GetWidth()const;
     int GetHeight()const;
+    float GetRotation()const;
 
     void SetColor(QColor _color);
     void SetEdgeColor(QColor _edge_color);
@@ -89,12 +90,13 @@ private:
     float y = 0.0f;
     float width = 1.0f;
     float height = 1.0f;
+    float rotation = 0.0f;
 
     QColor color;
     QColor edge_color;
     E_PRIMITIVE_TYPE primitive_type;
     E_LINE_TYPE line_type;
-    int edge_width;
+    int edge_width = 1;
 
     QLabel* title = nullptr;
     QVBoxLayout* layout = nullptr;
@@ -112,6 +114,8 @@ public slots:
 
     void SetXScale(double x_pos);
     void SetYScale(double y_pos);
+
+    void SetRotation(double _rot);
 
     void ChangePrimitive();
     void SetLineTypeComboBox();

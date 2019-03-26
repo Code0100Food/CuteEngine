@@ -28,6 +28,7 @@ BasicPrimitive::BasicPrimitive(E_PRIMITIVE_TYPE _type) : primitive_type(_type), 
     connect(select_primitive_box, SIGNAL(currentIndexChanged(int)), this, SLOT(ChangePrimitive()));
     layout->addWidget(select_primitive_box);
 
+    //Line type
     select_line_type_box = new QComboBox();
     select_line_type_box->addItem("Solid Line");
     select_line_type_box->addItem("Dash Line");
@@ -35,16 +36,20 @@ BasicPrimitive::BasicPrimitive(E_PRIMITIVE_TYPE _type) : primitive_type(_type), 
     connect(select_line_type_box, SIGNAL(currentIndexChanged(int)), this, SLOT(SetLineTypeComboBox()));
     layout->addWidget(select_line_type_box);
 
+    //Edge width
     edge_width_label = new QLabel("Edge Width:");
     layout->addWidget(edge_width_label);
     edge_width_spin_box = new QSpinBox();
+    edge_width_spin_box->setValue(GetEdgeWidth());
     connect(edge_width_spin_box, SIGNAL(valueChanged(int)), this, SLOT(SetEdgeWidth(int)));
     layout->addWidget(edge_width_spin_box);
 
+    //Color picker
     pick_color_btn = new QPushButton("Pick Color");
     connect(pick_color_btn, SIGNAL(clicked(bool)), this, SLOT(SetColorFromColorPicker()));
     layout->addWidget(pick_color_btn);
 
+    //Edge color picker
     pick_edge_color_btn = new QPushButton("Pick Edge Color");
     connect(pick_edge_color_btn, SIGNAL(clicked(bool)), this, SLOT(SetEdgeColorFromColorPicker()));
     layout->addWidget(pick_edge_color_btn);
@@ -107,6 +112,11 @@ int BasicPrimitive::GetWidth()const
 int BasicPrimitive::GetHeight()const
 {
     return height;
+}
+
+float BasicPrimitive::GetRotation() const
+{
+    return rotation;
 }
 
 void BasicPrimitive::SetColor(QColor _color)
@@ -177,10 +187,11 @@ void BasicPrimitive::Connect(Transform* target_trans)
     //Transform Conections
     connect(target_trans->GetPositionXButton(),SIGNAL(valueChanged(double)),this,SLOT(SetXPosition(double)));
     connect(target_trans->GetPositionYButton(),SIGNAL(valueChanged(double)),this,SLOT(SetYPosition(double)));
-    connect(target_trans->GetPositionZButton(),SIGNAL(valueChanged(double)),this,SLOT(SetZPosition(double)));
+
     connect(target_trans->GetScaleXButton(),SIGNAL(valueChanged(double)),this,SLOT(SetXScale(double)));
     connect(target_trans->GetScaleYButton(),SIGNAL(valueChanged(double)),this,SLOT(SetYScale(double)));
-    connect(target_trans->GetScaleZButton(),SIGNAL(valueChanged(double)),this,SLOT(SetZScale(double)));
+
+    connect(target_trans->GetRotationZButton(),SIGNAL(valueChanged(double)),this,SLOT(SetRotation(double)));
 }
 
 void BasicPrimitive::SetTransformValues(Transform *target_trans)
@@ -242,6 +253,11 @@ void BasicPrimitive::SetXScale(double value)
 void BasicPrimitive::SetYScale(double value)
 {
    height = PRIMITIVE_SIZE * static_cast<float>(value);
+}
+
+void BasicPrimitive::SetRotation(double value)
+{
+    rotation = static_cast<float>(value);
 }
 
 void BasicPrimitive::ChangePrimitive()
