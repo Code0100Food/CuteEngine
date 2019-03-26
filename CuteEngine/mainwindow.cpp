@@ -7,12 +7,12 @@
 #include <QTimer>
 #include "mainscene.h"
 #include <QScrollArea>
+#include <QDesktopServices>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     _uiMain(new Ui::MainWindow)
 {
-    //--------------------------------------HERE STARTS THE ASSIGNMENT---------------------------------------------
     _uiMain->setupUi(this);
 
     //Al tab position on top of the docking area
@@ -64,7 +64,9 @@ void MainWindow::openProject()
     QString path = QFileDialog::getOpenFileName(this,"Open Project");
     if(!path.isEmpty())
     {
-        //printf(path.toStdString());
+        QDesktopServices::openUrl(QUrl("file:///"+path,QUrl::TolerantMode));
+        //Temp code
+        qApp->quit();
     }
 }
 
