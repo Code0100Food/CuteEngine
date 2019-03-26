@@ -10,6 +10,11 @@ A simple editor of scenes made of vector shapes.
 
 ### Menu Bar
 
+- Open project: Open the project selected in the dialog window and close the current one.
+- Save project: The save button is a placeholder, it is not functional.
+- Close project: Close the project, also displays a security accept menu to avoid closing non saved projects(in this release save is not functional).
+
+![Hierarchy](https://github.com/Code0100Food/CuteEngine/blob/Assignment-1/Images/menu_bar.PNG)
 
 ### Hierarchy
 - Add Entity: With the button "Add Entity" you can add a new entity to the scene, that will appear in the hierarchy just as it is created.
