@@ -15,9 +15,13 @@ A simple editor of scenes made of vector shapes.
 - Add Entity: With the button "Add Entity" you can add a new entity to the scene, that will appear in the hierarchy just as it is created.
 - Remove Entity: You can remove those entities with the "Remove Entity" button if the entity you want to remove is selected.
 
+![Hierarchy](https://github.com/Code0100Food/CuteEngine/blob/Assignment-1/Images/hierarchy.PNG)
+
 ### Inspector
 - Name: You can change the name of the entity in the inpector and it is updated in the hierarchhy as well.
 - Add Component: A button that allows to add a new component to the entity.
+![Inspector1](https://github.com/Code0100Food/CuteEngine/blob/Assignment-1/Images/Inspector1.PNG)
+
 - List of Components: All the components that the entity has appear in the inspector
   - Transform: Controls the position, rotation and scale of the entity. You can see the changes in the scene if you have something to render.
   - Basic Primitive: Creates a basic primitve that renders in the scene. There are several options to change the primitive:
@@ -32,8 +36,14 @@ A simple editor of scenes made of vector shapes.
     - Pick Color: Opens a window to select a color. Can change the color of the primitive
     - Pick Edge Color: Opens a window to select a color. Can change the color of the edge of the primitive.
 
+![Inspector2](https://github.com/Code0100Food/CuteEngine/blob/Assignment-1/Images/Inspector2.PNG)
+
+
 ### Scene
 - Renders all the primitives that are in the hierarchy with the options selected in the inspector of each entity.
+
+![CuteEngine1](https://github.com/Code0100Food/CuteEngine/blob/Assignment-1/Images/CuteEngine1.PNG)
+
 
 ## Qt Features used in the application
 
