@@ -52,6 +52,11 @@ A simple editor of scenes made of vector shapes.
 
 ## Qt Features used in the application
 
+### Style Sheets
+- QT Dark Orange
+
+![CuteEngine1](https://github.com/Code0100Food/CuteEngine/blob/Assignment-1/Images/style.PNG)
+
 ### Slots
 - Main Window
   - void Update();
