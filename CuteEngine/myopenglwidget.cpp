@@ -68,7 +68,7 @@ void myopenglwidget::resizeGL(int width, int height)
 
 void myopenglwidget::paintGL()
 {
-    glClearColor(0.5f,0.7f,0.9f,1.0f);
+    glClearColor(0.4f,0.4f,0.4f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
     if(program.bind())
