@@ -53,17 +53,12 @@ A simple editor of scenes made of vector shapes.
 ## Qt Features used in the application
 
 ### Slots
-- Basic Primitive
-  - void SetXPosition(double x_pos);
-  - void SetYPosition(double y_pos)
-  - void SetXScale(double x_pos);
-  - void SetYScale(double y_pos)
-  - void ChangePrimitive();
-  - void SetLineTypeComboBox();
-  - void SetEdgeWidth(int value);
-  - void SetColorFromColorPicker();
-  - void SetEdgeColorFromColorPicker();
-
+- Main Window
+  - void Update();
+  - void openProject();
+  - void saveProject();
+  - void customExit();
+  
 - Hierarchy
   - void AddEntity();
   - void RemoveEntity();
@@ -74,12 +69,6 @@ A simple editor of scenes made of vector shapes.
   - void CreateTransformation();
   - void CreateBasicPrimitive();
   - void Rename();
-
-- Main Window
-  - void Update();
-  - void openProject();
-  - void saveProject();
-  - void customExit();
   
 - Transform
   - void SetXPosition(double value);
@@ -91,6 +80,18 @@ A simple editor of scenes made of vector shapes.
   - void SetXScale(double value);
   - void SetYScale(double value);
   - void SetZScale(double value);
+  
+- Basic Primitive
+  - void SetXPosition(double x_pos);
+  - void SetYPosition(double y_pos)
+  - void SetXScale(double x_pos);
+  - void SetYScale(double y_pos)
+  - void ChangePrimitive();
+  - void SetLineTypeComboBox();
+  - void SetEdgeWidth(int value);
+  - void SetColorFromColorPicker();
+  - void SetEdgeColorFromColorPicker();
+
 
 ### Dialogs
 - Color Dialog
