@@ -66,6 +66,7 @@ void MainScene::AddEntity(Entity *new_entity)
               break;
           }
       }
+      selected_entity = nullptr;
   }
 
  std::list<Entity*> MainScene::GetSelectedEntities()const
