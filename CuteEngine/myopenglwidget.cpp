@@ -20,8 +20,8 @@ void myopenglwidget::initializeGL()
     initializeOpenGLFunctions();
 
     std::string path = customApp->applicationDirPath().toStdString();
-    std::string vertex_path = path + "/Shaders/standard_vertex.vert";
-    std::string frag_path = path + "/Shaders/standard_fragment.frag";
+    std::string vertex_path = path + "/../../CuteEngine/Resources/Shaders/standard_vertex.vert";
+    std::string frag_path = path + "/../../CuteEngine/Resources/Shaders/standard_fragment.frag";
 
     std::cout<<path<<std::endl;
 
