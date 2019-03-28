@@ -8,18 +8,22 @@
 class MainWindow;
 class MainScene;
 
-class qt_Application : public QApplication
+class qt_Application: public QApplication
 {
 public:
-    qt_Application(int &argc, char **argv);
+
+    qt_Application(int &argc, char** argv);
     ~qt_Application();
 
     void Start();
 
-    MainScene* GetMainScene() {return scene; }
+    MainScene* main_scene() {return _scene; }
+    MainWindow* main_window() {return _window; }
+
 private:
-    MainWindow* window;
-    MainScene* scene;
+
+    MainWindow* _window = nullptr;
+    MainScene* _scene = nullptr;
 };
 
 #endif // QT_APPLICATION_H
