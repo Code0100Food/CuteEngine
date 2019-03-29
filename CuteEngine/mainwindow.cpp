@@ -56,6 +56,7 @@ MainWindow::~MainWindow()
 void MainWindow::Update()
 {
     customApp->main_scene()->Update();
+    _uiMain->openGLWidget->paintGL();
 }
 
 void MainWindow::openProject()
