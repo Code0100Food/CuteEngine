@@ -7,6 +7,7 @@
 
 class MainWindow;
 class MainScene;
+class Input;
 
 class qt_Application: public QApplication
 {
@@ -19,11 +20,13 @@ public:
 
     MainScene* main_scene() {return _scene; }
     MainWindow* main_window() {return _window; }
+    Input* input(){return _input;}
 
 private:
 
     MainWindow* _window = nullptr;
     MainScene* _scene = nullptr;
+    Input* _input = nullptr;
 };
 
 #endif // QT_APPLICATION_H

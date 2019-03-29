@@ -11,7 +11,6 @@
 myopenglwidget::myopenglwidget(QWidget* parent) : QOpenGLWidget(parent)
 {
     setMinimumSize(QSize(256,256));
-    this->grabKeyboard();
 
     //Camera is loaded as identity
     camera = new QMatrix4x4(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1);
@@ -23,6 +22,9 @@ myopenglwidget::~myopenglwidget()
 {
     makeCurrent();
     finalizeGL();
+
+    delete projection;
+    delete camera;
 }
 
 void myopenglwidget::initializeGL()
@@ -115,8 +117,6 @@ void myopenglwidget::paintGL()
         vao.release();
         program.release();
     }
-
-
 }
 
 void myopenglwidget::finalizeGL()
@@ -124,16 +124,8 @@ void myopenglwidget::finalizeGL()
     std::cout<<"finalizeGL()" <<std::endl;
 }
 
-void myopenglwidget::keyPressEvent(QKeyEvent *event)
+void myopenglwidget::TranslateCamera(float x, float y, float z)
 {
-    if(event->key() == Qt::Key_W)
-    {
-        camera->translate(0.0f,0.0f,-1.0f);
-    }
-    if(event->key() == Qt::Key_S)
-    {
-        camera->translate(0.0f,0.0f,1.0f);
-    }
-
-    std::cout<<"key pressed"<<std::endl;
+    std::cout<<"nide"<<std::endl;
+    camera->translate(x,y,z);
 }

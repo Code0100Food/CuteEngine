@@ -26,8 +26,8 @@ public:
     void resizeGL(int width, int height) override;
     void paintGL() override;
 
-    void keyPressEvent(QKeyEvent *event) override;
-
+    //Camera methods
+    void TranslateCamera(float x, float y, float z);
 
 
 private:
