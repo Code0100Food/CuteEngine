@@ -30,6 +30,7 @@ public slots:
     void openProject();
     void saveProject();
     void customExit();
+    void takeScreenshot();
 
 public:
 
@@ -37,6 +38,7 @@ public:
     ~MainWindow();
 
     void AddWidgetToRender(QWidget* form);
+
 private:
 
     Ui::MainWindow* _uiMain = nullptr;

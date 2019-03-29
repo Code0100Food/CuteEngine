@@ -487,10 +487,10 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
      <x>0</x>
      <y>0</y>
      <width>870</width>
-     <height>21</height>
+     <height>26</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuOpen_Project">
+   <widget class="QMenu" name="menuFile">
     <property name="title">
      <string>File</string>
     </property>
@@ -499,9 +499,15 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
-   <addaction name="menuOpen_Project"/>
+   <widget class="QMenu" name="menuWindow">
+    <property name="title">
+     <string>Window</string>
+    </property>
+    <addaction name="actionScreenshot"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuWindow"/>
   </widget>
-  <widget class="QStatusBar" name="statusBar"/>
   <widget class="QDockWidget" name="Hierarchy">
    <property name="windowTitle">
     <string>Hierarchy</string>
@@ -559,6 +565,15 @@ QCheckBox::indicator:disabled, QRadioButton::indicator:disabled
    </property>
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionScreenshot">
+   <property name="icon">
+    <iconset resource="icons.qrc">
+     <normaloff>:/icons/Resources/Icons/CD case.png</normaloff>:/icons/Resources/Icons/CD case.png</iconset>
+   </property>
+   <property name="text">
+    <string>Screenshot</string>
    </property>
   </action>
  </widget>

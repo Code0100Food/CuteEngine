@@ -42,7 +42,8 @@ SOURCES += \
     component.cpp \
     transform.cpp \
     inspector.cpp \
-    viewport.cpp
+    viewport.cpp \
+    input.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -56,7 +57,8 @@ HEADERS += \
     component.h \
     transform.h \
     inspector.h \
-    viewport.h
+    viewport.h \
+    input.h
 
 FORMS += \
         mainwindow.ui

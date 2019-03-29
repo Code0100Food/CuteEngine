@@ -38,6 +38,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(_uiMain->actionOpen_Project,SIGNAL(triggered()),this,SLOT(openProject()));
     connect(_uiMain->actionSave_Project,SIGNAL(triggered()),this,SLOT(saveProject()));
     connect(_uiMain->actionExit,SIGNAL(triggered()),this,SLOT(customExit()));
+    connect(_uiMain->actionScreenshot,SIGNAL(triggered()),this,SLOT(takeScreenshot()));
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(Update()));
@@ -89,6 +90,13 @@ void MainWindow::customExit()
     {
         printf("No exit");
     }
+}
+
+void MainWindow::takeScreenshot()
+{
+    //TODO
+    //makeCurrent();
+    //return grabFrameBuffer();
 }
 
 QWidget *MainWindow::scene_render()
