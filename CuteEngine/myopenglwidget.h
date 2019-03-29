@@ -2,6 +2,8 @@
 #define MYOPENGLWIDGET_H
 
 #define PI 3.14159265358979323846f
+#define RADTODEG(angle_in_radiants) (angle_in_radiants*180.0f)/PI
+#define DEGTORAD(angle_in_degrees) (angle_in_degrees*PI)/180.0f
 
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions_3_3_Core>
@@ -29,12 +31,13 @@ public:
 
 
 private:
-    QTimer* update_timer = nullptr;
 
     //Camera settings
     QMatrix4x4* camera = nullptr;
+    QMatrix4x4* projection = nullptr;
 
-    float field_of_view = 45.0f; //radiants
+    float aspect_ratio = 0.0f;
+    float field_of_view = 90.0f; //radiants
     float near_plane_distance = 0.1f;
     float far_plane_distance = 150.0f;
 

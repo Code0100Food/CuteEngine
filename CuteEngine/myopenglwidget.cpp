@@ -4,6 +4,7 @@
 #include <QMatrix4x4>
 #include <QTimer>
 #include "qt_application.h"
+#include "math.h"
 
 #pragma comment(lib, "OpenGL32.lib")
 
@@ -13,7 +14,9 @@ myopenglwidget::myopenglwidget(QWidget* parent) : QOpenGLWidget(parent)
     this->grabKeyboard();
 
     //Camera is loaded as identity
-    camera = new QMatrix4x4();
+    camera = new QMatrix4x4(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1);
+    aspect_ratio = ((float)width())/height();
+    projection = new QMatrix4x4((1.0f/tan(DEGTORAD(field_of_view)/2))/aspect_ratio, 0, 0, 0, 0, (1.0f/tan( DEGTORAD(field_of_view)/2)), 0 ,0 ,0 ,0, ((far_plane_distance + near_plane_distance)/(near_plane_distance - far_plane_distance)), ((2*near_plane_distance*far_plane_distance)/(near_plane_distance - far_plane_distance)),0,0,-1,0);
 }
 
 myopenglwidget::~myopenglwidget()
@@ -40,9 +43,9 @@ void myopenglwidget::initializeGL()
     program.bind();
 
     QVector3D vertices[] = {
-        QVector3D(-0.5f,-0.5f,-21.0f),QVector3D(1.0f,0.0f,0.0f) ,
-        QVector3D(0.5f,-0.5f, -21.0f),QVector3D(0.0f,1.0f,0.0f),
-        QVector3D(0.0f,2.5f,  -21.0f), QVector3D(0.0f,0.0f,1.0f)
+        QVector3D(-0.5f,3.5f,0.0f),QVector3D(1.0f,0.0f,0.0f) ,
+        QVector3D(0.5f,3.5f, 0.0f),QVector3D(0.0f,1.0f,0.0f),
+        QVector3D(0.0f,6.5f, 0.0f), QVector3D(0.0f,0.0f,1.0f)
     };
 
     vbo.create();
@@ -82,11 +85,20 @@ void myopenglwidget::initializeGL()
 
 void myopenglwidget::resizeGL(int width, int height)
 {
+    //Update Projection
+    aspect_ratio = ((float)width) / height;
+    QVector4D first((1.0f/tan(DEGTORAD(field_of_view)/2))/aspect_ratio, 0.0f, 0.0f, 0.0f);
+    QVector4D second(0.0f, (1.0f/tan(DEGTORAD(field_of_view)/2)), 0.0f, 0.0f);
+    QVector4D third(0.0f, 0.0f, ((far_plane_distance + near_plane_distance)/(near_plane_distance - far_plane_distance)), ((2*near_plane_distance*far_plane_distance)/(near_plane_distance - far_plane_distance)));
 
+    projection->setRow(0, first);
+    projection->setRow(1, second);
+    projection->setRow(2, third);
 }
 
 void myopenglwidget::paintGL()
 {
+    makeCurrent();
     glClearColor(0.4f,0.4f,0.4f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT);    
 
@@ -94,10 +106,8 @@ void myopenglwidget::paintGL()
 
     if(program.bind())
     {
-        QMatrix4x4* tmp = new QMatrix4x4(1.0f/(4.0f/3.0f), 0, 0, 0, 0, 1, 0 ,0 ,0 ,0, ((far_plane_distance + near_plane_distance)/(near_plane_distance - far_plane_distance)), ((2*near_plane_distance*far_plane_distance)/(near_plane_distance - far_plane_distance)),0,0,-1,0);
-
-       program.setUniformValue(program.uniformLocation("projection_matrix"), *tmp);
-       program.setUniformValue(program.uniformLocation("view_matrix"), *camera);
+       program.setUniformValue(program.uniformLocation("projection_matrix"), *projection);
+       program.setUniformValue(program.uniformLocation("view_matrix"), camera->inverted());
        program.setUniformValue(program.uniformLocation("model_matrix"), lol);
 
         vao.bind();
@@ -105,6 +115,7 @@ void myopenglwidget::paintGL()
         vao.release();
         program.release();
     }
+
 
 }
 
@@ -116,6 +127,10 @@ void myopenglwidget::finalizeGL()
 void myopenglwidget::keyPressEvent(QKeyEvent *event)
 {
     if(event->key() == Qt::Key_W)
+    {
+        camera->translate(0.0f,0.0f,-1.0f);
+    }
+    if(event->key() == Qt::Key_S)
     {
         camera->translate(0.0f,0.0f,1.0f);
     }
