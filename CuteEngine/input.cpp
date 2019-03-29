@@ -10,8 +10,14 @@ Input::Input()
 {
     this->grabKeyboard();
     this->grabMouse();
+    //this->grab(QRect(this->rect()));
 
     gl_widget = customApp->main_window()->uiMain()->openGLWidget;
+}
+
+Input::~Input()
+{
+    gl_widget = nullptr;
 }
 
 void Input::keyPressEvent(QKeyEvent *event)
@@ -45,19 +51,40 @@ void Input::keyPressEvent(QKeyEvent *event)
 void Input::mouseMoveEvent(QMouseEvent *event)
 {
     std::cout<<"nide"<<std::endl;
-    if(event->button() == Qt::MidButton)
+    if(mouse_mid)
     {
-        //char* buffer;
-         //itoa(event->key(),buffer,10);
-         std::cout<<"nide"<<std::endl;
+        gl_widget->TranslateCamera((mouse_pos.x() - event->pos().x()) * drag_scale, -(mouse_pos.y() - event->pos().y()) * drag_scale, 0.0f);
     }
+
+    mouse_pos = event->pos();
 }
 
 void Input::mousePressEvent(QMouseEvent *event)
 {
-    //std::cout<<"nide"<<std::endl;
+    mouse_pos = event->pos();
+
     if(event->button() == Qt::MidButton)
     {
-        std::cout<<"nide"<<std::endl;
+        std::cout<<"on"<<std::endl;
+        mouse_mid = true;
+    }
+}
+
+void Input::mouseReleaseEvent(QMouseEvent *event)
+{
+    if(event->button() == Qt::MidButton)
+    {
+        std::cout<<"off"<<std::endl;
+        mouse_mid = false;
+    }
+}
+
+void Input::wheelEvent(QWheelEvent *event)
+{
+    std::cout<<"dasdadaon"<<std::endl;
+
+    if(event->delta() != 0)
+    {
+        //gl_widget->TranslateCamera(event->delta(),0.0f,0.0f); //TODO CAMERA FOV
     }
 }
