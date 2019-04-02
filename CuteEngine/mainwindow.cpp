@@ -8,6 +8,10 @@
 #include "mainscene.h"
 #include <QScrollArea>
 #include <QDesktopServices>
+#include <QDragEnterEvent>
+#include <QMimeData>
+#include <QUrl>
+
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -44,6 +48,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(timer, SIGNAL(timeout()), this, SLOT(Update()));
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
     timer->start(UPDATE_DT);
+
+    setAcceptDrops(true);
 }
 
 MainWindow::~MainWindow()
@@ -104,3 +110,18 @@ QWidget *MainWindow::scene_render()
     return _uiMain->centralWidget->findChild<QWidget*>("viewport");
 }
 
+void MainWindow::dragEnterEvent(QDragEnterEvent *event)
+{
+    event->accept();
+}
+
+void MainWindow::dropEvent(QDropEvent *drop_event)
+{
+
+    foreach(const QUrl &path, drop_event->mimeData()->urls())
+    {
+       std::string file_name = path.toString().toStdString();
+       std::cout<< file_name <<std::endl;
+    }
+    //std::cout<< "dropped something" <<std::endl;
+}

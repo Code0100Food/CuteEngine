@@ -39,6 +39,9 @@ public:
 
     void AddWidgetToRender(QWidget* form);
 
+    void dragEnterEvent(QDragEnterEvent *e) override;
+    void dropEvent(QDropEvent* drop_event) override;
+
 private:
 
     Ui::MainWindow* _uiMain = nullptr;
