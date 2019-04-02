@@ -28,36 +28,34 @@ LIBS += -opengl32
 RESOURCES += \
     icons.qrc
 
-SOURCES += \
-        main.cpp \
-        mainwindow.cpp \
-    inspector.cpp \
-    myopenglwidget.cpp \
-    hierarchywidget.cpp \
-    mainscene.cpp \
-    qt_application.cpp \
-    entity.cpp \
+SOURCES += \ 
+    Components/component.cpp \
+    Components/transform.cpp \
+    Engine/hierarchywidget.cpp \
+    Engine/input.cpp \
+    Engine/inspector.cpp \
+    Engine/mainscene.cpp \
+    Engine/mainwindow.cpp \
+    Engine/myopenglwidget.cpp \
+    Engine/qt_application.cpp \
     basicprimitive.cpp \
-    component.cpp \
-    transform.cpp \
-    inspector.cpp \
-    viewport.cpp \
-    input.cpp
+    entity.cpp \
+    main.cpp \
+    viewport.cpp
 
 HEADERS += \
-        mainwindow.h \
-    inspector.h \
-    myopenglwidget.h \
-    hierarchywidget.h \
-    mainscene.h \
-    qt_application.h \
-    entity.h \
+    Components/component.h \
+    Components/transform.h \
+    Engine/hierarchywidget.h \
+    Engine/input.h \
+    Engine/inspector.h \
+    Engine/mainscene.h \
+    Engine/mainwindow.h \
+    Engine/myopenglwidget.h \
+    Engine/qt_application.h \
     basicprimitive.h \
-    component.h \
-    transform.h \
-    inspector.h \
-    viewport.h \
-    input.h
+    entity.h \
+    viewport.h
 
 FORMS += \
         mainwindow.ui
@@ -71,4 +69,8 @@ else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/Assimp/lib/ -lassimpd
 else:unix: LIBS += -L$$PWD/Assimp/lib/ -lassimp
 
 INCLUDEPATH += $$PWD/Assimp/include
+INCLUDEPATH += $$PWD/Engine
+INCLUDEPATH += $$PWD/Components
 DEPENDPATH += $$PWD/Assimp/include
+DEPENDPATH += $$PWD/Engine
+DEPENDPATH += $$PWD/Components
