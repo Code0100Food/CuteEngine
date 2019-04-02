@@ -41,7 +41,9 @@ SOURCES += \
     basicprimitive.cpp \
     entity.cpp \
     main.cpp \
-    viewport.cpp
+    viewport.cpp \
+    Data/mesh.cpp \
+    Data/submesh.cpp
 
 HEADERS += \
     Components/component.h \
@@ -55,7 +57,9 @@ HEADERS += \
     Engine/qt_application.h \
     basicprimitive.h \
     entity.h \
-    viewport.h
+    viewport.h \
+    Data/mesh.h \
+    Data/submesh.h
 
 FORMS += \
         mainwindow.ui
