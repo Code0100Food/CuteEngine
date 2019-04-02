@@ -6,6 +6,8 @@
 #include "qt_application.h"
 #include "math.h"
 #include "input.h"
+#include "mainscene.h"
+#include "entity.h"
 
 #pragma comment(lib, "OpenGL32.lib")
 
@@ -103,9 +105,15 @@ void myopenglwidget::paintGL()
 {
     makeCurrent();
     glClearColor(0.4f,0.4f,0.4f,1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);    
+    glClear(GL_COLOR_BUFFER_BIT);
 
     QMatrix4x4 lol;
+
+    // Crashes right now :(
+    //for(std::list<Entity*>::const_iterator it = customApp->main_scene()->GetEntities().begin(); it != customApp->main_scene()->GetEntities().end(); it++)
+    //{
+    //    lol = *it._Ptr->_Myval->GetTransform();
+    //}
 
     if(program.bind())
     {

@@ -42,6 +42,8 @@ private:
 
 public:
 
+    const QMatrix4x4* GetLocalTransform()const {return &transform_matrix;}
+
     const QDoubleSpinBox* GetPositionXButton() const { return position_x;}
     const QDoubleSpinBox* GetPositionYButton() const { return position_y;}
     const QDoubleSpinBox* GetPositionZButton(){ return position_z;}
