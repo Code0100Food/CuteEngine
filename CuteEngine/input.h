@@ -4,26 +4,29 @@
 
 class myopenglwidget;
 
-class Input : public QWidget
+class Input
 {
-        Q_OBJECT
 public:
 
     explicit Input();
-    ~Input()override;
+    ~Input();
 
-    void keyPressEvent(QKeyEvent *event) override;
-    void mouseMoveEvent(QMouseEvent* event) override;
-    void mousePressEvent(QMouseEvent* event)override;
-    void mouseReleaseEvent(QMouseEvent* event)override;
-    void wheelEvent(QWheelEvent* event)override;
+    void keyPressEvent(QKeyEvent *event);
+    void mouseMoveEvent(QMouseEvent* event);
+    void mousePressEvent(QMouseEvent* event);
+    void mouseReleaseEvent(QMouseEvent* event);
+    void wheelEvent(QWheelEvent* event);
+    void enterEvent(QEvent* event);
+    void leaveEvent(QEvent* event);
 
 private:
 
     myopenglwidget* gl_widget = nullptr;
 
     //Config
-    const float drag_scale = 0.10f;
+    const float drag_scale = 0.5f;
+    const float scroll_scale = 0.0010f;
+    const float key_move_scale = 0.4f;
 
     //Buttons
     mutable bool mouse_mid = false;

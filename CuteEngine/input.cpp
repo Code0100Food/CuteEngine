@@ -8,10 +8,6 @@
 
 Input::Input()
 {
-    this->grabKeyboard();
-    this->grabMouse();
-    //this->grab(QRect(this->rect()));
-
     gl_widget = customApp->main_window()->uiMain()->openGLWidget;
 }
 
@@ -24,27 +20,27 @@ void Input::keyPressEvent(QKeyEvent *event)
 {
     if(event->key() == Qt::Key_W)
     {
-        gl_widget->TranslateCamera(0.0f,0.0f,-1.0f);
+        gl_widget->TranslateCamera(0.0f,0.0f,-key_move_scale);
     }
     else if(event->key() == Qt::Key_S)
     {
-        gl_widget->TranslateCamera(0.0f,0.0f,1.0f);
+        gl_widget->TranslateCamera(0.0f,0.0f,key_move_scale);
     }
     else if(event->key() == Qt::Key_A)
     {
-        gl_widget->TranslateCamera(-1.0f,0.0f,0.0f);
+        gl_widget->TranslateCamera(-key_move_scale,0.0f,0.0f);
     }
     else if(event->key() == Qt::Key_D)
     {
-        gl_widget->TranslateCamera(1.0f,0.0f,0.0f);
+        gl_widget->TranslateCamera(key_move_scale,0.0f,0.0f);
     }
     else if(event->key() == Qt::Key_E)
     {
-        gl_widget->TranslateCamera(0.0f,1.0f,0.0f);
+        gl_widget->TranslateCamera(0.0f,-key_move_scale,0.0f);
     }
     else if(event->key() == Qt::Key_Q)
     {
-        gl_widget->TranslateCamera(0.0f,-1.0f,0.0f);
+        gl_widget->TranslateCamera(0.0f,key_move_scale,0.0f);
     }
 }
 
@@ -85,6 +81,16 @@ void Input::wheelEvent(QWheelEvent *event)
 
     if(event->delta() != 0)
     {
-        //gl_widget->TranslateCamera(event->delta(),0.0f,0.0f); //TODO CAMERA FOV
+        gl_widget->TranslateCamera(0.0f, 0.0f, event->delta() * scroll_scale);
     }
+}
+
+void Input::enterEvent(QEvent* event)
+{
+
+}
+
+void Input::leaveEvent(QEvent* event)
+{
+
 }

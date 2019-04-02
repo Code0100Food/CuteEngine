@@ -5,6 +5,7 @@
 #include <QTimer>
 #include "qt_application.h"
 #include "math.h"
+#include "input.h"
 
 #pragma comment(lib, "OpenGL32.lib")
 
@@ -45,9 +46,9 @@ void myopenglwidget::initializeGL()
     program.bind();
 
     QVector3D vertices[] = {
-        QVector3D(-0.5f,3.5f,0.0f),QVector3D(1.0f,0.0f,0.0f) ,
-        QVector3D(0.5f,3.5f, 0.0f),QVector3D(0.0f,1.0f,0.0f),
-        QVector3D(0.0f,6.5f, 0.0f), QVector3D(0.0f,0.0f,1.0f)
+        QVector3D(-0.5f,-0.5f,-1.0f),QVector3D(1.0f,0.0f,0.0f) ,
+        QVector3D(0.5f,-0.5f, -1.0f),QVector3D(0.0f,1.0f,0.0f),
+        QVector3D(0.0f,2.5f, -1.0f), QVector3D(0.0f,0.0f,1.0f)
     };
 
     vbo.create();
@@ -122,6 +123,44 @@ void myopenglwidget::paintGL()
 void myopenglwidget::finalizeGL()
 {
     std::cout<<"finalizeGL()" <<std::endl;
+}
+
+void myopenglwidget::keyPressEvent(QKeyEvent *event)
+{
+    customApp->input()->keyPressEvent(event);
+}
+
+void myopenglwidget::mouseMoveEvent(QMouseEvent* event)
+{
+    customApp->input()->mouseMoveEvent(event);
+}
+
+void myopenglwidget::mousePressEvent(QMouseEvent* event)
+{
+    customApp->input()->mousePressEvent(event);
+    setFocus();
+}
+
+void myopenglwidget::mouseReleaseEvent(QMouseEvent* event)
+{
+    customApp->input()->mouseReleaseEvent(event);
+}
+
+void myopenglwidget::wheelEvent(QWheelEvent* event)
+{
+    customApp->input()->wheelEvent(event);
+}
+
+void myopenglwidget::enterEvent(QEvent* event)
+{
+    customApp->input()->enterEvent(event);
+    this->grabKeyboard();
+}
+
+void myopenglwidget::leaveEvent(QEvent* event)
+{
+    customApp->input()->leaveEvent(event);
+    this->releaseKeyboard();
 }
 
 void myopenglwidget::TranslateCamera(float x, float y, float z)

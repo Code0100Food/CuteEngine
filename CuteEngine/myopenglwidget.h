@@ -26,6 +26,15 @@ public:
     void resizeGL(int width, int height) override;
     void paintGL() override;
 
+    //Input methods
+    void keyPressEvent(QKeyEvent *event) override;
+    void mouseMoveEvent(QMouseEvent* event) override;
+    void mousePressEvent(QMouseEvent* event)override;
+    void mouseReleaseEvent(QMouseEvent* event)override;
+    void wheelEvent(QWheelEvent* event)override;
+    void enterEvent(QEvent* event)override;
+    void leaveEvent(QEvent* event)override;
+
     //Camera methods
     void TranslateCamera(float x, float y, float z);
 
