@@ -8,6 +8,7 @@
 #include "input.h"
 #include "mainscene.h"
 #include "entity.h"
+#include "../Data/mesh.h"
 
 #pragma comment(lib, "OpenGL32.lib")
 
@@ -32,7 +33,11 @@ myopenglwidget::~myopenglwidget()
 
 void myopenglwidget::initializeGL()
 {
+   //glEnable(GL_CULL_FACE);
+
     initializeOpenGLFunctions();
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
 
     std::string path = customApp->applicationDirPath().toStdString();
     std::string vertex_path = path + "/../../CuteEngine/Resources/Shaders/standard_vertex.vert";
@@ -86,6 +91,12 @@ void myopenglwidget::initializeGL()
     program.release();
     }
 
+
+    //Debug
+    patrick = new Mesh();
+    patrick->LoadModel("C:/Users/Th_Sola/Desktop/Patrick/Patrick.obj");
+    patrick->Reload();
+
 }
 
 void myopenglwidget::resizeGL(int width, int height)
@@ -105,15 +116,9 @@ void myopenglwidget::paintGL()
 {
     makeCurrent();
     glClearColor(0.4f,0.4f,0.4f,1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     QMatrix4x4 lol;
-
-    // Crashes right now :(
-    //for(std::list<Entity*>::const_iterator it = customApp->main_scene()->GetEntities().begin(); it != customApp->main_scene()->GetEntities().end(); it++)
-    //{
-    //    lol = *it._Ptr->_Myval->GetTransform();
-    //}
 
     if(program.bind())
     {
@@ -121,10 +126,13 @@ void myopenglwidget::paintGL()
        program.setUniformValue(program.uniformLocation("view_matrix"), camera->inverted());
        program.setUniformValue(program.uniformLocation("model_matrix"), lol);
 
-        vao.bind();
-        glDrawArrays(GL_TRIANGLES,0,3);
-        vao.release();
-        program.release();
+       patrick->Draw();
+
+       vao.bind();
+       glDrawArrays(GL_TRIANGLES, 0, 3);
+       vao.release();
+
+       program.release();
     }
 }
 

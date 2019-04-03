@@ -25,16 +25,17 @@ public:
             attribute[location].enabled = true;
             attribute[location].offset = offset;
             attribute[location].num_components = num_components;
+            size += (num_components * sizeof(float));
         }
     }
 
-    VertexFormat& operator=(const VertexFormat& other_vertex_format)
-    {
-        memcpy(attribute, other_vertex_format.attribute, MAX_VERTEX_ATTRIBUTES);
-        size = other_vertex_format.size;
+   VertexFormat& operator=(const VertexFormat& other_vertex_format)
+   {
+       memcpy(attribute, other_vertex_format.attribute, sizeof(VertexAttribute) * MAX_VERTEX_ATTRIBUTES);
+       size = other_vertex_format.size;
 
-        return *this;
-    }
+       return *this;
+   }
 
     VertexAttribute attribute[MAX_VERTEX_ATTRIBUTES];
     int size = 0;
@@ -45,21 +46,23 @@ class Submesh
 public:
     Submesh(VertexFormat format, void* data, int size);
     Submesh(VertexFormat format, void* _data, int size, void* _indexs, int index_size);
-    ~Submesh();
+    ~Submesh() { }
 
     void ReLoad();
     void Draw();
     void Destroy();
 
+VertexFormat vertex_format;
+
 private:
 
     unsigned char* data = nullptr;
-    unsigned int data_size = 0;
+    size_t data_size = 0;
 
     unsigned int* indexs = nullptr;
-    unsigned int  indexs_count = 0;
+    size_t indexs_count = 0;
 
-    VertexFormat vertex_format;
+
     QOpenGLBuffer vertex_buffer_object;
     QOpenGLBuffer index_buffer_object;
     QOpenGLVertexArrayObject vertex_array_object;

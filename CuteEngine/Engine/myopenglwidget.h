@@ -13,6 +13,7 @@
 
 class QMatrix4x4;
 class QTimer;
+class Mesh;
 
 class myopenglwidget : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
 {
@@ -38,6 +39,7 @@ public:
     //Camera methods
     void TranslateCamera(float x, float y, float z);
 
+    Mesh* patrick = nullptr;
 
 private:
 
