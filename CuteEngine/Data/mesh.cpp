@@ -8,7 +8,7 @@
 #include <QFile>
 #include <QIODevice>
 
-Mesh::Mesh()
+Mesh::Mesh() : Resource(RESOURCE_MESH)
 {
 
 }
@@ -26,19 +26,14 @@ Mesh::~Mesh()
 
 void Mesh::Reload()
 {
-    //meshes[0]->ReLoad();
-   //int i = 0;
    foreach (Submesh* submesh, meshes)
        submesh->ReLoad();
-
 }
 
 void Mesh::Draw()
 {
-    //meshes[0]->Draw();
     foreach (Submesh* submesh, meshes)
         submesh->Draw();
-
 }
 
 void Mesh::Destroy()
@@ -147,10 +142,6 @@ Submesh* Mesh::ProcessSubMesh(aiMesh *mesh, const aiScene *scene)
         format.SetVertexAttribute(2, 6 * sizeof(float), 2);
 
     ret = new Submesh(format, &vertices[0], vertices.size() * sizeof(float), &indices[0], indices.size());
-
-    std::cout<<  vertices.size() << std::endl;
-    std::cout<<  indices.size() << std::endl;
-    std::cout<<  format.size << std::endl;
 
     return ret;
 }

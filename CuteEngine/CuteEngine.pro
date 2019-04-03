@@ -43,7 +43,8 @@ SOURCES += \
     main.cpp \
     viewport.cpp \
     Data/mesh.cpp \
-    Data/submesh.cpp
+    Data/submesh.cpp \
+    Engine/resourcemanager.cpp
 
 HEADERS += \
     Components/component.h \
@@ -59,7 +60,8 @@ HEADERS += \
     entity.h \
     viewport.h \
     Data/mesh.h \
-    Data/submesh.h
+    Data/submesh.h \
+    Engine/resourcemanager.h
 
 FORMS += \
         mainwindow.ui

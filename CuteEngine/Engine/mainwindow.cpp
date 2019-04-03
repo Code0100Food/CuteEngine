@@ -11,6 +11,7 @@
 #include <QDragEnterEvent>
 #include <QMimeData>
 #include <QUrl>
+#include <resourcemanager.h>
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -44,6 +45,14 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(_uiMain->actionExit,SIGNAL(triggered()),this,SLOT(customExit()));
     connect(_uiMain->actionScreenshot,SIGNAL(triggered()),this,SLOT(takeScreenshot()));
 
+    //Set Resource Manager
+    QDockWidget* resource_dock = new QDockWidget();
+    resource_dock->setWindowTitle("Resources");
+    _resource_manager = new ResourceManager(resource_dock->widget());
+    addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, resource_dock);
+    tabifyDockWidget(_uiMain->Hierarchy, resource_dock);
+
+
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(Update()));
     connect(timer, SIGNAL(timeout()), this, SLOT(update()));
@@ -58,6 +67,7 @@ MainWindow::~MainWindow()
     delete _uiRendering;
     delete timer;
     delete _scroll;
+    delete _resource_manager;
 }
 
 void MainWindow::Update()
@@ -122,6 +132,8 @@ void MainWindow::dropEvent(QDropEvent *drop_event)
     {
        std::string file_name = path.toString().toStdString();
        std::cout<< file_name <<std::endl;
+
+
     }
     //std::cout<< "dropped something" <<std::endl;
 }

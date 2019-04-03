@@ -76,7 +76,6 @@ void Submesh::Draw()
     vertex_array_object.bind();
     if(indexs_count > 0)
     {
-        std::cout<<indexs_count<<std::endl;
         gl_functions->glDrawElements(GL_TRIANGLES, indexs_count, GL_UNSIGNED_INT, nullptr);
     }
     else{

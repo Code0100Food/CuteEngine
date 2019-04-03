@@ -3,27 +3,28 @@
 
 #include <vector>
 #include <queue>
+#include "resourcemanager.h"
 
 class Submesh;
 struct aiNode;
 struct aiScene;
 struct aiMesh;
 
-class Mesh
+class Mesh : public Resource
 {
 public:
     Mesh();
-    ~Mesh();
+    ~Mesh() override;
 
-    void Reload();
+    void Reload() override;
     void Draw();
-    void Destroy();
+    void Destroy() override;
 
     void AddSubMesh(Submesh* new_mesh);
-    bool NeedsReload() const { return needs_reload; }
 
     void LoadModel(const char* path);
     std::vector<Submesh*> meshes;
+
 private:
 
     bool needs_reload = false;
