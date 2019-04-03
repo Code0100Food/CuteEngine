@@ -59,3 +59,15 @@ void Submesh::ReLoad()
         index_buffer_object.release();
 
 }
+
+void Submesh::Draw()
+{
+
+}
+
+void Submesh::Destroy()
+{
+    if(vertex_buffer_object.isCreated()) vertex_buffer_object.destroy();
+    if(index_buffer_object.isCreated()) index_buffer_object.destroy();
+    if(vertex_array_object.isCreated()) vertex_array_object.destroy();
+}
