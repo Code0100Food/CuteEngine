@@ -16,9 +16,11 @@ public:
     virtual ~Resource() {}
 
     virtual void Reload() {}
+    virtual void Draw() {}
     virtual void Destroy(){}
 
     bool NeedsReload() const { return needs_reload; }
+    void SetReload(bool reload) { needs_reload = reload; }
 
 private:
     bool needs_reload = false;
@@ -33,11 +35,16 @@ class ResourceManager : public QWidget
 public:
     ResourceManager(QWidget* parent = nullptr);
 
-    void ImportMesh(const char* path);
+    void DebugDraw() const;
+
+    void UpdateResources();
+    void Import(std::string path);
     void AddResource(const Resource* new_resource);
 
 private:
     std::list<Resource*> resources;
+
+    void ImportMesh(const char* path);
 };
 
 #endif // RESOURCEMANAGER_H

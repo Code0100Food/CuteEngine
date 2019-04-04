@@ -28,6 +28,8 @@ void Mesh::Reload()
 {
    foreach (Submesh* submesh, meshes)
        submesh->ReLoad();
+
+   SetReload(false);
 }
 
 void Mesh::Draw()
@@ -81,7 +83,7 @@ void Mesh::LoadModel(const char *path)
         nodes.pop();
     }
 
-    needs_reload = true;
+   SetReload(true);
 }
 
 void Mesh::ProcessNode(aiNode *node, const aiScene *scene)

@@ -17,7 +17,7 @@ public:
     ~Mesh() override;
 
     void Reload() override;
-    void Draw();
+    void Draw() override;
     void Destroy() override;
 
     void AddSubMesh(Submesh* new_mesh);
@@ -26,9 +26,6 @@ public:
     std::vector<Submesh*> meshes;
 
 private:
-
-    bool needs_reload = false;
-
     //Load Stuff
     std::queue<aiNode*> nodes;
     void ProcessNode(aiNode* node, const aiScene* scene);

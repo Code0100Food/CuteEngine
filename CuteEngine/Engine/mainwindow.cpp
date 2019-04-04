@@ -73,6 +73,7 @@ MainWindow::~MainWindow()
 void MainWindow::Update()
 {
     customApp->main_scene()->Update();
+    _resource_manager->UpdateResources();
     _uiMain->openGLWidget->paintGL();
 }
 
@@ -131,8 +132,9 @@ void MainWindow::dropEvent(QDropEvent *drop_event)
     foreach(const QUrl &path, drop_event->mimeData()->urls())
     {
        std::string file_name = path.toString().toStdString();
-       std::cout<< file_name <<std::endl;
+       std::cout<< file_name.substr(8) << std::endl;
 
+       resource_manager()->Import(file_name.substr(8));
 
     }
     //std::cout<< "dropped something" <<std::endl;
