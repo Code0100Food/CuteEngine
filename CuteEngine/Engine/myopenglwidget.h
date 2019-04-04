@@ -56,6 +56,11 @@ private:
     QOpenGLVertexArrayObject vao;
     QOpenGLShaderProgram program;
 
+    // Frame buffer object Textures
+    GLuint colorTexture;
+    GLuint depthTexture;
+    GLuint fbo;
+
 signals:
 
 public slots:

@@ -9,6 +9,7 @@
 #include "mainscene.h"
 #include "entity.h"
 #include "../Data/mesh.h"
+#include <QOpenGLFramebufferObject>
 
 #pragma comment(lib, "OpenGL32.lib")
 
@@ -38,6 +39,55 @@ void myopenglwidget::initializeGL()
     initializeOpenGLFunctions();
     glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
+
+    glGenTextures(1, &colorTexture);
+    glBindTexture(GL_TEXTURE_2D, colorTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width(), height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    glGenTextures(1, &depthTexture);
+    glBindTexture(GL_TEXTURE_2D, depthTexture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, width(), height(), 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+
+    glGenFramebuffers(1, &fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
+    glDrawBuffer(GL_COLOR_ATTACHMENT0);
+
+    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+     switch(status)
+     {
+        case GL_FRAMEBUFFER_COMPLETE: // OK
+            std::cout<< "OK!" << std::endl;
+            break;
+        case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+            std::cout<< "Framebuffer ERROR: GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT" << std::endl;
+            break;
+        case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+            std::cout<< "Framebuffer ERROR: GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT" << std::endl;
+             break;
+        case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
+            std::cout<< "Framebuffer ERROR: GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER" << std::endl;
+            break;
+        case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
+            std::cout<< "Framebuffer ERROR: GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER" << std::endl;
+            break;
+        case GL_FRAMEBUFFER_UNSUPPORTED:
+            std::cout<< "Framebuffer ERROR: GL_FRAMEBUFFER_UNSUPPORTED" << std::endl;
+            break;
+        default:
+            std::cout<< "Framebuffer ERROR: Unknown ERROR" << std::endl;
+            break;
+     }
+
 
     std::string path = customApp->applicationDirPath().toStdString();
     std::string vertex_path = path + "/../../CuteEngine/Resources/Shaders/standard_vertex.vert";
@@ -82,13 +132,13 @@ void myopenglwidget::initializeGL()
 
     if(program.bind())
     {
-    std::cout<< program.programId()  <<std::endl;
+        std::cout<< program.programId()  <<std::endl;
 
-    std::cout<< program.uniformLocation("model_matrix")<<std::endl;
-    std::cout<<program.uniformLocation("projection_matrix")<<std::endl;
-    std::cout<<program.uniformLocation("view_matrix")<<std::endl;
+        std::cout<< program.uniformLocation("model_matrix")<<std::endl;
+        std::cout<<program.uniformLocation("projection_matrix")<<std::endl;
+        std::cout<<program.uniformLocation("view_matrix")<<std::endl;
 
-    program.release();
+        program.release();
     }
 
 
@@ -115,6 +165,14 @@ void myopenglwidget::resizeGL(int width, int height)
 void myopenglwidget::paintGL()
 {
     makeCurrent();
+
+    // FrameBuffer Object has a void texture atm
+    // glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    // GLenum buffs[] =
+    //  { GL_COLOR_ATTACHMENT0 };
+    // glDrawBuffers(1, buffs);
+
+    glClearDepth(1.0);
     glClearColor(0.4f,0.4f,0.4f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -134,6 +192,9 @@ void myopenglwidget::paintGL()
 
        program.release();
     }
+
+    // FrameBuffer Object has a void texture atm
+    // QOpenGLFramebufferObject::bindDefault();
 }
 
 void myopenglwidget::finalizeGL()
