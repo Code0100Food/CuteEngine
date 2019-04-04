@@ -5,6 +5,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <myopenglwidget.h>
+#include "mainscene.h"
+#include "entity.h"
+#include "transform.h"
 
 Input::Input()
 {
@@ -41,6 +44,23 @@ void Input::keyPressEvent(QKeyEvent *event)
     else if(event->key() == Qt::Key_Q)
     {
         gl_widget->TranslateCamera(0.0f,key_move_scale,0.0f);
+    }
+    else if(event->key() == Qt::Key_F)
+    {
+        Entity* target_entity = customApp->main_scene()->GetSelectedEntity();
+        if(target_entity != nullptr)
+        {
+            /*QVector3D target_pos = target_entity->GetTransform()->GetPosition();
+            QVector3D camera_rotation = gl_widget->GetCameraRotation();
+            QVector3D camera_position = gl_widget->GetCameraPosition();
+
+            QVector3D new_focus = QVector3D(0.0f,0.0f,1.0f);
+            QQuaternion mat;
+            mat = mat.fromEulerAngles(camera_rotation);
+            new_focus = mat.inverted() * new_focus;
+            gl_widget->TranslateCamera(new_focus.x(), new_focus.y(), new_focus.z());*/
+
+        }
     }
 }
 

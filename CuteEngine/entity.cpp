@@ -64,10 +64,10 @@ std::string Entity::GetName() const
     return name;
 }
 
-const QMatrix4x4* Entity::GetTransform()const
+Transform* Entity::GetTransform()const
 {
     Transform* transform = (Transform*)FindComponent(COMPONENT_TRANSFORM);
-    return transform->GetLocalTransform();
+    return transform;
 }
 
 void Entity::AddComponent(Component* new_component)
