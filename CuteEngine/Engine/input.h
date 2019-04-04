@@ -24,7 +24,7 @@ private:
     myopenglwidget* gl_widget = nullptr;
 
     //Config
-    const float drag_scale = 0.5f;
+    const float drag_scale = 0.1f;
     const float scroll_scale = 0.0010f;
     const float key_move_scale = 0.4f;
 

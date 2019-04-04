@@ -56,9 +56,9 @@ public:
     const QDoubleSpinBox* GetScaleYButton() const { return scale_y;}
     const QDoubleSpinBox* GetScaleZButton(){ return scale_z;}
 
-    const QVector3D* GetPosition(){ return &position; }
-    const QVector3D* GetRotation(){ return &rotation_euler_angles; }
-    const QVector3D* GetScale(){ return &scale; }
+    QVector3D GetPosition()const { return position; }
+    QVector3D GetRotation()const { return rotation_euler_angles; }
+    QVector3D GetScale()const { return scale; }
 
 public slots:
 

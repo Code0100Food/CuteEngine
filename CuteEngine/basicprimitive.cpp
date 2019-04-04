@@ -196,11 +196,11 @@ void BasicPrimitive::Connect(Transform* target_trans)
 
 void BasicPrimitive::SetTransformValues(Transform *target_trans)
 {
-    this->x = target_trans->GetPosition()->x();
-    this->y = target_trans->GetPosition()->y();
+    this->x = target_trans->GetPosition().x();
+    this->y = target_trans->GetPosition().y();
 
-    this->width = PRIMITIVE_SIZE * target_trans->GetScale()->x();
-    this->height = PRIMITIVE_SIZE * target_trans->GetScale()->y();
+    this->width = PRIMITIVE_SIZE * target_trans->GetScale().x();
+    this->height = PRIMITIVE_SIZE * target_trans->GetScale().y();
 }
 
 void BasicPrimitive::GoToInspector(QVBoxLayout *inspector_layout)
