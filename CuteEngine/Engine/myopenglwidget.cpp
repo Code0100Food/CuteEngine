@@ -207,6 +207,11 @@ void myopenglwidget::keyPressEvent(QKeyEvent *event)
     customApp->input()->keyPressEvent(event);
 }
 
+void myopenglwidget::keyReleaseEvent(QKeyEvent *event)
+{
+    customApp->input()->keyReleaseEvent(event);
+}
+
 void myopenglwidget::mouseMoveEvent(QMouseEvent* event)
 {
     customApp->input()->mouseMoveEvent(event);
@@ -242,6 +247,20 @@ void myopenglwidget::leaveEvent(QEvent* event)
 
 void myopenglwidget::TranslateCamera(float x, float y, float z)
 {
-    std::cout<<"nide"<<std::endl;
     camera->translate(x,y,z);
+}
+
+void myopenglwidget::RotateCamera(float x, float y, float z)
+{
+    camera->rotate(x,y,z);
+}
+
+QVector3D myopenglwidget::GetCameraPosition() const
+{
+    return camera->column(3).toVector3D();
+}
+
+QVector3D myopenglwidget::GetCameraFront() const
+{
+    return camera->column(2).toVector3D();
 }

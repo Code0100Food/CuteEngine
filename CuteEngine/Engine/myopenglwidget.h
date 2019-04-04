@@ -29,6 +29,7 @@ public:
 
     //Input methods
     void keyPressEvent(QKeyEvent *event) override;
+    void keyReleaseEvent(QKeyEvent* event) override;
     void mouseMoveEvent(QMouseEvent* event) override;
     void mousePressEvent(QMouseEvent* event)override;
     void mouseReleaseEvent(QMouseEvent* event)override;
@@ -38,6 +39,9 @@ public:
 
     //Camera methods
     void TranslateCamera(float x, float y, float z);
+    void RotateCamera(float x, float y, float z);
+    QVector3D GetCameraPosition()const;
+    QVector3D GetCameraFront()const;
 
     Mesh* patrick = nullptr;
 

@@ -50,26 +50,48 @@ void Input::keyPressEvent(QKeyEvent *event)
         Entity* target_entity = customApp->main_scene()->GetSelectedEntity();
         if(target_entity != nullptr)
         {
-            /*QVector3D target_pos = target_entity->GetTransform()->GetPosition();
-            QVector3D camera_rotation = gl_widget->GetCameraRotation();
-            QVector3D camera_position = gl_widget->GetCameraPosition();
+            QVector3D target_pos = target_entity->GetTransform()->GetPosition();
+            target_pos-=gl_widget->GetCameraPosition();
+            target_pos+= gl_widget->GetCameraFront();
 
-            QVector3D new_focus = QVector3D(0.0f,0.0f,1.0f);
-            QQuaternion mat;
-            mat = mat.fromEulerAngles(camera_rotation);
-            new_focus = mat.inverted() * new_focus;
-            gl_widget->TranslateCamera(new_focus.x(), new_focus.y(), new_focus.z());*/
-
+            gl_widget->TranslateCamera(target_pos.x(),target_pos.y(),target_pos.z());
         }
+    }
+    else if(event->key() == Qt::Key_Alt)
+    {
+        alt_key = true;
+    }
+}
+
+void Input::keyReleaseEvent(QKeyEvent *event)
+{
+    if(event->key() == Qt::Key_Alt)
+    {
+        alt_key = false;
     }
 }
 
 void Input::mouseMoveEvent(QMouseEvent *event)
 {
-    std::cout<<"nide"<<std::endl;
+
     if(mouse_mid)
     {
-        gl_widget->TranslateCamera((mouse_pos.x() - event->pos().x()) * drag_scale, -(mouse_pos.y() - event->pos().y()) * drag_scale, 0.0f);
+        if(alt_key)
+        {
+            std::cout<<"nide"<<std::endl;
+            QVector3D target_pos = gl_widget->GetCameraFront();
+            gl_widget->RotateCamera((mouse_pos.y() - event->pos().y()) ,(mouse_pos.x() - event->pos().x()) , 0.0f);
+            target_pos -= gl_widget->GetCameraFront();
+            std::cout<< (mouse_pos.y() - event->pos().y()) <<std::endl;
+            std::cout<< target_pos.x() << std::endl;
+            std::cout<< target_pos.y() << std::endl;
+            std::cout<< target_pos.z() << std::endl;
+            gl_widget->TranslateCamera(target_pos.x(),target_pos.y(),target_pos.z());
+        }
+        else
+        {
+            gl_widget->TranslateCamera((mouse_pos.x() - event->pos().x()) * drag_scale, -(mouse_pos.y() - event->pos().y()) * drag_scale, 0.0f);
+        }
     }
 
     mouse_pos = event->pos();

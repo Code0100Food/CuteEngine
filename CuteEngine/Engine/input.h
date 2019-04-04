@@ -12,6 +12,7 @@ public:
     ~Input();
 
     void keyPressEvent(QKeyEvent *event);
+    void keyReleaseEvent(QKeyEvent *event);
     void mouseMoveEvent(QMouseEvent* event);
     void mousePressEvent(QMouseEvent* event);
     void mouseReleaseEvent(QMouseEvent* event);
@@ -30,6 +31,7 @@ private:
 
     //Buttons
     mutable bool mouse_mid = false;
+    mutable bool alt_key = false;
     mutable QPoint mouse_pos;
 
 };
