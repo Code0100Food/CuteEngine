@@ -10,6 +10,7 @@
 #include <QSplitter>
 #include "mainwindow.h"
 #include <qscrollarea.h>
+#include "meshrenderer.h"
 
 Inspector::Inspector(QWidget* parent) : QWidget(parent)
 {
@@ -40,7 +41,7 @@ void Inspector::Start()
     add_component_button = new QComboBox();
     add_component_button->addItem("Add Component");
     add_component_button->addItem("Transform");
-    add_component_button->addItem("Basic Primitive");
+    add_component_button->addItem("Mesh Renderer");
 
     connect(add_component_button,SIGNAL(currentIndexChanged(int)),this,SLOT(AddComponent()));
 
@@ -82,6 +83,10 @@ void Inspector::AddComponent()
         CreateTransformation();
         break;
     case 2:
+        std::cout<<"Create Mesh Renderer" << std::endl;
+        CreateMeshRenderer();
+        break;
+    case 3:
         CreateBasicPrimitive();
         break;
     }
@@ -97,6 +102,23 @@ void Inspector::CreateTransformation()
         Transform* transform = new Transform();
         (*entity_item)->AddComponent(transform);
         layout->addWidget(transform);
+
+        std::cout<<(*entity_item)->GetName()<<std::endl;
+    }
+
+    add_component_button->setCurrentIndex(0);
+}
+
+void Inspector::CreateMeshRenderer()
+{
+    std::list<Entity*> selected = customApp->main_scene()->GetSelectedEntities();
+    for(std::list<Entity*>::const_iterator entity_item = selected.begin(); entity_item != selected.end(); entity_item++)
+    {
+        if((*entity_item)->FindComponent(COMPONENT_TYPE::COMPONENT_MESHRENDERER))continue;
+
+        MeshRenderer* mesh_renderer = new MeshRenderer();
+        (*entity_item)->AddComponent(mesh_renderer);
+        layout->addWidget(mesh_renderer);
 
         std::cout<<(*entity_item)->GetName()<<std::endl;
     }

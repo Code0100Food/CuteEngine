@@ -35,6 +35,7 @@ public slots:
 
     void AddComponent();
     void CreateTransformation();
+    void CreateMeshRenderer();
     void CreateBasicPrimitive();
     void Rename();
 

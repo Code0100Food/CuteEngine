@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <list>
+#include <map>
 
 class QListWidget;
 
@@ -48,11 +49,15 @@ public:
     void Import(std::string path);
     void AddResource(const Resource* new_resource);
 
+    Resource* GetSelectedMesh() const;
 private:
     std::list<Resource*> resources;
     QListWidget* widget_resources_list = nullptr;
 
     void ImportMesh(std::string path);
+
+    //UI
+
 };
 
 #endif // RESOURCEMANAGER_H

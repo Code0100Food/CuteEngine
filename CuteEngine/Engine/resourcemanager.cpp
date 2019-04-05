@@ -6,6 +6,7 @@
 #include "myopenglwidget.h"
 #include "qt_application.h"
 #include <QListWidget>
+#include <QLabel>
 
 ResourceManager::ResourceManager(QWidget* parent) : QWidget(parent)
 {
@@ -58,5 +59,27 @@ void ResourceManager::UpdateResources()
             customApp->main_window()->uiMain()->openGLWidget->makeCurrent();
             (*i)->Reload();
         }
+    }
+}
+
+Resource* ResourceManager::GetSelectedMesh() const
+{
+    QList<QListWidgetItem*> selected_items = widget_resources_list->selectedItems();
+
+    if(selected_items.size() <= 0)
+    {
+        std::cout<<"NO RESOURCE MESH SELECTED"<< std::endl;
+        return nullptr;
+    }
+    if(selected_items.size() > 1)
+    {
+        std::cout<<"MORE THAN 1 MESH SELECTED"<< std::endl;
+        return nullptr;
+    }
+
+    for(std::list<Resource*>::const_iterator item = resources.begin(); item != resources.end(); item++)
+    {
+        if(selected_items.at(0)->text() == (*item)->GetName())
+            return (*item);
     }
 }
