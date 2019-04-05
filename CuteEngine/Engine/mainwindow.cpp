@@ -48,10 +48,10 @@ MainWindow::MainWindow(QWidget *parent) :
     //Set Resource Manager
     QDockWidget* resource_dock = new QDockWidget();
     resource_dock->setWindowTitle("Resources");
-    _resource_manager = new ResourceManager(resource_dock->widget());
+    _resource_manager = new ResourceManager();
+    resource_dock->setWidget(_resource_manager);
     addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, resource_dock);
     tabifyDockWidget(_uiMain->Hierarchy, resource_dock);
-
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(Update()));

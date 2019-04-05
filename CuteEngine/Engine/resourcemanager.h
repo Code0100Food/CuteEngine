@@ -4,6 +4,8 @@
 #include <QWidget>
 #include <list>
 
+class QListWidget;
+
 enum RESOURCE_TYPE
 {
     RESOURCE_MESH = 0
@@ -22,10 +24,15 @@ public:
     bool NeedsReload() const { return needs_reload; }
     void SetReload(bool reload) { needs_reload = reload; }
 
+    void SetName(const char* _name){ name = _name; }
+    const char* GetName() const { return name.c_str(); }
+
+    RESOURCE_TYPE GetType() const { return type; }
 private:
+
+    std::string name;
     bool needs_reload = false;
     RESOURCE_TYPE type;
-
 };
 
 class ResourceManager : public QWidget
@@ -43,8 +50,9 @@ public:
 
 private:
     std::list<Resource*> resources;
+    QListWidget* widget_resources_list = nullptr;
 
-    void ImportMesh(const char* path);
+    void ImportMesh(std::string path);
 };
 
 #endif // RESOURCEMANAGER_H

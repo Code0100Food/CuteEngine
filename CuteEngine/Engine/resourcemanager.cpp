@@ -5,57 +5,58 @@
 #include "ui_mainwindow.h"
 #include "myopenglwidget.h"
 #include "qt_application.h"
+#include <QListWidget>
 
 ResourceManager::ResourceManager(QWidget* parent) : QWidget(parent)
 {
+    widget_resources_list = new QListWidget(parent);
 
+    QVBoxLayout* _layout = new QVBoxLayout();
+    _layout->addWidget(widget_resources_list);
+
+    setLayout(_layout);
 }
 
 void ResourceManager::Import(std::string path)
 {
     //Check file type
     if(path.substr(path.find_last_of(".")) == ".obj")
-        ImportMesh(path.c_str());
+        ImportMesh(path);
 
 }
 
-
-
-void ResourceManager::ImportMesh(const char *path)
+void ResourceManager::ImportMesh(std::string path)
 {
     Mesh* new_mesh = new Mesh();
-    new_mesh->LoadModel(path);
+    new_mesh->SetName(path.substr(path.find_last_of("/") + 1).c_str());
+    new_mesh->LoadModel(path.c_str());    
+    std::cout<< "LOADED MESH: " << path.substr(path.find_last_of("/") + 1).c_str()<<std::endl;
 
+    //Add the new mesh to the resources list
     resources.push_back(new_mesh);
+
+    //Add the new mesh to the UI
+    widget_resources_list->addItem(new_mesh->GetName());
 
 }
 
 void ResourceManager::DebugDraw() const
 {
-    int a = 0;
     for(std::list<Resource*>::const_iterator i = resources.begin(); i != resources.end(); i++)
     {
         if(!(*i)->NeedsReload())
-         {
-            std::cout<<"Draw Resource " << a << std::endl;
-            (*i)->Draw();
-        }
-        a++;
+            (*i)->Draw();      
     }
 }
 
 void ResourceManager::UpdateResources()
 {
-    int a = 0;
     for(std::list<Resource*>::const_iterator i = resources.begin(); i != resources.end(); i++)
     {
         if((*i)->NeedsReload())
         {
-            std::cout<<"Update Resource " << a << std::endl;
             customApp->main_window()->uiMain()->openGLWidget->makeCurrent();
             (*i)->Reload();
         }
-
-        a++;
     }
 }
