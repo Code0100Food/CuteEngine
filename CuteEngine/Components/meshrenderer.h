@@ -11,6 +11,7 @@ public:
     MeshRenderer();
 
     void Update() override;
+    void Draw();
 
 private:
     Mesh* current_mesh = nullptr;

@@ -28,6 +28,9 @@ MeshRenderer::MeshRenderer()
     main_layout->addWidget(add_mesh);
 
     setLayout(main_layout);
+
+
+    this->type = COMPONENT_MESHRENDERER;
 }
 
 void MeshRenderer::SetSelectedMesh()
@@ -36,6 +39,11 @@ void MeshRenderer::SetSelectedMesh()
 }
 
 void MeshRenderer::Update()
+{
+
+}
+
+void MeshRenderer::Draw()
 {
     if(current_mesh != nullptr)
     {

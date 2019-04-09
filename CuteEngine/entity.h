@@ -19,6 +19,7 @@ public:
     ~Entity();
 
     void Update();
+    void Draw();
 
 private:
 

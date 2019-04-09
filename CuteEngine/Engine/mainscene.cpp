@@ -33,6 +33,14 @@ void MainScene::Update()
     }
 }
 
+void MainScene::Draw()
+{
+    for(std::list<Entity*>::iterator item = entities.begin(); item != entities.end(); item++)
+    {
+        (*item)->Draw();
+    }
+}
+
 void MainScene::AddEntity(Entity *new_entity)
 {
     if (new_entity != nullptr)

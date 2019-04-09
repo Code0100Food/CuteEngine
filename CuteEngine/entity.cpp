@@ -6,6 +6,7 @@
 #include "mainwindow.h"
 #include "mainscene.h"
 #include <QVBoxLayout>
+#include "meshrenderer.h"
 
 Entity::Entity(int _id) : id(_id)
 {
@@ -56,6 +57,16 @@ void Entity::Update()
     for(size_t i = 0; i < components.size(); i++)
     {
         components[i]->Update();
+    }
+}
+
+void Entity::Draw()
+{
+    MeshRenderer* renderer = (MeshRenderer*)FindComponent(COMPONENT_TYPE::COMPONENT_MESHRENDERER);
+
+    if(renderer)
+    {
+        renderer->Draw();
     }
 }
 

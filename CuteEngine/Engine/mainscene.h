@@ -18,6 +18,7 @@ public:
 public:
 
     void Update();
+    void Draw();
 
     void AddEntity(Entity* new_entity);
     void RemoveEntities();
