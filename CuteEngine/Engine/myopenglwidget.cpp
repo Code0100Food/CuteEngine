@@ -9,6 +9,7 @@
 #include "mainscene.h"
 #include "entity.h"
 #include "../Data/mesh.h"
+#include "deferredrenderer.h"
 #include <QOpenGLFramebufferObject>
 
 #pragma comment(lib, "OpenGL32.lib")
@@ -21,6 +22,7 @@ myopenglwidget::myopenglwidget(QWidget* parent) : QOpenGLWidget(parent)
     camera = new QMatrix4x4(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1);
     aspect_ratio = ((float)width())/height();
     projection = new QMatrix4x4((1.0f/tan(DEGTORAD(field_of_view)/2))/aspect_ratio, 0, 0, 0, 0, (1.0f/tan( DEGTORAD(field_of_view)/2)), 0 ,0 ,0 ,0, ((far_plane_distance + near_plane_distance)/(near_plane_distance - far_plane_distance)), ((2*near_plane_distance*far_plane_distance)/(near_plane_distance - far_plane_distance)),0,0,-1,0);
+    deferred_renderer = new DeferredRenderer();
 }
 
 myopenglwidget::~myopenglwidget()
@@ -34,8 +36,6 @@ myopenglwidget::~myopenglwidget()
 
 void myopenglwidget::initializeGL()
 {
-   //glEnable(GL_CULL_FACE);
-
     initializeOpenGLFunctions();
     glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
@@ -146,6 +146,9 @@ void myopenglwidget::initializeGL()
     patrick = new Mesh();
     patrick->LoadModel("C:/Users/Th_Sola/Desktop/Patrick/Patrick.obj");
     patrick->Reload();
+
+
+   // TODO: if(RenderGrid())
 
 }
 

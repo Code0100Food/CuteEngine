@@ -14,6 +14,7 @@
 class QMatrix4x4;
 class QTimer;
 class Mesh;
+class DeferredRenderer;
 
 class myopenglwidget : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
 {
@@ -59,6 +60,9 @@ private:
     QOpenGLBuffer vbo;
     QOpenGLVertexArrayObject vao;
     QOpenGLShaderProgram program;
+
+    DeferredRenderer* deferred_renderer;
+    QOpenGLShaderProgram program_grid;
 
     // Frame buffer object Textures
     GLuint colorTexture;

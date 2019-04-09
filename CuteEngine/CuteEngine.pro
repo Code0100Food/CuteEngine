@@ -45,7 +45,8 @@ SOURCES += \
     Data/mesh.cpp \
     Data/submesh.cpp \
     Engine/resourcemanager.cpp \
-    Components/meshrenderer.cpp
+    Components/meshrenderer.cpp \
+    Engine/deferredrenderer.cpp
 
 HEADERS += \
     Components/component.h \
@@ -63,7 +64,8 @@ HEADERS += \
     Data/mesh.h \
     Data/submesh.h \
     Engine/resourcemanager.h \
-    Components/meshrenderer.h
+    Components/meshrenderer.h \
+    Engine/deferredrenderer.h
 
 FORMS += \
         mainwindow.ui
