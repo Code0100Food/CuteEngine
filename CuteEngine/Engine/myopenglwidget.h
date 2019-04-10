@@ -10,6 +10,7 @@
 #include <QOpenGLBuffer>
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLShaderProgram>
+#include <camera.h>
 
 class QMatrix4x4;
 class QTimer;
@@ -44,13 +45,16 @@ public:
     QVector3D GetCameraPosition()const;
     QVector3D GetCameraFront()const;
 
+    Camera* GetCamera(){return camera;}
+
     Mesh* patrick = nullptr;
 
 private:
 
     //Camera settings
-    QMatrix4x4* camera = nullptr;
-    QMatrix4x4* projection = nullptr;
+    Camera* camera = nullptr;
+    //QMatrix4x4* camera = nullptr;
+    //QMatrix4x4* projection = nullptr;
 
     float aspect_ratio = 0.0f;
     float field_of_view = 90.0f; //radiants

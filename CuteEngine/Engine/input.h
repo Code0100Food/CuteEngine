@@ -25,7 +25,7 @@ private:
     myopenglwidget* gl_widget = nullptr;
 
     //Config
-    const float drag_scale = 0.1f;
+    const float drag_scale = 0.05f;
     const float scroll_scale = 0.0010f;
     const float key_move_scale = 0.4f;
 
@@ -33,6 +33,9 @@ private:
     mutable bool mouse_mid = false;
     mutable bool alt_key = false;
     mutable QPoint mouse_pos;
-
+    int mouse_x = 0;
+    int mouse_y = 0;
+    int mouse_prev_x = 0;
+    int mouse_prev_y = 0;
 };
 #endif // INPUT_H

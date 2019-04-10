@@ -17,11 +17,12 @@
 myopenglwidget::myopenglwidget(QWidget* parent) : QOpenGLWidget(parent)
 {
     setMinimumSize(QSize(256,256));
+    setMouseTracking(true);
 
     //Camera is loaded as identity
-    camera = new QMatrix4x4(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1);
+    camera = new Camera();
     aspect_ratio = ((float)width())/height();
-    projection = new QMatrix4x4((1.0f/tan(DEGTORAD(field_of_view)/2))/aspect_ratio, 0, 0, 0, 0, (1.0f/tan( DEGTORAD(field_of_view)/2)), 0 ,0 ,0 ,0, ((far_plane_distance + near_plane_distance)/(near_plane_distance - far_plane_distance)), ((2*near_plane_distance*far_plane_distance)/(near_plane_distance - far_plane_distance)),0,0,-1,0);
+    camera->projection_matrix = QMatrix4x4((1.0f/tan(DEGTORAD(field_of_view)/2))/aspect_ratio, 0, 0, 0, 0, (1.0f/tan( DEGTORAD(field_of_view)/2)), 0 ,0 ,0 ,0, ((far_plane_distance + near_plane_distance)/(near_plane_distance - far_plane_distance)), ((2*near_plane_distance*far_plane_distance)/(near_plane_distance - far_plane_distance)),0,0,-1,0);
     deferred_renderer = new DeferredRenderer();
 }
 
@@ -30,7 +31,7 @@ myopenglwidget::~myopenglwidget()
     makeCurrent();
     finalizeGL();
 
-    delete projection;
+    //delete projection;
     delete camera;
 }
 
@@ -160,14 +161,16 @@ void myopenglwidget::resizeGL(int width, int height)
     QVector4D second(0.0f, (1.0f/tan(DEGTORAD(field_of_view)/2)), 0.0f, 0.0f);
     QVector4D third(0.0f, 0.0f, ((far_plane_distance + near_plane_distance)/(near_plane_distance - far_plane_distance)), ((2*near_plane_distance*far_plane_distance)/(near_plane_distance - far_plane_distance)));
 
-    projection->setRow(0, first);
-    projection->setRow(1, second);
-    projection->setRow(2, third);
+    camera->projection_matrix.setRow(0, first);
+    camera->projection_matrix.setRow(1, second);
+    camera->projection_matrix.setRow(2, third);
 }
 
 void myopenglwidget::paintGL()
 {
     makeCurrent();
+
+    camera->PrepareMatrices();
 
     // FrameBuffer Object has a void texture atm
     // glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -179,13 +182,13 @@ void myopenglwidget::paintGL()
     glClearColor(0.4f,0.4f,0.4f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    QMatrix4x4 lol;
+    QMatrix4x4 model_matrix;
 
     if(program.bind())
     {
-       program.setUniformValue(program.uniformLocation("projection_matrix"), *projection);
-       program.setUniformValue(program.uniformLocation("view_matrix"), camera->inverted());
-       program.setUniformValue(program.uniformLocation("model_matrix"), lol);
+       program.setUniformValue(program.uniformLocation("projection_matrix"), camera->projection_matrix);
+       program.setUniformValue(program.uniformLocation("view_matrix"), camera->view_matrix);
+       program.setUniformValue(program.uniformLocation("model_matrix"), model_matrix);
 
        patrick->Draw();
 
@@ -250,20 +253,20 @@ void myopenglwidget::leaveEvent(QEvent* event)
 
 void myopenglwidget::TranslateCamera(float x, float y, float z)
 {
-    camera->translate(x,y,z);
+    camera->view_matrix.translate(x,y,z);
 }
 
 void myopenglwidget::RotateCamera(float x, float y, float z)
 {
-    camera->rotate(x,y,z);
+    camera->view_matrix.rotate(x,y,z);
 }
 
 QVector3D myopenglwidget::GetCameraPosition() const
 {
-    return camera->column(3).toVector3D();
+    return camera->view_matrix.column(3).toVector3D();
 }
 
 QVector3D myopenglwidget::GetCameraFront() const
 {
-    return camera->column(2).toVector3D();
+    return camera->view_matrix.column(2).toVector3D();
 }

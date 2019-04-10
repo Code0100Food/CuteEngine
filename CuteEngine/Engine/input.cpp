@@ -8,6 +8,7 @@
 #include "mainscene.h"
 #include "entity.h"
 #include "transform.h"
+#include <qmath.h>
 
 Input::Input()
 {
@@ -21,17 +22,24 @@ Input::~Input()
 
 void Input::keyPressEvent(QKeyEvent *event)
 {
+    QVector3D displacement_vector;
     if(event->key() == Qt::Key_W)
     {
-        gl_widget->TranslateCamera(0.0f,0.0f,-key_move_scale);
+        displacement_vector += QVector3D(-sinf(qDegreesToRadians(gl_widget->GetCamera()->yaw)) * cosf(qDegreesToRadians(gl_widget->GetCamera()->pitch)),
+                                         sinf(qDegreesToRadians(gl_widget->GetCamera()->pitch)),
+                                         -cosf(qDegreesToRadians(gl_widget->GetCamera()->yaw)) * cosf(qDegreesToRadians(gl_widget->GetCamera()->pitch)));
     }
     else if(event->key() == Qt::Key_S)
     {
-        gl_widget->TranslateCamera(0.0f,0.0f,key_move_scale);
+        displacement_vector += QVector3D(sinf(qDegreesToRadians(gl_widget->GetCamera()->yaw)) * cosf(qDegreesToRadians(gl_widget->GetCamera()->pitch)),
+                                         -sinf(qDegreesToRadians(gl_widget->GetCamera()->pitch)),
+                                         cosf(qDegreesToRadians(gl_widget->GetCamera()->yaw)) * cosf(qDegreesToRadians(gl_widget->GetCamera()->pitch)));
     }
     else if(event->key() == Qt::Key_A)
     {
-        gl_widget->TranslateCamera(-key_move_scale,0.0f,0.0f);
+        displacement_vector += QVector3D(-cosf(qDegreesToRadians(gl_widget->GetCamera()->yaw)) * sinf(qDegreesToRadians(gl_widget->GetCamera()->pitch)),
+                                         cosf(qDegreesToRadians(gl_widget->GetCamera()->pitch)),
+                                         -sinf(qDegreesToRadians(gl_widget->GetCamera()->yaw)) * sinf(qDegreesToRadians(gl_widget->GetCamera()->pitch)));
     }
     else if(event->key() == Qt::Key_D)
     {
@@ -39,11 +47,15 @@ void Input::keyPressEvent(QKeyEvent *event)
     }
     else if(event->key() == Qt::Key_E)
     {
-        gl_widget->TranslateCamera(0.0f,-key_move_scale,0.0f);
+        displacement_vector += QVector3D(-cosf(qDegreesToRadians(gl_widget->GetCamera()->yaw)) * sinf(qDegreesToRadians(gl_widget->GetCamera()->pitch)),
+                                         cosf(qDegreesToRadians(gl_widget->GetCamera()->pitch)),
+                                         -sinf(qDegreesToRadians(gl_widget->GetCamera()->yaw)) * sinf(qDegreesToRadians(gl_widget->GetCamera()->pitch)));
     }
     else if(event->key() == Qt::Key_Q)
     {
-        gl_widget->TranslateCamera(0.0f,key_move_scale,0.0f);
+        displacement_vector += QVector3D(cosf(qDegreesToRadians(gl_widget->GetCamera()->yaw)) * sinf(qDegreesToRadians(gl_widget->GetCamera()->pitch)),
+                                         -cosf(qDegreesToRadians(gl_widget->GetCamera()->pitch)),
+                                         sinf(qDegreesToRadians(gl_widget->GetCamera()->yaw)) * sinf(qDegreesToRadians(gl_widget->GetCamera()->pitch)));
     }
     else if(event->key() == Qt::Key_F)
     {
@@ -51,16 +63,30 @@ void Input::keyPressEvent(QKeyEvent *event)
         if(target_entity != nullptr)
         {
             QVector3D target_pos = target_entity->GetTransform()->GetPosition();
+            float yaw_angle = atan2(0.0f,gl_widget->GetCamera()->position.x() -  target_pos.x());
+            float pitch_angle = atan2(gl_widget->GetCamera()->position.y() -  target_pos.y(), 0.0f);
+
+            std::cout<<gl_widget->GetCamera()->position.x()<<std::endl;
+            std::cout<<yaw_angle<<std::endl;
+
+            gl_widget->GetCamera()->yaw += yaw_angle;
+            gl_widget->GetCamera()->pitch += pitch_angle;
+
+            /*
             target_pos-=gl_widget->GetCameraPosition();
             target_pos+= gl_widget->GetCameraFront();
 
-            gl_widget->TranslateCamera(target_pos.x(),target_pos.y(),target_pos.z());
+            gl_widget->TranslateCamera(target_pos.x(),target_pos.y(),target_pos.z());*/
         }
     }
     else if(event->key() == Qt::Key_Alt)
     {
         alt_key = true;
     }
+
+    displacement_vector *= 0.05f;
+
+    gl_widget->GetCamera()->position += displacement_vector;
 }
 
 void Input::keyReleaseEvent(QKeyEvent *event)
@@ -73,24 +99,37 @@ void Input::keyReleaseEvent(QKeyEvent *event)
 
 void Input::mouseMoveEvent(QMouseEvent *event)
 {
+    std::cout<<"sdasdas"<< std::endl;
+
+    mouse_prev_x = mouse_x;
+    mouse_prev_y = mouse_y;
+    mouse_x = event->pos().x();
+    mouse_y = event->pos().y();
+
+    int mouse_x_delta = mouse_x - mouse_prev_x;
+    int mouse_y_delta = mouse_y - mouse_prev_y;
+
+    float &yaw = gl_widget->GetCamera()->yaw;
+    float &pitch = gl_widget->GetCamera()->pitch;
 
     if(mouse_mid)
     {
         if(alt_key)
         {
-            std::cout<<"nide"<<std::endl;
-            QVector3D target_pos = gl_widget->GetCameraFront();
-            gl_widget->RotateCamera((mouse_pos.y() - event->pos().y()) ,(mouse_pos.x() - event->pos().x()) , 0.0f);
-            target_pos -= gl_widget->GetCameraFront();
-            std::cout<< (mouse_pos.y() - event->pos().y()) <<std::endl;
-            std::cout<< target_pos.x() << std::endl;
-            std::cout<< target_pos.y() << std::endl;
-            std::cout<< target_pos.z() << std::endl;
-            gl_widget->TranslateCamera(target_pos.x(),target_pos.y(),target_pos.z());
+            if(mouse_x_delta != 0 || mouse_y_delta != 0)
+            {
+
+            yaw -= 0.3f * mouse_x_delta;
+            pitch -= 0.3f * mouse_y_delta;
+            while(yaw < 0.0f)yaw += 360.0f;
+            while(yaw > 360.0f)yaw -= 360.0f;
+            if(pitch > 89.0f)pitch = 89.0f;
+            if(pitch < -89.0f)pitch = -89.0f;
+            }
         }
         else
         {
-            gl_widget->TranslateCamera((mouse_pos.x() - event->pos().x()) * drag_scale, -(mouse_pos.y() - event->pos().y()) * drag_scale, 0.0f);
+            gl_widget->GetCamera()->position += QVector3D(mouse_x_delta * drag_scale, -mouse_y_delta * drag_scale, 0.0f);
         }
     }
 
@@ -123,7 +162,7 @@ void Input::wheelEvent(QWheelEvent *event)
 
     if(event->delta() != 0)
     {
-        gl_widget->TranslateCamera(0.0f, 0.0f, event->delta() * scroll_scale);
+        gl_widget->GetCamera()->position += QVector3D(0.0f, 0.0f, event->delta() * scroll_scale);
     }
 }
 
