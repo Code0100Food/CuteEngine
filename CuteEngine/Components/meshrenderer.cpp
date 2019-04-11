@@ -16,7 +16,7 @@ MeshRenderer::MeshRenderer()
     QLabel* title = new QLabel("Mesh Renderer");
     main_layout->addWidget(title);
 
-    QLabel* select_mesh = new QLabel("Selected Mesh: ");
+    select_mesh = new QLabel("Selected Mesh: No Selected");
     main_layout->addWidget(select_mesh);
 
     //QTextEdit* mesh_name = new QTextEdit("Select Mesh");
@@ -35,7 +35,17 @@ MeshRenderer::MeshRenderer()
 
 void MeshRenderer::SetSelectedMesh()
 {
+   //Set Mesh
    current_mesh = (Mesh*)customApp->main_window()->resource_manager()->GetSelectedMesh();
+
+   if(current_mesh)
+   {
+    //Update UI
+
+    std::string tmp = "Selected Mesh: ";
+    tmp += current_mesh->GetName();
+    select_mesh->setText(tmp.c_str());
+   }
 }
 
 void MeshRenderer::Update()

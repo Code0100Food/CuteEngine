@@ -2,6 +2,8 @@
 #define MESHRENDERER_H
 
 #include "component.h"
+
+class QLabel;
 class Mesh;
 
 class MeshRenderer : public Component
@@ -15,6 +17,7 @@ public:
 
 private:
     Mesh* current_mesh = nullptr;
+    QLabel* select_mesh = nullptr;
 
 public slots:
     void SetSelectedMesh();
