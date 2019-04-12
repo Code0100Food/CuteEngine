@@ -149,7 +149,7 @@ void myopenglwidget::initializeGL()
     patrick->Reload();
 
 
-   // TODO: if(RenderGrid())
+   deferred_renderer->LoadShaders(customApp->applicationDirPath().toStdString().c_str());
 
 }
 
@@ -172,33 +172,37 @@ void myopenglwidget::paintGL()
 
     camera->PrepareMatrices();
 
+    deferred_renderer->Render(camera);
+
     // FrameBuffer Object has a void texture atm
     // glBindFramebuffer(GL_FRAMEBUFFER, fbo);
     // GLenum buffs[] =
     //  { GL_COLOR_ATTACHMENT0 };
     // glDrawBuffers(1, buffs);
 
-    glClearDepth(1.0);
-    glClearColor(0.4f,0.4f,0.4f,1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    QMatrix4x4 model_matrix;
-
-    if(program.bind())
-    {
-       program.setUniformValue(program.uniformLocation("projection_matrix"), camera->projection_matrix);
-       program.setUniformValue(program.uniformLocation("view_matrix"), camera->view_matrix);
-       program.setUniformValue(program.uniformLocation("model_matrix"), model_matrix);
-
-       patrick->Draw();
-
-       vao.bind();
-       glDrawArrays(GL_TRIANGLES, 0, 3);
-       vao.release();
-
-       program.release();
-    }
-
+   //glClearDepth(1.0);
+   //glClearColor(0.4f,0.4f,0.4f,1.0f);
+   //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   //
+   //QMatrix4x4 model_matrix;
+   //
+   //if(program.bind())
+   //{
+   //   program.setUniformValue(program.uniformLocation("projection_matrix"), camera->projection_matrix);
+   //   program.setUniformValue(program.uniformLocation("view_matrix"), camera->view_matrix);
+   //   program.setUniformValue(program.uniformLocation("model_matrix"), model_matrix);
+   //
+   //   patrick->Draw();
+   //
+   //   vao.bind();
+   //   glDrawArrays(GL_TRIANGLES, 0, 3);
+   //   vao.release();
+   //
+   //
+   //
+   //   program.release();
+   //}
+   //
     // FrameBuffer Object has a void texture atm
     // QOpenGLFramebufferObject::bindDefault();
 }

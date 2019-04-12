@@ -1,6 +1,10 @@
+#include "qt_application.h"
+#include "mainscene.h"
 #include "deferredrenderer.h"
 #include <QOpenGLFunctions_3_3_Core>
 #include "camera.h"
+#include "entity.h"
+#include "transform.h"
 
 DeferredRenderer::DeferredRenderer()
 {
@@ -15,14 +19,7 @@ bool DeferredRenderer::PassGrid(Camera *camera, std::string path)
      //OpenGLState glState;
      //glState.depthTest = true;
 
-     std::string grid_vertex_path = path + "/../../CuteEngine/Resources/Shaders/grid_vertex.vert";
-     std::string grid_frag_path = path + "/../../CuteEngine/Resources/Shaders/grid_fragment.frag";
 
-     program_grid.create();
-     program_grid.addShaderFromSourceFile(QOpenGLShader::Vertex, grid_vertex_path.c_str());
-     program_grid.addShaderFromSourceFile(QOpenGLShader::Fragment, grid_frag_path.c_str());
-
-     program_grid.link();
      if (program_grid.bind())
      {
          //QVector4D camera_parameters; // = camera->GetLRBT();
@@ -76,4 +73,81 @@ void DeferredRenderer::PassBackground(Camera *camera, std::string path)
 
         program_background.release();
     }
+}
+
+void DeferredRenderer::Render(Camera *camera)
+{
+    glClearDepth(1.0);
+    glClearColor(0.4f,0.4f,0.4f,1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    PassMeshes(camera);
+}
+
+void DeferredRenderer::PassMeshes(Camera *camera)
+{
+    standard_program.bind();
+    standard_program.setUniformValue(standard_program.uniformLocation("projection_matrix"), camera->projection_matrix);
+    standard_program.setUniformValue(standard_program.uniformLocation("view_matrix"), camera->view_matrix);
+
+    foreach(Entity* entity, customApp->main_scene()->GetEntities())
+    {
+        standard_program.setUniformValue(standard_program.uniformLocation("model_matrix"), (*entity->GetTransform()->GetLocalTransform()));
+        entity->Draw();
+    }
+
+    standard_program.release();
+
+}
+
+void DeferredRenderer::LoadShaders(const char *char_path)
+{
+    LoadStandardShader(char_path);
+    LoadGridShader(char_path);
+    LoadBackgroundShader(char_path);
+}
+
+void DeferredRenderer::LoadStandardShader(const char* char_path)
+{
+    std::string vertex_path = char_path;
+    vertex_path += "/../../CuteEngine/Resources/Shaders/standard_vertex.vert";
+
+    std::string frag_path = char_path;
+    frag_path += "/../../CuteEngine/Resources/Shaders/standard_fragment.frag";
+
+    standard_program.create();
+    standard_program.addShaderFromSourceFile(QOpenGLShader::Vertex, vertex_path.c_str());
+    standard_program.addShaderFromSourceFile(QOpenGLShader::Fragment, frag_path.c_str());
+
+    standard_program.link();
+}
+
+void DeferredRenderer::LoadGridShader(const char* char_path)
+{
+    std::string vertex_path = char_path;
+    vertex_path += "/../../CuteEngine/Resources/Shaders/grid_vertex.vert";
+
+    std::string frag_path = char_path;
+    frag_path += "/../../CuteEngine/Resources/Shaders/grid_fragment.frag";
+
+    program_grid.create();
+    program_grid.addShaderFromSourceFile(QOpenGLShader::Vertex, vertex_path.c_str());
+    program_grid.addShaderFromSourceFile(QOpenGLShader::Fragment, frag_path.c_str());
+
+    program_grid.link();
+}
+
+void DeferredRenderer::LoadBackgroundShader(const char* char_path)
+{
+    std::string vertex_path = char_path;
+    vertex_path += "/../../CuteEngine/Resources/Shaders/background_vertex.vert";
+
+    std::string frag_path = char_path;
+    frag_path += "/../../CuteEngine/Resources/Shaders/background_fragment.frag";
+
+    program_background.create();
+    program_background.addShaderFromSourceFile(QOpenGLShader::Vertex, vertex_path.c_str());
+    program_background.addShaderFromSourceFile(QOpenGLShader::Fragment, frag_path.c_str());
+
+    program_background.link();
 }

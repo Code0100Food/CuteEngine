@@ -79,7 +79,7 @@ Resource* ResourceManager::GetSelectedMesh() const
 
     for(std::list<Resource*>::const_iterator item = resources.begin(); item != resources.end(); item++)
     {
-        if(selected_items.at(0)->text() == (*item)->GetName())
+        if((*item)->GetType() == RESOURCE_TYPE::RESOURCE_MESH && selected_items.at(0)->text() == (*item)->GetName())
             return (*item);
     }
 }
