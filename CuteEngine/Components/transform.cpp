@@ -37,28 +37,30 @@ Transform::Transform(QWidget *aParent) : Component(aParent)
     QLabel* scale_label_z = new QLabel("Z");
     //Spin boxes
     position_x = new QDoubleSpinBox();
-    position_x->setRange(0.0f,1000.0f);
+    position_x->setRange(-1000.0f,1000.0f);
     position_y = new QDoubleSpinBox();
-    position_y->setRange(0.0f,1000.0f);
+    position_y->setRange(-1000.0f,1000.0f);
     position_z = new QDoubleSpinBox();
-    position_z->setRange(0.0f,1000.0f);
-    position_z->setEnabled(false);
+    position_z->setRange(-1000.0f,1000.0f);
+
     rotation_x = new QDoubleSpinBox();
-    rotation_x->setEnabled(false);
+    rotation_x->setRange(-360.0f,360.0f);
     rotation_y = new QDoubleSpinBox();
-    rotation_y->setEnabled(false);
+    rotation_y->setRange(-360.0f,360.0f);
     rotation_z = new QDoubleSpinBox();
     rotation_z->setRange(-360.0f,360.0f);
+
     scale_x = new QDoubleSpinBox();
     scale_x->setRange(0.0f,1000.0f);
     scale_y = new QDoubleSpinBox();
     scale_y->setRange(0.0f,1000.0f);
     scale_z = new QDoubleSpinBox();
     scale_z->setRange(0.0f,1000.0f);
-    scale_z->setEnabled(false);
+
     //Initial values
     scale_x->setValue(1.0);
     scale_y->setValue(1.0);
+    scale_z->setValue(1.0);
 
     //Position
     grid->addWidget(position_label,0,0);
@@ -105,6 +107,7 @@ Transform::Transform(QWidget *aParent) : Component(aParent)
     main_layout->addLayout(grid);
 
     setLayout(main_layout);
+
 }
 
 Transform::~Transform()
@@ -112,51 +115,79 @@ Transform::~Transform()
 
 }
 
+void Transform::Update()
+{
+    if(!needs_update) return;
+
+    transform_matrix.setToIdentity();
+
+    std::cout<< "Euler Angles: x: " << rotation_euler_angles.x() << " y: " << rotation_euler_angles.y() << " z: "<< rotation_euler_angles.z() <<std::endl;
+
+    transform_matrix.translate(position);
+    transform_matrix.rotate(rotation_euler_angles.x(), QVector3D(1.0f, 0.0f, 0.0f));
+    transform_matrix.rotate(rotation_euler_angles.y(), QVector3D(0.0f, 1.0f, 0.0f));
+    transform_matrix.rotate(rotation_euler_angles.z(), QVector3D(0.0f, 0.0f, 1.0f));
+    transform_matrix.scale(scale);
+
+    needs_update = false;
+}
+
 void Transform::SetXPosition(double value)
 {
-    transform_matrix.translate(static_cast<float>(value), 0.0f, 0.0f);
-    position = transform_matrix.column(3).toVector3D();
+    position.setX(static_cast<float>(value));
+    needs_update = true;
 }
 
 void Transform::SetYPosition(double value)
 {
-    transform_matrix.translate(0.0f, value, 0.0f);
-    position = transform_matrix.column(3).toVector3D();
+    position.setY(static_cast<float>(value));
+    needs_update = true;
 }
 
 void Transform::SetZPosition(double value)
 {
-    transform_matrix.translate(0.0f, 0.0f, value);
-    position = transform_matrix.column(3).toVector3D();
+    position.setZ(static_cast<float>(value));
+    needs_update = true;
 }
 
 void Transform::SetXRotation(double value)
 {
-    transform_matrix.rotate(value, 0.0f, 0.0f);
-    //rotation_euler_angles = transform_matrix.
+    rotation_euler_angles.setX(static_cast<float>(value));
+    rotation_quaternion.fromEulerAngles(rotation_euler_angles);
+
+    needs_update = true;
 }
 
 void Transform::SetYRotation(double value)
 {
-    transform_matrix.rotate(0.0f, value, 0.0f);
+    rotation_euler_angles.setY(static_cast<float>(value));
+    rotation_quaternion.fromEulerAngles(rotation_euler_angles);
+
+    needs_update = true;
 }
 
 void Transform::SetZRotation(double value)
 {
-    transform_matrix.rotate(0.0f, 0.0f, value);
+    rotation_euler_angles.setZ(static_cast<float>(value));
+    rotation_quaternion.fromEulerAngles(rotation_euler_angles);
+
+    needs_update = true;
 }
 
 void Transform::SetXScale(double value)
 {
-    transform_matrix.scale(value,scale_y->value(),scale_z->value());
+    scale.setX(static_cast<float>(value));
+    needs_update = true;
 }
 
 void Transform::SetYScale(double value)
 {
-    transform_matrix.scale(scale_x->value(),value,scale_z->value());
+    scale.setY(static_cast<float>(value));
+    needs_update = true;
 }
 
 void Transform::SetZScale(double value)
 {
-    transform_matrix.scale(scale_x->value(),scale_y->value(),value);
+    scale.setZ(static_cast<float>(value));
+    needs_update = true;
 }

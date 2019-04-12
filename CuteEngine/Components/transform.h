@@ -17,16 +17,19 @@ public:
     explicit Transform(QWidget *aParent = nullptr);
     ~Transform()override;
 
+    void Update() override;
+
 private:
 
     QMatrix4x4 transform_matrix;
 
     QVector3D position;
-    QVector3D rotation_euler_angles;
+    QVector3D rotation_euler_angles = QVector3D(0.0f,0.0f,0.0f);
     QQuaternion rotation_quaternion;
     QVector3D scale = QVector3D(1.0f,1.0f,1.0f);
 
     QMatrix4x4 inherited_transform;
+    bool needs_update = false;
 
 private:
 
@@ -39,6 +42,8 @@ private:
     QDoubleSpinBox* scale_x = nullptr;
     QDoubleSpinBox* scale_y = nullptr;
     QDoubleSpinBox* scale_z = nullptr;
+
+
 
 public:
 
@@ -59,6 +64,8 @@ public:
     QVector3D GetPosition()const { return position; }
     QVector3D GetRotation()const { return rotation_euler_angles; }
     QVector3D GetScale()const { return scale; }
+
+
 
 public slots:
 
