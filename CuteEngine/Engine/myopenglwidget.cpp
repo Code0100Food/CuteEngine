@@ -11,6 +11,7 @@
 #include "../Data/mesh.h"
 #include "deferredrenderer.h"
 #include <QOpenGLFramebufferObject>
+#include <QImage>
 
 #pragma comment(lib, "OpenGL32.lib")
 
@@ -18,6 +19,7 @@ myopenglwidget::myopenglwidget(QWidget* parent) : QOpenGLWidget(parent)
 {
     setMinimumSize(QSize(256,256));
     setMouseTracking(true);
+
 
     //Camera is loaded as identity
     camera = new Camera();
@@ -41,58 +43,12 @@ void myopenglwidget::initializeGL()
     glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
 
-    glGenTextures(1, &colorTexture);
-    glBindTexture(GL_TEXTURE_2D, colorTexture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width(), height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-
-    glGenTextures(1, &depthTexture);
-    glBindTexture(GL_TEXTURE_2D, depthTexture);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, width(), height(), 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
-
-    glGenFramebuffers(1, &fbo);
-    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, colorTexture, 0);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depthTexture, 0);
-    glDrawBuffer(GL_COLOR_ATTACHMENT0);
-
-    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-     switch(status)
-     {
-        case GL_FRAMEBUFFER_COMPLETE: // OK
-            std::cout<< "OK!" << std::endl;
-            break;
-        case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
-            std::cout<< "Framebuffer ERROR: GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT" << std::endl;
-            break;
-        case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
-            std::cout<< "Framebuffer ERROR: GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT" << std::endl;
-             break;
-        case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
-            std::cout<< "Framebuffer ERROR: GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER" << std::endl;
-            break;
-        case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
-            std::cout<< "Framebuffer ERROR: GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER" << std::endl;
-            break;
-        case GL_FRAMEBUFFER_UNSUPPORTED:
-            std::cout<< "Framebuffer ERROR: GL_FRAMEBUFFER_UNSUPPORTED" << std::endl;
-            break;
-        default:
-            std::cout<< "Framebuffer ERROR: Unknown ERROR" << std::endl;
-            break;
-     }
-
+    makeCurrent();
+    deferred_renderer->SetMainBuffer(width(), height());
 
     std::string path = customApp->applicationDirPath().toStdString();
-    std::string vertex_path = path + "/../../CuteEngine/Resources/Shaders/standard_vertex.vert";
-    std::string frag_path = path + "/../../CuteEngine/Resources/Shaders/standard_fragment.frag";
+    std::string vertex_path = path + "/../../CuteEngine/Resources/Shaders/screen_vertex.vert";
+    std::string frag_path = path + "/../../CuteEngine/Resources/Shaders/screen_fragment.frag";
 
     std::cout<<path<<std::endl;
 
@@ -104,26 +60,29 @@ void myopenglwidget::initializeGL()
     program.bind();
 
     QVector3D vertices[] = {
-        QVector3D(-0.5f,-0.5f,-1.0f),QVector3D(1.0f,0.0f,0.0f) ,
-        QVector3D(0.5f,-0.5f, -1.0f),QVector3D(0.0f,1.0f,0.0f),
-        QVector3D(0.0f,2.5f, -1.0f), QVector3D(0.0f,0.0f,1.0f)
+        QVector3D(-1.0f,-1.0f,0.0f), QVector3D(0.0f,0.0f, 0.0f) ,
+        QVector3D(1.0f,1.0f, 0.0f),  QVector3D(1.0f,1.0f, 0.0f),
+        QVector3D(-1.0f, 1.0f, 0.0f),QVector3D(0.0f,1.0f, 0.0f),
+        QVector3D(-1.0f,-1.0f,0.0f), QVector3D(0.0f,0.0f, 0.0f) ,
+        QVector3D(1.0f,-1.0f, 0.0f), QVector3D(1.0f,0.0f, 0.0f),
+        QVector3D(1.0f,1.0f, 0.0f),  QVector3D(1.0f,1.0f, 0.0f)
     };
 
     vbo.create();
     vbo.bind();
     vbo.setUsagePattern(QOpenGLBuffer::UsagePattern::StaticDraw);
-    vbo.allocate(vertices,6 * sizeof(QVector3D));
+    vbo.allocate(vertices,6 * 2 * sizeof(QVector3D));
 
     vao.create();
     vao.bind();
     const GLint compCount = 3;
-    const int strideBytes = 2 * sizeof(QVector3D);
+    const int strideBytes = sizeof(QVector3D) * 2;
     const int offsetBytes0 = 0;
     const int offsetBytes1 = sizeof(QVector3D);
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(0,compCount,GL_FLOAT,GL_FALSE,strideBytes,(void*)(offsetBytes0));
-    glVertexAttribPointer(1,compCount,GL_FLOAT,GL_FALSE,strideBytes,(void*)(offsetBytes1));
+    glVertexAttribPointer(1, compCount,GL_FLOAT,GL_FALSE,strideBytes,(void*)(offsetBytes1));
 
     vao.release();
     vbo.release();
@@ -131,23 +90,10 @@ void myopenglwidget::initializeGL()
 
     connect(context(),SIGNAL(aboutToBeDestroyed()),this,SLOT(finalizeGL()));
 
-    if(program.bind())
-    {
-        std::cout<< program.programId()  <<std::endl;
-
-        std::cout<< program.uniformLocation("model_matrix")<<std::endl;
-        std::cout<<program.uniformLocation("projection_matrix")<<std::endl;
-        std::cout<<program.uniformLocation("view_matrix")<<std::endl;
-
-        program.release();
-    }
-
-
     //Debug
     patrick = new Mesh();
     patrick->LoadModel("C:/Users/Th_Sola/Desktop/Patrick/Patrick.obj");
     patrick->Reload();
-
 
    deferred_renderer->LoadShaders(customApp->applicationDirPath().toStdString().c_str());
 
@@ -171,40 +117,21 @@ void myopenglwidget::paintGL()
     makeCurrent();
 
     camera->PrepareMatrices();
-
     deferred_renderer->Render(camera);
 
-    // FrameBuffer Object has a void texture atm
-    // glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-    // GLenum buffs[] =
-    //  { GL_COLOR_ATTACHMENT0 };
-    // glDrawBuffers(1, buffs);
+    //Draw Final Scene
+    if(program.bind())
+    {
+        program.setUniformValue(program.uniformLocation("color_texture"), 0);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, deferred_renderer->main_buffer->GetColorTexture());
 
-   //glClearDepth(1.0);
-   //glClearColor(0.4f,0.4f,0.4f,1.0f);
-   //glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-   //
-   //QMatrix4x4 model_matrix;
-   //
-   //if(program.bind())
-   //{
-   //   program.setUniformValue(program.uniformLocation("projection_matrix"), camera->projection_matrix);
-   //   program.setUniformValue(program.uniformLocation("view_matrix"), camera->view_matrix);
-   //   program.setUniformValue(program.uniformLocation("model_matrix"), model_matrix);
-   //
-   //   patrick->Draw();
-   //
-   //   vao.bind();
-   //   glDrawArrays(GL_TRIANGLES, 0, 3);
-   //   vao.release();
-   //
-   //
-   //
-   //   program.release();
-   //}
-   //
-    // FrameBuffer Object has a void texture atm
-    // QOpenGLFramebufferObject::bindDefault();
+        vao.bind();
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        vao.release();
+
+        program.release();
+    }
 }
 
 void myopenglwidget::finalizeGL()
