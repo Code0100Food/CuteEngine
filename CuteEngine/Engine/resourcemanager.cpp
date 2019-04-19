@@ -7,6 +7,8 @@
 #include "qt_application.h"
 #include <QListWidget>
 #include <QLabel>
+#include <QDir>
+#include <QDirIterator>
 
 ResourceManager::ResourceManager(QWidget* parent) : QWidget(parent)
 {
@@ -16,6 +18,25 @@ ResourceManager::ResourceManager(QWidget* parent) : QWidget(parent)
     _layout->addWidget(widget_resources_list);
 
     setLayout(_layout);
+
+    //Init Load All resources
+    QString resources_path = customApp->applicationDirPath() + "/Resources";
+    std::cout<<resources_path.toStdString()<<std::endl;
+    QDir resources_dir(resources_path);
+
+    QDirIterator resources_searcher(resources_dir, QDirIterator::Subdirectories);
+
+    while(resources_searcher.hasNext())
+    {
+
+        //Import(resources_searcher.filePath().toStdString());
+
+        if(resources_searcher.fileInfo().suffix() != "")
+            Import(resources_searcher.filePath().toStdString());
+
+        resources_searcher.next();
+
+    }
 }
 
 void ResourceManager::Import(std::string path)
