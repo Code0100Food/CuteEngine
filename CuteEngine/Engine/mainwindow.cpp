@@ -74,7 +74,7 @@ void MainWindow::Update()
 {
     customApp->main_scene()->Update();
     _resource_manager->UpdateResources();
-    _uiMain->openGLWidget->paintGL();
+    _uiMain->openGLWidget->update();
 }
 
 void MainWindow::openProject()
