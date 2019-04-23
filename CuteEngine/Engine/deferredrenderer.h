@@ -38,7 +38,7 @@ public:
     void Render(Camera *camera);
 
     void PassMeshes(Camera* camera);
-    bool PassGrid(Camera* camera, std::string path);
+    bool PassGrid(Camera* camera);
     void PassBackground(Camera* camera, std::string path);
 
      FrameBufferObject* main_buffer;

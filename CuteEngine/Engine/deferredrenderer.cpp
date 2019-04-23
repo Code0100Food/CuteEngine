@@ -93,7 +93,7 @@ DeferredRenderer::DeferredRenderer()
 
 }
 
-bool DeferredRenderer::PassGrid(Camera *camera, std::string path)
+bool DeferredRenderer::PassGrid(Camera *camera)
 {
      //GLenum draw_buffers[] = {GL_COLOR_ATTACHMENT3};
      //glDrawBuffers(1, draw_buffers);
@@ -176,7 +176,6 @@ void DeferredRenderer::PassMeshes(Camera *camera)
 {
     if(standard_program.bind())
     {
-        std::cout<<"Start Rendering Meshes"<<std::endl;
         standard_program.setUniformValue(standard_program.uniformLocation("projection_matrix"), camera->projection_matrix);
         standard_program.setUniformValue(standard_program.uniformLocation("view_matrix"), camera->view_matrix);
 
@@ -188,8 +187,6 @@ void DeferredRenderer::PassMeshes(Camera *camera)
 
         standard_program.release();
     }
-
-
 }
 
 void DeferredRenderer::LoadShaders(const char *char_path)

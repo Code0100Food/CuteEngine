@@ -9,6 +9,8 @@
 #include <QLabel>
 #include <QDir>
 #include <QDirIterator>
+#include "Data/mesh.h"
+#include "Data/submesh.h"
 
 ResourceManager::ResourceManager(QWidget* parent) : QWidget(parent)
 {
@@ -28,15 +30,14 @@ ResourceManager::ResourceManager(QWidget* parent) : QWidget(parent)
 
     while(resources_searcher.hasNext())
     {
-
-        //Import(resources_searcher.filePath().toStdString());
-
         if(resources_searcher.fileInfo().suffix() != "")
             Import(resources_searcher.filePath().toStdString());
 
         resources_searcher.next();
-
     }
+
+    //Load the screen
+    LoadScreenQuad();
 }
 
 void ResourceManager::Import(std::string path)
@@ -81,6 +82,10 @@ void ResourceManager::UpdateResources()
             (*i)->Reload();
         }
     }
+
+    if(screen_quad->NeedsReload())
+        screen_quad->Reload();
+
 }
 
 Resource* ResourceManager::GetSelectedMesh() const
@@ -103,4 +108,28 @@ Resource* ResourceManager::GetSelectedMesh() const
         if((*item)->GetType() == RESOURCE_TYPE::RESOURCE_MESH && selected_items.at(0)->text() == (*item)->GetName())
             return (*item);
     }
+}
+
+void ResourceManager::LoadScreenQuad()
+{
+    float vertex_attributes[20] = {
+        -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+        1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+        -1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+        1.0f, -1.0f, 0.0f, 1.0f, 0.0f
+    };
+
+    unsigned int indices[6] = {
+      0, 1, 2,
+      0, 3, 1
+    };
+
+    VertexFormat format;
+    format.SetVertexAttribute(0, 0, 3);
+    format.SetVertexAttribute(1, 3 * sizeof(float), 2);
+
+    screen_quad = new Mesh();
+    Submesh* tmp = new Submesh(format, &vertex_attributes[0], 20 * sizeof(float), &indices[0], 6);
+    screen_quad->AddSubMesh(tmp);
+    screen_quad->SetReload(true);
 }

@@ -6,10 +6,12 @@
 #include <map>
 
 class QListWidget;
+class Mesh;
 
 enum RESOURCE_TYPE
 {
-    RESOURCE_MESH = 0
+    RESOURCE_MESH = 0,
+    RESOURCE_TEXTURE
 };
 
 class Resource
@@ -50,11 +52,15 @@ public:
     void AddResource(const Resource* new_resource);
 
     Resource* GetSelectedMesh() const;
+    Mesh* ScreenQuad() const { return screen_quad; }
+
 private:
+    Mesh* screen_quad = nullptr;
     std::list<Resource*> resources;
     QListWidget* widget_resources_list = nullptr;
 
     void ImportMesh(std::string path);
+    void LoadScreenQuad();
 
     //UI
 

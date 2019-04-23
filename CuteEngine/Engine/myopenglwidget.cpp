@@ -12,6 +12,8 @@
 #include "deferredrenderer.h"
 #include <QOpenGLFramebufferObject>
 #include <QImage>
+#include "mainwindow.h"
+#include "resourcemanager.h"
 
 #pragma comment(lib, "OpenGL32.lib")
 
@@ -45,58 +47,19 @@ void myopenglwidget::initializeGL()
 
     makeCurrent();
     deferred_renderer->SetMainBuffer(width(), height());
+    deferred_renderer->LoadShaders(customApp->applicationDirPath().toStdString().c_str());
 
     std::string path = customApp->applicationDirPath().toStdString();
     std::string vertex_path = path + "/../../CuteEngine/Resources/Shaders/screen_vertex.vert";
     std::string frag_path = path + "/../../CuteEngine/Resources/Shaders/screen_fragment.frag";
-
-    std::cout<<path<<std::endl;
 
     program.create();
     program.addShaderFromSourceFile(QOpenGLShader::Vertex, vertex_path.c_str());
     program.addShaderFromSourceFile(QOpenGLShader::Fragment, frag_path.c_str());
 
     program.link();
-    program.bind();
-
-    QVector3D vertices[] = {
-        QVector3D(-1.0f,-1.0f,0.0f), QVector3D(0.0f,0.0f, 0.0f) ,
-        QVector3D(1.0f,1.0f, 0.0f),  QVector3D(1.0f,1.0f, 0.0f),
-        QVector3D(-1.0f, 1.0f, 0.0f),QVector3D(0.0f,1.0f, 0.0f),
-        QVector3D(-1.0f,-1.0f,0.0f), QVector3D(0.0f,0.0f, 0.0f) ,
-        QVector3D(1.0f,-1.0f, 0.0f), QVector3D(1.0f,0.0f, 0.0f),
-        QVector3D(1.0f,1.0f, 0.0f),  QVector3D(1.0f,1.0f, 0.0f)
-    };
-
-    vbo.create();
-    vbo.bind();
-    vbo.setUsagePattern(QOpenGLBuffer::UsagePattern::StaticDraw);
-    vbo.allocate(vertices,6 * 2 * sizeof(QVector3D));
-
-    vao.create();
-    vao.bind();
-    const GLint compCount = 3;
-    const int strideBytes = sizeof(QVector3D) * 2;
-    const int offsetBytes0 = 0;
-    const int offsetBytes1 = sizeof(QVector3D);
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(0,compCount,GL_FLOAT,GL_FALSE,strideBytes,(void*)(offsetBytes0));
-    glVertexAttribPointer(1, compCount,GL_FLOAT,GL_FALSE,strideBytes,(void*)(offsetBytes1));
-
-    vao.release();
-    vbo.release();
-    program.release();
 
     connect(context(),SIGNAL(aboutToBeDestroyed()),this,SLOT(finalizeGL()));
-
-    //Debug
-    patrick = new Mesh();
-    patrick->LoadModel("C:/Users/Th_Sola/Desktop/Patrick/Patrick.obj");
-    patrick->Reload();
-
-   deferred_renderer->LoadShaders(customApp->applicationDirPath().toStdString().c_str());
-
 }
 
 void myopenglwidget::resizeGL(int width, int height)
@@ -126,9 +89,7 @@ void myopenglwidget::paintGL()
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, deferred_renderer->main_buffer->GetColorTexture());
 
-        vao.bind();
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-        vao.release();
+        customApp->main_window()->resource_manager()->ScreenQuad()->Draw();
 
         program.release();
     }
