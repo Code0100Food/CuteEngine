@@ -89,7 +89,8 @@ void myopenglwidget::paintGL()
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, deferred_renderer->main_buffer->GetColorTexture());
 
-        customApp->main_window()->resource_manager()->ScreenQuad()->Draw();
+        if(!customApp->main_window()->resource_manager()->ScreenQuad()->NeedsReload())
+            customApp->main_window()->resource_manager()->ScreenQuad()->Draw();
 
         program.release();
     }
