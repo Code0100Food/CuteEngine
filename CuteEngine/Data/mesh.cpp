@@ -34,6 +34,9 @@ void Mesh::Reload()
 
 void Mesh::Draw()
 {
+    if(NeedsReload())
+        return;
+
     foreach (Submesh* submesh, meshes)
         submesh->Draw();
 }

@@ -7,7 +7,7 @@
 class Camera
 {
 public:
-    Camera();
+    Camera(int width, int height);
 
     QVector4D GetLeftRightBottomTop();
 

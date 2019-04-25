@@ -10,7 +10,7 @@
 
 MainScene::MainScene()
 {
-
+    BackgroundColor = QVector4D(0.0f, 0.5f, 0.0f, 1.0f);
 }
 
 MainScene::~MainScene()
@@ -148,6 +148,12 @@ void MainScene::AddEntity(Entity *new_entity)
      }
  }
 
+ void MainScene::SetBackgroundColor(const QVector4D new_color)
+ {
+    BackgroundColor = new_color;
+ }
 
-
-
+ const QVector4D MainScene::GetBackgroundColor()const
+ {
+    return BackgroundColor;
+ }

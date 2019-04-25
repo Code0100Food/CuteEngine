@@ -8,10 +8,15 @@
 #include <QOpenGLFunctions>
 #include "mainwindow.h"
 #include "myopenglwidget.h"
+#include "resourcemanager.h"
+#include "../Data/mesh.h"
 
 ///////////////////////////////////////FRAME BUFFER OBJECT////////////////////////////////////
 FrameBufferObject::FrameBufferObject(int width, int height, bool has_depth_texture)
 {
+    viewport_width = width;
+    viewport_height = height;
+
     QOpenGLFunctions* gl_functions = QOpenGLContext::currentContext()->functions();
 
     glGenTextures(1, &color_texture);
@@ -90,63 +95,50 @@ void FrameBufferObject::UnBind()
 
 DeferredRenderer::DeferredRenderer()
 {
-
 }
 
 bool DeferredRenderer::PassGrid(Camera *camera)
 {
-     //GLenum draw_buffers[] = {GL_COLOR_ATTACHMENT3};
-     //glDrawBuffers(1, draw_buffers);
-
-     //OpenGLState glState;
-     //glState.depthTest = true;
-
+     GLenum draw_buffers = GL_COLOR_ATTACHMENT0;
+     glDrawBuffer(draw_buffers);
 
      if (program_grid.bind())
      {
-         //QVector4D camera_parameters; // = camera->GetLRBT();
-         //program_grid->setUniformValue("left", camera_parameters.x());
-         //program_grid->setUniformValue("right", camera_parameters.y());
-         //program_grid->setUniformValue("bottom", camera_parameters.z());
-         //program_grid->setUniformValue("top", camera_parameters.w());
-         //program_grid->setUniformValue("znear", camera->;
-         //program_grid->setUniformValue("worldMatrix", camera->a());
-         //program_grid->setUniformValue("viewMatrix", camera->a());
-         //program_grid->setUniformValue("projectionMatrix", camera->a());
-         //
-         //resource_manager->quad->submeshes[0]->draw();
+         QVector4D camera_parameters = camera->GetLeftRightBottomTop();
+         program_grid.setUniformValue("left", camera_parameters.x());
+         program_grid.setUniformValue("right", camera_parameters.y());
+         program_grid.setUniformValue("bottom", camera_parameters.z());
+         program_grid.setUniformValue("top", camera_parameters.w());
+         program_grid.setUniformValue("znear", camera->z_near);
+         program_grid.setUniformValue("worldMatrix", camera->world_matrix);
+         program_grid.setUniformValue("viewMatrix", camera->view_matrix);
+         program_grid.setUniformValue("projectionMatrix", camera->projection_matrix);
+
+        customApp->main_window()->resource_manager()->ScreenQuad()->Draw();
 
          program_grid.release();
      }
     return true;
 }
 
-void DeferredRenderer::PassBackground(Camera *camera, std::string path)
+void DeferredRenderer::PassBackground(Camera *camera)
 {
-    GLenum draw_buffers = { GL_COLOR_ATTACHMENT3 };
+    GLenum draw_buffers = GL_COLOR_ATTACHMENT0;
     glDrawBuffer(draw_buffers);
 
-    std::string background_vertex_path = path + "/../../CuteEngine/Resources/Shaders/background_vertex.vert";
-    std::string background_frag_path = path + "/../../CuteEngine/Resources/Shaders/background_fragment.frag";
-
-    program_background.create();
-    program_background.addShaderFromSourceFile(QOpenGLShader::Vertex, background_vertex_path.c_str());
-    program_background.addShaderFromSourceFile(QOpenGLShader::Fragment, background_frag_path.c_str());
-
-    program_background.link();
     if (program_background.bind())
     {
-        //QVector4D viewport_parameters; // = camera->GetLRBT();
-        //program_background->setUniformValue("viewportSize", QVector2D(viewportWidth, viewportHeight);
-        //program_background->setUniformValue("left", viewport_parameters.x());
-        //program_background->setUniformValue("right", viewport_parameters.y());
-        //program_background->setUniformValue("bottom", viewport_parameters.z());
-        //program_background->setUniformValue("top", viewport_parameters.w());
-        //program_background->setUniformValue("znear", camera->GetZNear();
-        //program_background->setUniformValue("worldMatrix", camera->GetWorldMatrix());
-        //program_background->setUniformValue("backgroundColor", scene->GetBackgroundColor());
-        //
-        //resource_manager->quad->submeshes[0]->draw();
+        QVector4D viewport_parameters = camera->GetLeftRightBottomTop();
+        program_background.setUniformValue("viewportSize", QVector2D(main_buffer->GetViewportWidth(), main_buffer->GetViewportHeight()));
+        program_background.setUniformValue("left", viewport_parameters.x());
+        program_background.setUniformValue("right", viewport_parameters.y());
+        program_background.setUniformValue("bottom", viewport_parameters.z());
+        program_background.setUniformValue("top", viewport_parameters.w());
+        program_background.setUniformValue("znear", camera->z_near);
+        program_background.setUniformValue("worldMatrix", camera->world_matrix);
+        program_background.setUniformValue("backgroundColor", customApp->main_scene()->GetBackgroundColor());
+
+        customApp->main_window()->resource_manager()->ScreenQuad()->Draw();
 
         program_background.release();
     }
@@ -162,6 +154,8 @@ void DeferredRenderer::Render(Camera *camera)
     glClearColor(0.4f,0.4f,0.4f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    PassGrid(camera);
+    PassBackground(camera);
     PassMeshes(camera);
 
     main_buffer->UnBind();

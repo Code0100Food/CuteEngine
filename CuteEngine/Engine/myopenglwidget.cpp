@@ -24,7 +24,7 @@ myopenglwidget::myopenglwidget(QWidget* parent) : QOpenGLWidget(parent)
 
 
     //Camera is loaded as identity
-    camera = new Camera();
+    camera = new Camera(width(), height());
     aspect_ratio = ((float)width())/height();
     camera->projection_matrix = QMatrix4x4((1.0f/tan(DEGTORAD(field_of_view)/2))/aspect_ratio, 0, 0, 0, 0, (1.0f/tan( DEGTORAD(field_of_view)/2)), 0 ,0 ,0 ,0, ((far_plane_distance + near_plane_distance)/(near_plane_distance - far_plane_distance)), ((2*near_plane_distance*far_plane_distance)/(near_plane_distance - far_plane_distance)),0,0,-1,0);
     deferred_renderer = new DeferredRenderer();
@@ -89,8 +89,7 @@ void myopenglwidget::paintGL()
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, deferred_renderer->main_buffer->GetColorTexture());
 
-        if(!customApp->main_window()->resource_manager()->ScreenQuad()->NeedsReload())
-            customApp->main_window()->resource_manager()->ScreenQuad()->Draw();
+        customApp->main_window()->resource_manager()->ScreenQuad()->Draw();
 
         program.release();
     }

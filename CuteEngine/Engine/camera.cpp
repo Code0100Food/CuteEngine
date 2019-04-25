@@ -4,9 +4,10 @@
 #include <qmath.h>
 #include<iostream>
 
-Camera::Camera()
+Camera::Camera(int width, int height)
 {
-
+    viewport_width = width;
+    viewport_height = height;
 }
 
 QVector4D Camera::GetLeftRightBottomTop()
