@@ -25,9 +25,10 @@ private:
     myopenglwidget* gl_widget = nullptr;
 
     //Config
-    const float drag_scale = 0.05f;
-    const float scroll_scale = 0.0010f;
-    const float key_move_scale = 0.4f;
+    const float drag_speed = 0.01f;
+    const float scroll_speed = 0.02f;
+    const float rotation_speed = 0.05f;
+    const float wasd_speed = 0.01f;
 
     //Buttons
     mutable bool mouse_mid = false;
