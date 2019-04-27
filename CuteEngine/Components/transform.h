@@ -14,13 +14,12 @@ class Transform : public Component
 
 public:   
 
-    explicit Transform(QWidget *aParent = nullptr);
+    explicit Transform();
     ~Transform()override;
 
     void Update() override;
 
 private:
-
     QMatrix4x4 transform_matrix;
 
     QVector3D position;
@@ -31,43 +30,13 @@ private:
     QMatrix4x4 inherited_transform;
     bool needs_update = false;
 
-private:
-
-    QDoubleSpinBox* position_x = nullptr;
-    QDoubleSpinBox* position_y = nullptr;
-    QDoubleSpinBox* position_z = nullptr;
-    QDoubleSpinBox* rotation_x = nullptr;
-    QDoubleSpinBox* rotation_y = nullptr;
-    QDoubleSpinBox* rotation_z = nullptr;
-    QDoubleSpinBox* scale_x = nullptr;
-    QDoubleSpinBox* scale_y = nullptr;
-    QDoubleSpinBox* scale_z = nullptr;
-
-
-
 public:
 
     const QMatrix4x4* GetLocalTransform()const {return &transform_matrix;}
 
-    const QDoubleSpinBox* GetPositionXButton() const { return position_x;}
-    const QDoubleSpinBox* GetPositionYButton() const { return position_y;}
-    const QDoubleSpinBox* GetPositionZButton(){ return position_z;}
-
-    const QDoubleSpinBox* GetRotationXButton(){ return rotation_x;}
-    const QDoubleSpinBox* GetRotationYButton(){ return rotation_y;}
-    const QDoubleSpinBox* GetRotationZButton(){ return rotation_z;}
-
-    const QDoubleSpinBox* GetScaleXButton() const { return scale_x;}
-    const QDoubleSpinBox* GetScaleYButton() const { return scale_y;}
-    const QDoubleSpinBox* GetScaleZButton(){ return scale_z;}
-
     QVector3D GetPosition()const { return position; }
     QVector3D GetRotation()const { return rotation_euler_angles; }
     QVector3D GetScale()const { return scale; }
-
-
-
-public slots:
 
     void SetXPosition(double value);
     void SetYPosition(double value);

@@ -6,6 +6,8 @@
 class QVBoxLayout;
 class QTextEdit;
 class QComboBox;
+class TransformWidget;
+class Entity;
 
 class Inspector : public QWidget
 {
@@ -20,6 +22,8 @@ public:
     void Start();
     void SetName(QString entity_name);
 
+    void UIReadEntity(Entity* selected_entity);
+
     void ShowUI();
     void HideUI();
 
@@ -30,6 +34,7 @@ private:
     QVBoxLayout* layout = nullptr;
     QTextEdit* name_display = nullptr;
     QComboBox* add_component_button = nullptr;
+    TransformWidget* transform_widget = nullptr;
 
 public slots:
 

@@ -5,12 +5,14 @@
 #include <QComboBox>
 #include "entity.h"
 #include "transform.h"
+#include "Widgets/transformwidget.h"
 #include "basicprimitive.h"
 #include <QTextEdit>
 #include <QSplitter>
 #include "mainwindow.h"
 #include <qscrollarea.h>
 #include "meshrenderer.h"
+#include <QGridLayout>
 
 Inspector::Inspector(QWidget* parent) : QWidget(parent)
 {
@@ -37,23 +39,16 @@ void Inspector::Start()
 
     connect(name_display, SIGNAL(textChanged()), this, SLOT(Rename()));
 
-    //Combo Box Settings
-    add_component_button = new QComboBox();
-    add_component_button->addItem("Add Component");
-    add_component_button->addItem("Transform");
-    add_component_button->addItem("Mesh Renderer");
-
-    connect(add_component_button,SIGNAL(currentIndexChanged(int)),this,SLOT(AddComponent()));
+    //Transform Settings
+    transform_widget = new TransformWidget(nullptr);
 
     QSplitter* tmp = new QSplitter();
 
     layout->addWidget(name_display);
-    layout->addWidget(add_component_button);
+    layout->addWidget(transform_widget);
     layout->addWidget(tmp);
 
     setLayout(layout);
-
-    HideUI();
 }
 
 void Inspector::SetName(QString entity_name)
@@ -63,14 +58,12 @@ void Inspector::SetName(QString entity_name)
 
 void Inspector::ShowUI()
 {
-    name_display->show();
-    add_component_button->show();
+    //Deprecated
 }
 
 void Inspector::HideUI()
 {
-    name_display->hide();
-    add_component_button->hide();
+    //Deprecated
 }
 
 void Inspector::AddComponent()
@@ -94,19 +87,19 @@ void Inspector::AddComponent()
 
 void Inspector::CreateTransformation()
 {
-    std::list<Entity*> selected = customApp->main_scene()->GetSelectedEntities();
-    for(std::list<Entity*>::const_iterator entity_item = selected.begin(); entity_item != selected.end(); entity_item++)
-    {
-        if((*entity_item)->FindComponent(COMPONENT_TYPE::COMPONENT_TRANSFORM))continue;
-
-        Transform* transform = new Transform();
-        (*entity_item)->AddComponent(transform);
-        layout->addWidget(transform);
-
-        std::cout<<(*entity_item)->GetName()<<std::endl;
-    }
-
-    add_component_button->setCurrentIndex(0);
+    //std::list<Entity*> selected = customApp->main_scene()->GetSelectedEntities();
+    //for(std::list<Entity*>::const_iterator entity_item = selected.begin(); entity_item != selected.end(); entity_item++)
+    //{
+    //    if((*entity_item)->FindComponent(COMPONENT_TYPE::COMPONENT_TRANSFORM))continue;
+    //
+    //    //Transform* transform = new Transform();
+    //    //(*entity_item)->AddComponent(transform);
+    //    //layout->addWidget(transform);
+    //
+    //    std::cout<<(*entity_item)->GetName()<<std::endl;
+    //}
+    //
+    //add_component_button->setCurrentIndex(0);
 }
 
 void Inspector::CreateMeshRenderer()
@@ -128,23 +121,23 @@ void Inspector::CreateMeshRenderer()
 
 void Inspector::CreateBasicPrimitive()
 {
-    std::list<Entity*> selected = customApp->main_scene()->GetSelectedEntities();
-    for(std::list<Entity*>::const_iterator entity_item = selected.begin(); entity_item != selected.end(); entity_item++)
-    {
-        if((*entity_item)->FindComponent(COMPONENT_TYPE::COMPONENT_PRIMITIVE))continue;
-
-        BasicPrimitive* primitive = new BasicPrimitive(E_PRIMITIVE_TYPE::PT_CIRCLE);
-        (*entity_item)->AddComponent(primitive);
-        primitive->GoToInspector(layout);
-
-        Transform* target_trans = dynamic_cast<Transform*>((*entity_item)->FindComponent(COMPONENT_TYPE::COMPONENT_TRANSFORM));
-        primitive->Connect(target_trans);
-        primitive->SetTransformValues(target_trans);
-
-        std::cout<<(*entity_item)->GetName()<<std::endl;
-    }
-
-    add_component_button->setCurrentIndex(0);
+    //std::list<Entity*> selected = customApp->main_scene()->GetSelectedEntities();
+    //for(std::list<Entity*>::const_iterator entity_item = selected.begin(); entity_item != selected.end(); entity_item++)
+    //{
+    //    if((*entity_item)->FindComponent(COMPONENT_TYPE::COMPONENT_PRIMITIVE))continue;
+    //
+    //    BasicPrimitive* primitive = new BasicPrimitive(E_PRIMITIVE_TYPE::PT_CIRCLE);
+    //    (*entity_item)->AddComponent(primitive);
+    //    primitive->GoToInspector(layout);
+    //
+    //    Transform* target_trans = dynamic_cast<Transform*>((*entity_item)->FindComponent(COMPONENT_TYPE::COMPONENT_TRANSFORM));
+    //    primitive->Connect(target_trans);
+    //    primitive->SetTransformValues(target_trans);
+    //
+    //    std::cout<<(*entity_item)->GetName()<<std::endl;
+    //}
+    //
+    //add_component_button->setCurrentIndex(0);
 } 
 
 void Inspector::Rename()
@@ -160,3 +153,10 @@ void Inspector::Rename()
     }
 }
 
+void Inspector::UIReadEntity(Entity *selected_entity)
+{
+    Transform* entity_transform = selected_entity->GetTransform();
+
+    transform_widget->SetSelectedTransform(entity_transform);
+    transform_widget->GetEntityValues(entity_transform->GetPosition(), entity_transform->GetRotation(), entity_transform->GetScale());
+}

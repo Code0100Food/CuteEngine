@@ -116,7 +116,7 @@ void MainScene::AddEntity(Entity *new_entity)
         if(selected_entity != nullptr)
         {
             selected_entity->Select();
-            customApp->main_window()->inspector()->ShowUI();
+            customApp->main_window()->inspector()->UIReadEntity(selected_entity);
             std::cout<<selected_entity->GetName() + " selected!"<<std::endl;
         }
     }

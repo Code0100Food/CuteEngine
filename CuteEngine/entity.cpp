@@ -19,7 +19,7 @@ Entity::Entity(int _id) : id(_id)
     AddComponent(transform);
 
     customApp->main_window()->inspector()->SetName(name.c_str());
-    customApp->main_window()->inspector()->GetLayout()->addWidget(transform);
+    //customApp->main_window()->inspector()->GetLayout()->addWidget(transform);
     customApp->main_scene()->SetSelectedEntity(name);
 
 }
@@ -30,7 +30,7 @@ Entity::Entity(int _id, const std::string _name) : id(_id), name(_name)
    AddComponent(transform);
 
    customApp->main_window()->inspector()->SetName(name.c_str());
-   customApp->main_window()->inspector()->GetLayout()->addWidget(transform);
+   //customApp->main_window()->inspector()->GetLayout()->addWidget(transform);
    customApp->main_scene()->SetSelectedEntity(name);
 
 }
@@ -41,7 +41,7 @@ Entity::Entity(const Entity& _entity) : id(_entity.id), name(_entity.name)
     AddComponent(transform);
 
     customApp->main_window()->inspector()->SetName(name.c_str());
-    customApp->main_window()->inspector()->GetLayout()->addWidget(transform);
+   // customApp->main_window()->inspector()->GetLayout()->addWidget(transform);
     customApp->main_scene()->SetSelectedEntity(name);
 }
 
@@ -101,22 +101,22 @@ Component* Entity::FindComponent(COMPONENT_TYPE target_type)const
 
 void Entity::Select()
 {
-    if(components.empty())return;
-
-    size_t len = components.size();
-    for(size_t k = 0; k < len; k++)
-    {
-        components[k]->ShowUI();
-    }
+    //if(components.empty())return;
+    //
+    //size_t len = components.size();
+    //for(size_t k = 0; k < len; k++)
+    //{
+    //    components[k]->ShowUI();
+    //}
 }
 
 void Entity::Deselect()
 {
-    if(components.empty())return;
-
-    size_t len = components.size();
-    for(size_t k = 0; k < len; k++)
-    {
-        components[k]->HideUI();
-    }
+   //if(components.empty())return;
+   //
+   //size_t len = components.size();
+   //for(size_t k = 0; k < len; k++)
+   //{
+   //    components[k]->HideUI();
+   //}
 }

@@ -68,7 +68,6 @@ void HierarchyWidget::RemoveEntity()
     {
         selected->Deselect();
     }
-    customApp->main_window()->inspector()->HideUI();
 
     foreach (QListWidgetItem* item, selected_items)
     {
