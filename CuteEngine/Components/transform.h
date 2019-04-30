@@ -6,16 +6,14 @@
 #include <QMatrix4x4>
 #include <QQuaternion>
 
-class QDoubleSpinBox;
-
 class Transform : public Component
 {
-    Q_OBJECT
+
 
 public:   
 
     explicit Transform();
-    ~Transform()override;
+    ~Transform() override;
 
     void Update() override;
 

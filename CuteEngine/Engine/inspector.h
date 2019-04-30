@@ -8,6 +8,8 @@ class QTextEdit;
 class QComboBox;
 class TransformWidget;
 class Entity;
+class MeshRendereWidget;
+class QPushButton;
 
 class Inspector : public QWidget
 {
@@ -34,7 +36,12 @@ private:
     QVBoxLayout* layout = nullptr;
     QTextEdit* name_display = nullptr;
     QComboBox* add_component_button = nullptr;
+
+    QPushButton* add_mesh_renderer = nullptr;
+    QPushButton* add_light_source = nullptr;
+
     TransformWidget* transform_widget = nullptr;
+    MeshRendereWidget* mesh_renderer_widget = nullptr;
 
 public slots:
 

@@ -25,7 +25,7 @@ BasicPrimitive::BasicPrimitive(E_PRIMITIVE_TYPE _type) : primitive_type(_type), 
     select_primitive_box = new QComboBox();
     select_primitive_box->addItem("Circle");
     select_primitive_box->addItem("Rectangle");
-    connect(select_primitive_box, SIGNAL(currentIndexChanged(int)), this, SLOT(ChangePrimitive()));
+    //connect(select_primitive_box, SIGNAL(currentIndexChanged(int)), this, SLOT(ChangePrimitive()));
     layout->addWidget(select_primitive_box);
 
     //Line type
@@ -33,7 +33,7 @@ BasicPrimitive::BasicPrimitive(E_PRIMITIVE_TYPE _type) : primitive_type(_type), 
     select_line_type_box->addItem("Solid Line");
     select_line_type_box->addItem("Dash Line");
     select_line_type_box->addItem("Dot Line");
-    connect(select_line_type_box, SIGNAL(currentIndexChanged(int)), this, SLOT(SetLineTypeComboBox()));
+    //connect(select_line_type_box, SIGNAL(currentIndexChanged(int)), this, SLOT(SetLineTypeComboBox()));
     layout->addWidget(select_line_type_box);
 
     //Edge width
@@ -41,24 +41,24 @@ BasicPrimitive::BasicPrimitive(E_PRIMITIVE_TYPE _type) : primitive_type(_type), 
     layout->addWidget(edge_width_label);
     edge_width_spin_box = new QSpinBox();
     edge_width_spin_box->setValue(GetEdgeWidth());
-    connect(edge_width_spin_box, SIGNAL(valueChanged(int)), this, SLOT(SetEdgeWidth(int)));
+//    connect(edge_width_spin_box, SIGNAL(valueChanged(int)), this, SLOT(SetEdgeWidth(int)));
     layout->addWidget(edge_width_spin_box);
 
     //Color picker
     pick_color_btn = new QPushButton("Pick Color");
-    connect(pick_color_btn, SIGNAL(clicked(bool)), this, SLOT(SetColorFromColorPicker()));
+   // connect(pick_color_btn, SIGNAL(clicked(bool)), this, SLOT(SetColorFromColorPicker()));
     layout->addWidget(pick_color_btn);
 
     //Edge color picker
     pick_edge_color_btn = new QPushButton("Pick Edge Color");
-    connect(pick_edge_color_btn, SIGNAL(clicked(bool)), this, SLOT(SetEdgeColorFromColorPicker()));
+//    connect(pick_edge_color_btn, SIGNAL(clicked(bool)), this, SLOT(SetEdgeColorFromColorPicker()));
     layout->addWidget(pick_edge_color_btn);
 
-    setLayout(layout);
+    //setLayout(layout);
 }
 
 BasicPrimitive::~BasicPrimitive()
-{      
+{
     delete layout;
     delete title;
     delete select_primitive_box;
@@ -71,7 +71,7 @@ BasicPrimitive::~BasicPrimitive()
 
 void BasicPrimitive::Update()
 {
-    this->update();
+    //this->update();
 }
 
 void BasicPrimitive::SetX(int _x)
@@ -201,38 +201,6 @@ void BasicPrimitive::SetTransformValues(Transform *target_trans)
 
     this->width = PRIMITIVE_SIZE * target_trans->GetScale().x();
     this->height = PRIMITIVE_SIZE * target_trans->GetScale().y();
-}
-
-void BasicPrimitive::GoToInspector(QVBoxLayout *inspector_layout)
-{
-    inspector_layout->addWidget(title);
-    inspector_layout->addWidget(select_primitive_box);
-    inspector_layout->addWidget(select_line_type_box);
-    inspector_layout->addWidget(edge_width_label);
-    inspector_layout->addWidget(edge_width_spin_box);
-    inspector_layout->addWidget(pick_color_btn);
-    inspector_layout->addWidget(pick_edge_color_btn);
-}
-
-void BasicPrimitive::ShowUI()
-{
-    title->show();
-    select_primitive_box->show();
-    select_line_type_box->show();
-    edge_width_label->show();
-    edge_width_spin_box->show();
-    pick_color_btn->show();
-    pick_edge_color_btn->show();
-}
-void BasicPrimitive::HideUI()
-{
-    title->hide();
-    select_primitive_box->hide();
-    select_line_type_box->hide();
-    edge_width_label->hide();
-    edge_width_spin_box->hide();
-    pick_color_btn->hide();
-    pick_edge_color_btn->hide();
 }
 
 void BasicPrimitive::SetXPosition(double value)

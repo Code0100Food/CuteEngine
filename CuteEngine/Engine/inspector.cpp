@@ -13,6 +13,9 @@
 #include <qscrollarea.h>
 #include "meshrenderer.h"
 #include <QGridLayout>
+#include <QPushButton>
+#include "Widgets/meshrenderewidget.h"
+#include "Data/mesh.h"
 
 Inspector::Inspector(QWidget* parent) : QWidget(parent)
 {
@@ -29,7 +32,6 @@ Inspector::~Inspector()
 void Inspector::Start()
 {
     //QScrollArea* scroll = new QScrollArea(this);
-
     layout = new QVBoxLayout();
 
     //Entity Name Display
@@ -42,11 +44,22 @@ void Inspector::Start()
     //Transform Settings
     transform_widget = new TransformWidget(nullptr);
 
+    //Mesh Renderer Settings
+    mesh_renderer_widget = new MeshRendereWidget();
+
+    //ButTons
+    add_mesh_renderer = new QPushButton("Add Mesh Renderer");
+    add_light_source = new QPushButton("Add Light Source");
+
     QSplitter* tmp = new QSplitter();
 
     layout->addWidget(name_display);
     layout->addWidget(transform_widget);
+    layout->addWidget(mesh_renderer_widget);
     layout->addWidget(tmp);
+
+    layout->addWidget(add_mesh_renderer);
+    layout->addWidget(add_light_source);
 
     setLayout(layout);
 }
@@ -111,7 +124,7 @@ void Inspector::CreateMeshRenderer()
 
         MeshRenderer* mesh_renderer = new MeshRenderer();
         (*entity_item)->AddComponent(mesh_renderer);
-        layout->addWidget(mesh_renderer);
+        //layout->addWidget(mesh_renderer);
 
         std::cout<<(*entity_item)->GetName()<<std::endl;
     }
@@ -159,4 +172,13 @@ void Inspector::UIReadEntity(Entity *selected_entity)
 
     transform_widget->SetSelectedTransform(entity_transform);
     transform_widget->GetEntityValues(entity_transform->GetPosition(), entity_transform->GetRotation(), entity_transform->GetScale());
+
+    MeshRenderer* entity_renderer = (MeshRenderer*)selected_entity->FindComponent(COMPONENT_TYPE::COMPONENT_MESHRENDERER);
+
+    if(entity_renderer)
+    {
+        //if(entity_renderer->GetCurrentMesh() != nullptr)
+        //   mesh_renderer_widget->
+        //add_mesh_renderer->hide();
+    }
 }

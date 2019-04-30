@@ -47,7 +47,10 @@ SOURCES += \
     Engine/resourcemanager.cpp \
     Components/meshrenderer.cpp \
     Engine/deferredrenderer.cpp \
-    Engine/camera.cpp
+    Engine/camera.cpp \
+    Data/texture.cpp \
+    Widgets/transformwidget.cpp \
+    Widgets/meshrenderewidget.cpp
 
 HEADERS += \
     Components/component.h \
@@ -67,7 +70,10 @@ HEADERS += \
     Engine/resourcemanager.h \
     Components/meshrenderer.h \
     Engine/deferredrenderer.h \
-    Engine/camera.h
+    Engine/camera.h \
+    Data/texture.h \
+    Widgets/transformwidget.h \
+    Widgets/meshrenderewidget.h
 
 FORMS += \
         mainwindow.ui

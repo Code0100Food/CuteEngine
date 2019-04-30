@@ -24,7 +24,6 @@ Submesh::Submesh(VertexFormat format, void* _data, int size, void* _indexs, int 
 
 void Submesh::ReLoad()
 {
-    std::cout<< "SUBMESH: 1" << std::endl;
     QOpenGLFunctions* gl_functions = QOpenGLContext::currentContext()->functions();
 
     vertex_array_object.create();

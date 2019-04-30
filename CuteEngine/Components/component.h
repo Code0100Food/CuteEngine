@@ -13,14 +13,13 @@ enum COMPONENT_TYPE
     COMPONENT_PRIMITIVE
 };
 
-class Component : public QWidget
+class Component
 {
-    Q_OBJECT
 
 public:
 
-    explicit Component(QWidget* parent = nullptr);
-    ~Component() override;
+    explicit Component();
+    virtual ~Component();
 
     virtual void Update();
 
@@ -32,11 +31,6 @@ protected:
 public:
 
     COMPONENT_TYPE GetType()const;
-
-    virtual void GoToInspector(QVBoxLayout*){};
-    virtual void ShowUI();
-    virtual void HideUI();
-
 };
 
 #endif // COMPONENT_H

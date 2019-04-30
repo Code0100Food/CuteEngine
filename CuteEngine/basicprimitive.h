@@ -43,7 +43,6 @@ public:
 
 class BasicPrimitive : public Component
 {
-    Q_OBJECT
 
 public:
 
@@ -79,10 +78,6 @@ public:
 
     void Connect(Transform* target_trans);
     void SetTransformValues(Transform* target_trans);
-
-    void GoToInspector(QVBoxLayout* inspector_layout) override;
-    void ShowUI() override;
-    void HideUI() override;
 
 private:
 
