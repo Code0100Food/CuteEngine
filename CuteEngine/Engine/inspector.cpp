@@ -49,6 +49,8 @@ void Inspector::Start()
 
     //ButTons
     add_mesh_renderer = new QPushButton("Add Mesh Renderer");
+    connect(add_mesh_renderer, SIGNAL(released()), this, SLOT(AddMeshRenderer()));
+
     add_light_source = new QPushButton("Add Light Source");
 
     QSplitter* tmp = new QSplitter();
@@ -177,8 +179,38 @@ void Inspector::UIReadEntity(Entity *selected_entity)
 
     if(entity_renderer)
     {
-        //if(entity_renderer->GetCurrentMesh() != nullptr)
-        //   mesh_renderer_widget->
-        //add_mesh_renderer->hide();
+        mesh_renderer_widget->show();
+        add_mesh_renderer->hide();
+
+        //Update Combo Box
+        if(!entity_renderer->GetCurrentMesh())
+            mesh_renderer_widget->ResetComboBox();
+        else mesh_renderer_widget->UpdateComboBox(entity_renderer->GetCurrentMesh()->GetName());
+    }
+    else
+    {
+        add_mesh_renderer->show();
+        mesh_renderer_widget->hide();
+    }
+}
+
+void Inspector::AddMeshToWidget(const char *name)
+{
+    mesh_renderer_widget->AddMesh(name);
+}
+
+void Inspector::AddMeshRenderer()
+{
+    Entity* tmp = customApp->main_scene()->GetSelectedEntity();
+
+    if(tmp)
+    {
+        MeshRenderer* new_mesh_renderer = new MeshRenderer();
+        tmp->AddComponent(new_mesh_renderer);
+
+        mesh_renderer_widget->show();
+        add_mesh_renderer->hide();
+
+        mesh_renderer_widget->ResetComboBox();
     }
 }

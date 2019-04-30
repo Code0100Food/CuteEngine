@@ -54,6 +54,9 @@ public:
     Resource* GetSelectedMesh() const;
     Mesh* ScreenQuad() const { return screen_quad; }
 
+    //New Functionality
+    Resource* GetMeshByName(std::string name) const;
+
 private:
     Mesh* screen_quad = nullptr;
     std::list<Resource*> resources;

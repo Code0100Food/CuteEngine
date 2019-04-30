@@ -11,6 +11,7 @@
 #include <QDirIterator>
 #include "Data/mesh.h"
 #include "Data/submesh.h"
+#include "inspector.h"
 
 ResourceManager::ResourceManager(QWidget* parent) : QWidget(parent)
 {
@@ -61,6 +62,8 @@ void ResourceManager::ImportMesh(std::string path)
     //Add the new mesh to the UI
     widget_resources_list->addItem(new_mesh->GetName());
 
+    std::cout<<"Mesh to widget"<<std::endl;
+
 }
 
 void ResourceManager::DebugDraw() const
@@ -80,7 +83,12 @@ void ResourceManager::UpdateResources()
         {
             customApp->main_window()->uiMain()->openGLWidget->makeCurrent();
             (*i)->Reload();
+
+            if((*i)->GetType() == RESOURCE_TYPE::RESOURCE_MESH)
+                customApp->main_window()->inspector()->AddMeshToWidget((*i)->GetName());
         }
+
+
     }
 
     if(screen_quad->NeedsReload())
@@ -132,4 +140,15 @@ void ResourceManager::LoadScreenQuad()
     Submesh* tmp = new Submesh(format, &vertex_attributes[0], 20 * sizeof(float), &indices[0], 6);
     screen_quad->AddSubMesh(tmp);
     screen_quad->SetReload(true);
+}
+
+Resource* ResourceManager::GetMeshByName(std::string name) const
+{
+    foreach(Resource* res, resources)
+    {
+        if(res->GetType() == RESOURCE_MESH && name == res->GetName())
+            return res;
+    }
+
+    return nullptr;
 }

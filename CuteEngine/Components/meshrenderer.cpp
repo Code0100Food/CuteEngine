@@ -11,12 +11,6 @@ MeshRenderer::MeshRenderer() : Component()
     type = COMPONENT_TYPE::COMPONENT_MESHRENDERER;
 }
 
-void MeshRenderer::SetSelectedMesh()
-{
-   //Set Mesh
-   current_mesh = (Mesh*)customApp->main_window()->resource_manager()->GetSelectedMesh();
-}
-
 void MeshRenderer::Update()
 {
 

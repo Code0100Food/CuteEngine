@@ -31,6 +31,8 @@ public:
 
     QVBoxLayout* GetLayout() const {return layout;}
 
+    void AddMeshToWidget(const char* name);
+
 private:
 
     QVBoxLayout* layout = nullptr;
@@ -50,6 +52,8 @@ public slots:
     void CreateMeshRenderer();
     void CreateBasicPrimitive();
     void Rename();
+
+    void AddMeshRenderer();
 
 };
 
