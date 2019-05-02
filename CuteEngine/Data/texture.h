@@ -6,7 +6,7 @@
 class Texture : public Resource
 {
 public:
-    Texture(unsigned char* buffer, int _width, int _height);
+    Texture(const char* image_path);
     ~Texture() override;
 
     void Reload() override;
@@ -15,12 +15,11 @@ public:
 
     unsigned int GetIndex() const { return id; }
 
+
 private:
     unsigned int id = 0;
 
-    int width = 0;
-    int height = 0;
-    unsigned char* image_data = nullptr;
+    std::string texture_path;
 };
 
 #endif // TEXTURE_H

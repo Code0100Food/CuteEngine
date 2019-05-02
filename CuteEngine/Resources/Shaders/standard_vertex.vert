@@ -11,11 +11,12 @@ uniform mat4 model_matrix;
 out Data
 {
         vec3 color;
+	vec2 uv_coords;
 }VSOut;
 
 void main(void)
 {
 	gl_Position = projection_matrix * view_matrix * model_matrix * vec4(position, 1);
-        //gl_Position = vec4(position, 1);
+	VSOut.uv_coords = UVcoords;
         VSOut.color = color;
 }

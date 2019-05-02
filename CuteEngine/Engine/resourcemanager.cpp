@@ -12,6 +12,7 @@
 #include "Data/mesh.h"
 #include "Data/submesh.h"
 #include "inspector.h"
+#include "Data/texture.h"
 
 ResourceManager::ResourceManager(QWidget* parent) : QWidget(parent)
 {
@@ -44,9 +45,13 @@ ResourceManager::ResourceManager(QWidget* parent) : QWidget(parent)
 void ResourceManager::Import(std::string path)
 {
     //Check file type
-    if(path.substr(path.find_last_of(".")) == ".obj")
+    std::string file_type = path.substr(path.find_last_of("."));
+
+    if(file_type == ".obj")
         ImportMesh(path);
 
+    if(file_type == ".png")
+        ImportTexture(path);
 }
 
 void ResourceManager::ImportMesh(std::string path)
@@ -54,15 +59,13 @@ void ResourceManager::ImportMesh(std::string path)
     Mesh* new_mesh = new Mesh();
     new_mesh->SetName(path.substr(path.find_last_of("/") + 1).c_str());
     new_mesh->LoadModel(path.c_str());    
-    std::cout<< "LOADED MESH: " << path.substr(path.find_last_of("/") + 1).c_str()<<std::endl;
+    std::cout<< "LOADED MESH: " << new_mesh->GetName() <<std::endl;
 
     //Add the new mesh to the resources list
     resources.push_back(new_mesh);
 
     //Add the new mesh to the UI
     widget_resources_list->addItem(new_mesh->GetName());
-
-    std::cout<<"Mesh to widget"<<std::endl;
 
 }
 
@@ -86,6 +89,9 @@ void ResourceManager::UpdateResources()
 
             if((*i)->GetType() == RESOURCE_TYPE::RESOURCE_MESH)
                 customApp->main_window()->inspector()->AddMeshToWidget((*i)->GetName());
+
+             if((*i)->GetType() == RESOURCE_TYPE::RESOURCE_TEXTURE)
+                  customApp->main_window()->inspector()->AddtextureToWidget((*i)->GetName());
         }
 
 
@@ -142,13 +148,35 @@ void ResourceManager::LoadScreenQuad()
     screen_quad->SetReload(true);
 }
 
-Resource* ResourceManager::GetMeshByName(std::string name) const
+Resource* ResourceManager::GetResourceByName(std::string name, RESOURCE_TYPE type)
 {
+    std::cout<< "Num resource: " << resources.size() << std::endl;
+
     foreach(Resource* res, resources)
     {
-        if(res->GetType() == RESOURCE_MESH && name == res->GetName())
+        std::cout<< "resource: " << res->GetName()<< std::endl;
+        std::cout<< "resource type: " << res->GetType()<< std::endl;
+
+        if(res->GetType() == type && name == res->GetName())
+        {
+            std::cout<< "Returned resource: " << res->GetName()<< std::endl;
             return res;
+        }
     }
 
     return nullptr;
+}
+
+void ResourceManager::ImportTexture(std::string path)
+{
+   Texture* new_texture = new Texture(path.c_str());
+   new_texture->SetName(path.substr(path.find_last_of("/") + 1).c_str());
+
+   std::cout<< "LOADED TEXTURE: " << new_texture->GetName() <<std::endl;
+
+   //Add the new mesh to the resources list
+   resources.push_back(new_texture);
+
+   //Add the new mesh to the UI
+   widget_resources_list->addItem(new_texture->GetName());
 }

@@ -55,7 +55,8 @@ public:
     Mesh* ScreenQuad() const { return screen_quad; }
 
     //New Functionality
-    Resource* GetMeshByName(std::string name) const;
+    Resource* GetResourceByName(std::string name, RESOURCE_TYPE type);
+
 
 private:
     Mesh* screen_quad = nullptr;
@@ -63,6 +64,7 @@ private:
     QListWidget* widget_resources_list = nullptr;
 
     void ImportMesh(std::string path);
+    void ImportTexture(std::string path);
     void LoadScreenQuad();
 
     //UI
