@@ -4,7 +4,8 @@
 #include <mainwindow.h>
 #include <resourcemanager.h>
 #include "../Data/mesh.h"
-
+#include "Data/material.h"
+#include<iostream>
 
 MeshRenderer::MeshRenderer() : Component()
 {
@@ -19,7 +20,7 @@ void MeshRenderer::Update()
 void MeshRenderer::Draw()
 {
     if(current_mesh != nullptr)
-    {
-        current_mesh->Draw();
+    {   
+        current_mesh->Draw(mesh_material);
     }
 }

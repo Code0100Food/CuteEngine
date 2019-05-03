@@ -13,7 +13,7 @@
 #include "mainscene.h"
 #include "entity.h"
 #include "meshrenderer.h"
-#include "Data/texture.h"
+#include "Data/material.h"
 
 MeshRendereWidget::MeshRendereWidget()
 {
@@ -33,12 +33,15 @@ MeshRendereWidget::MeshRendereWidget()
     mesh_selector->addItem("No Mesh Selected");
     grid->addWidget(mesh_selector, 0, 1);
 
+    QLabel* select_material = new QLabel("Selected Material: ");
+    grid->addWidget(select_material, 1, 0);
+
     texture_selector = new QComboBox();
-    texture_selector->addItem("No texture");
+    texture_selector->addItem("No Material");
     grid->addWidget(texture_selector, 1, 1);
 
-    connect(mesh_selector, SIGNAL(currentIndexChanged(int)), this, SLOT(SetSelectedMesh(int)));
-    connect(texture_selector, SIGNAL(currentIndexChanged(int)), this, SLOT(SetSelectedTexture(int)));
+    connect(texture_selector , SIGNAL(currentIndexChanged(int)), this, SLOT(SetSelectedTexture(int)));
+    connect(mesh_selector, SIGNAL(currentIndexChanged(int)), this, SLOT(SetSelectedMesh (int)));
 
     main_layout->addLayout(grid);
     setLayout(main_layout);
@@ -49,7 +52,12 @@ void MeshRendereWidget::AddMesh(const char* name)
     mesh_selector->addItem(name);
 }
 
-void MeshRendereWidget::SetSelectedMesh(int value) const
+void MeshRendereWidget::AddMaterial(const char *name)
+{
+    texture_selector->addItem(name);
+}
+
+void MeshRendereWidget::SetSelectedMesh(int value)
 {
     if(value == 0)
         return;
@@ -60,46 +68,54 @@ void MeshRendereWidget::SetSelectedMesh(int value) const
     Entity* tmp = customApp->main_scene()->GetSelectedEntity();
     if(tmp)
     {
-        std::cout<< mesh_selector->currentText().toStdString() << std::endl;
-
         MeshRenderer* entity_mesh_renderer = (MeshRenderer*)tmp->FindComponent(COMPONENT_TYPE::COMPONENT_MESHRENDERER);
         entity_mesh_renderer->SetCurrentMesh(selected_mesh);
     }
 }
 
-void MeshRendereWidget::SetSelectedTexture(int value) const
+void MeshRendereWidget::SetSelectedTexture(int value)
 {
     if(value == 0)
         return;
 
     //Esto no me gusta pero es fast de hacer
-    std::cout<< "Looking for " << mesh_selector->currentText().toStdString() << std::endl;
-    Texture* selected_texture = (Texture*)customApp->main_window()->resource_manager()->GetResourceByName("Skin_Patrick.png", RESOURCE_TYPE::RESOURCE_TEXTURE);
-
-    if(selected_texture)
-        std::cout<<"Texture nonull"<<std::endl;
-
-    selected_texture->GetIndex();
+    Material* selected_material = (Material*)customApp->main_window()->resource_manager()->GetResourceByName(texture_selector->currentText().toStdString(), RESOURCE_TYPE::RESOURCE_MATERIAL);
 
     Entity* tmp = customApp->main_scene()->GetSelectedEntity();
     if(tmp)
     {
-        std::cout<< mesh_selector->currentText().toStdString() << std::endl;
-
         MeshRenderer* entity_mesh_renderer = (MeshRenderer*)tmp->FindComponent(COMPONENT_TYPE::COMPONENT_MESHRENDERER);
-        entity_mesh_renderer->debug = selected_texture;
-        std::cout << "selected texture" << std::endl;
+        entity_mesh_renderer->SetCurrentMaterial(selected_material);
     }
 }
 
-void MeshRendereWidget::ResetComboBox()
+void MeshRendereWidget::ResetComboBox(int type)
 {
-    mesh_selector->setCurrentIndex(0);
+    switch(type)
+    {
+        case RESOURCE_MESH:
+            mesh_selector->setCurrentIndex(0);
+            break;
+
+        case RESOURCE_MATERIAL:
+            texture_selector->setCurrentIndex(0);
+            break;
+    }
 }
 
-void MeshRendereWidget::UpdateComboBox(const char *name)
+void MeshRendereWidget::UpdateComboBox(int type, const char *name)
 {
-    mesh_selector->setCurrentIndex( mesh_selector->findText(name));
+
+    switch(type)
+    {
+        case RESOURCE_MESH:
+             mesh_selector->setCurrentIndex( mesh_selector->findText(name));
+            break;
+
+        case RESOURCE_MATERIAL:
+            texture_selector->setCurrentIndex(texture_selector->findText(name));
+            break;
+    }
 }
 
 

@@ -7,6 +7,8 @@
 #include "assimp/scene.h"
 #include <QFile>
 #include <QIODevice>
+#include "Data/material.h"
+#include <QOpenGLFunctions>
 
 Mesh::Mesh() : Resource(RESOURCE_MESH)
 {
@@ -32,13 +34,32 @@ void Mesh::Reload()
    SetReload(false);
 }
 
+void Mesh::Draw(Material* material)
+{
+    if(NeedsReload())
+        return;
+
+    int material_index = 0;
+    foreach (Submesh* submesh, meshes)
+    {
+        if(material)
+        {
+            material->Draw(material_index);
+            material_index++;
+        }
+        submesh->Draw();
+    }
+}
+
 void Mesh::Draw()
 {
     if(NeedsReload())
         return;
 
     foreach (Submesh* submesh, meshes)
+    {
         submesh->Draw();
+    }
 }
 
 void Mesh::Destroy()
@@ -63,7 +84,6 @@ void Mesh::LoadModel(const char *path)
 
     const aiScene* scene = importer.ReadFileFromMemory(data.data(), (unsigned int)data.size(),
                                                        aiProcess_Triangulate |
-                                                       aiProcess_FlipUVs |
                                                        aiProcess_GenSmoothNormals |
                                                        aiProcess_PreTransformVertices |
                                                        aiProcess_ImproveCacheLocality, ".obj");

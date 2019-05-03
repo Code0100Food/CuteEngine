@@ -14,15 +14,23 @@ public:
 
 
     void AddMesh(const char* name);
-    void ResetComboBox();
-    void UpdateComboBox(const char* name);
+    void AddMaterial(const char* name);
+
+    void ResetComboBox(int type);
+    void UpdateComboBox(int type, const char* name);
+
+    //Debug
+    QComboBox* texture_selector = nullptr;
 
 private:
     QLabel* select_mesh = nullptr;
     QComboBox* mesh_selector = nullptr;
 
+
+
 public slots:
-    void SetSelectedMesh(int) const;
+    void SetSelectedMesh(int);
+    void SetSelectedTexture(int);
 };
 
 #endif // MESHRENDEREWIDGET_H

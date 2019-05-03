@@ -13,6 +13,7 @@
 #include "Data/submesh.h"
 #include "inspector.h"
 #include "Data/texture.h"
+#include "Data/material.h"
 
 ResourceManager::ResourceManager(QWidget* parent) : QWidget(parent)
 {
@@ -40,6 +41,9 @@ ResourceManager::ResourceManager(QWidget* parent) : QWidget(parent)
 
     //Load the screen
     LoadScreenQuad();
+
+    //Load Materials
+    LoadPatrickMaterial();
 }
 
 void ResourceManager::Import(std::string path)
@@ -90,8 +94,8 @@ void ResourceManager::UpdateResources()
             if((*i)->GetType() == RESOURCE_TYPE::RESOURCE_MESH)
                 customApp->main_window()->inspector()->AddMeshToWidget((*i)->GetName());
 
-             if((*i)->GetType() == RESOURCE_TYPE::RESOURCE_TEXTURE)
-                  customApp->main_window()->inspector()->AddtextureToWidget((*i)->GetName());
+             if((*i)->GetType() == RESOURCE_TYPE::RESOURCE_MATERIAL)
+                  customApp->main_window()->inspector()->AddMaterialToWidget((*i)->GetName());
         }
 
 
@@ -150,13 +154,8 @@ void ResourceManager::LoadScreenQuad()
 
 Resource* ResourceManager::GetResourceByName(std::string name, RESOURCE_TYPE type)
 {
-    std::cout<< "Num resource: " << resources.size() << std::endl;
-
     foreach(Resource* res, resources)
     {
-        std::cout<< "resource: " << res->GetName()<< std::endl;
-        std::cout<< "resource type: " << res->GetType()<< std::endl;
-
         if(res->GetType() == type && name == res->GetName())
         {
             std::cout<< "Returned resource: " << res->GetName()<< std::endl;
@@ -179,4 +178,26 @@ void ResourceManager::ImportTexture(std::string path)
 
    //Add the new mesh to the UI
    widget_resources_list->addItem(new_texture->GetName());
+}
+
+void ResourceManager::LoadPatrickMaterial()
+{
+    std::vector<Texture*> patrick_textures;
+    Texture* colors = (Texture*)GetResourceByName("Color.png", RESOURCE_TYPE::RESOURCE_TEXTURE);
+
+    patrick_textures.push_back(colors);
+    patrick_textures.push_back(colors);
+    patrick_textures.push_back(colors);
+    patrick_textures.push_back((Texture*)GetResourceByName("Flowers.png", RESOURCE_TYPE::RESOURCE_TEXTURE));
+    patrick_textures.push_back((Texture*)GetResourceByName("Skin_Patrick.png", RESOURCE_TYPE::RESOURCE_TEXTURE));
+    patrick_textures.push_back(colors);
+
+    Material* new_material = new Material(patrick_textures);
+    new_material->SetName("Patrick_Material.mtl");
+
+    //Add the new mesh to the resources list
+    resources.push_back(new_material);
+
+    //Add the new mesh to the UI
+    widget_resources_list->addItem(new_material->GetName());
 }

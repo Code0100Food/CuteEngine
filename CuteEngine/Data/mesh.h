@@ -9,6 +9,7 @@ class Submesh;
 struct aiNode;
 struct aiScene;
 struct aiMesh;
+class Material;
 
 class Mesh : public Resource
 {
@@ -17,6 +18,7 @@ public:
     ~Mesh() override;
 
     void Reload() override;
+    void Draw(Material* material);
     void Draw() override;
     void Destroy() override;
 
@@ -24,6 +26,8 @@ public:
 
     void LoadModel(const char* path);
     std::vector<Submesh*> meshes;
+
+    unsigned int debug = 0;
 
 private:
     //Load Stuff

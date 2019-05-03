@@ -39,6 +39,7 @@ FrameBufferObject::FrameBufferObject(int width, int height, bool has_depth_textu
     gl_functions->glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
     gl_functions->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_texture, 0);
     gl_functions->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_texture, 0);
+
     glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
     GLenum status = gl_functions->glCheckFramebufferStatus(GL_FRAMEBUFFER);
@@ -176,6 +177,8 @@ void DeferredRenderer::PassMeshes(Camera *camera)
         foreach(Entity* entity, customApp->main_scene()->GetEntities())
         {
             standard_program.setUniformValue(standard_program.uniformLocation("model_matrix"), (*entity->GetTransform()->GetLocalTransform()));
+
+            standard_program.setUniformValue(standard_program.uniformLocation("albedo_texture"), 0);
             entity->Draw();
         }
 

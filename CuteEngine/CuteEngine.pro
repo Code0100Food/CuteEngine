@@ -50,7 +50,8 @@ SOURCES += \
     Engine/camera.cpp \
     Data/texture.cpp \
     Widgets/transformwidget.cpp \
-    Widgets/meshrenderewidget.cpp
+    Widgets/meshrenderewidget.cpp \
+    Data/material.cpp
 
 HEADERS += \
     Components/component.h \
@@ -73,7 +74,8 @@ HEADERS += \
     Engine/camera.h \
     Data/texture.h \
     Widgets/transformwidget.h \
-    Widgets/meshrenderewidget.h
+    Widgets/meshrenderewidget.h \
+    Data/material.h
 
 FORMS += \
         mainwindow.ui

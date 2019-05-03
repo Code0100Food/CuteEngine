@@ -11,7 +11,8 @@ class Mesh;
 enum RESOURCE_TYPE
 {
     RESOURCE_MESH = 0,
-    RESOURCE_TEXTURE
+    RESOURCE_TEXTURE,
+    RESOURCE_MATERIAL
 };
 
 class Resource
@@ -57,6 +58,8 @@ public:
     //New Functionality
     Resource* GetResourceByName(std::string name, RESOURCE_TYPE type);
 
+    //Custom functions
+    void LoadPatrickMaterial();
 
 private:
     Mesh* screen_quad = nullptr;
