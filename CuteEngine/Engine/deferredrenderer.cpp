@@ -100,7 +100,7 @@ DeferredRenderer::DeferredRenderer()
 
 bool DeferredRenderer::PassGrid(Camera *camera)
 {
-     GLenum draw_buffers = GL_COLOR_ATTACHMENT0;
+    /* GLenum draw_buffers = GL_COLOR_ATTACHMENT0;
      glDrawBuffer(draw_buffers);
 
      if (program_grid.bind())
@@ -118,7 +118,7 @@ bool DeferredRenderer::PassGrid(Camera *camera)
         customApp->main_window()->resource_manager()->ScreenQuad()->Draw();
 
          program_grid.release();
-     }
+     }*/
     return true;
 }
 

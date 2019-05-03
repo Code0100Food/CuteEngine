@@ -25,7 +25,7 @@ private:
     myopenglwidget* gl_widget = nullptr;
 
     //Config
-    const float drag_speed = 0.01f;
+    const float drag_speed = 0.001f;
     const float scroll_speed = 0.02f;
     const float rotation_speed = 0.05f;
     const float wasd_speed = 0.01f;
