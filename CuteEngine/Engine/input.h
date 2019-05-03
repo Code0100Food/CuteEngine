@@ -33,7 +33,11 @@ private:
     //Buttons
     mutable bool mouse_mid = false;
     mutable bool alt_key = false;
+    mutable bool right_mouse = false;
+    mutable bool left_mouse = false;
+
     mutable QPoint mouse_pos;
+
     int mouse_x = 0;
     int mouse_y = 0;
     int mouse_prev_x = 0;

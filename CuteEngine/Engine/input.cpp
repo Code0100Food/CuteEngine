@@ -22,53 +22,56 @@ Input::~Input()
 
 void Input::keyPressEvent(QKeyEvent *event)
 {
-    QVector3D displacement_vector;
-    if(event->key() == Qt::Key_W)
+    if(right_mouse)
     {
-        displacement_vector += QVector3D(-sinf(qDegreesToRadians(gl_widget->GetCamera()->yaw)) * cosf(qDegreesToRadians(gl_widget->GetCamera()->pitch)),
-                                         sinf(qDegreesToRadians(gl_widget->GetCamera()->pitch)),
-                                         -cosf(qDegreesToRadians(gl_widget->GetCamera()->yaw)) * cosf(qDegreesToRadians(gl_widget->GetCamera()->pitch)));
-        displacement_vector *= UPDATE_DT * wasd_speed;
-    }
-    else if(event->key() == Qt::Key_S)
-    {
-        displacement_vector += QVector3D(sinf(qDegreesToRadians(gl_widget->GetCamera()->yaw)) * cosf(qDegreesToRadians(gl_widget->GetCamera()->pitch)),
-                                         -sinf(qDegreesToRadians(gl_widget->GetCamera()->pitch)),
-                                         cosf(qDegreesToRadians(gl_widget->GetCamera()->yaw)) * cosf(qDegreesToRadians(gl_widget->GetCamera()->pitch)));
-        displacement_vector *= UPDATE_DT * wasd_speed;
-    }
-    else if(event->key() == Qt::Key_A)
-    {
-        displacement_vector += QVector3D(-cosf(qDegreesToRadians(gl_widget->GetCamera()->yaw)),
-                                         0.0f,
-                                         sinf(qDegreesToRadians(gl_widget->GetCamera()->yaw)));
-        displacement_vector *= UPDATE_DT * wasd_speed;
-    }
-    //Cos en 0 val 1
-    //Sin en 1 val 0
-    else if(event->key() == Qt::Key_D)
-    {
-        displacement_vector += QVector3D(cosf(qDegreesToRadians(gl_widget->GetCamera()->yaw)),
-                                         0.0f,
-                                         -sinf(qDegreesToRadians(gl_widget->GetCamera()->yaw)));
-        displacement_vector *= UPDATE_DT * wasd_speed;
-    }
-    else if(event->key() == Qt::Key_E)
-    {
-        displacement_vector += QVector3D(-sinf(qDegreesToRadians(gl_widget->GetCamera()->yaw)),
-                                         cosf(qDegreesToRadians(gl_widget->GetCamera()->pitch)) ,
-                                         cosf(qDegreesToRadians(gl_widget->GetCamera()->yaw)) * sinf(qDegreesToRadians(gl_widget->GetCamera()->pitch)));
-        displacement_vector *= UPDATE_DT * wasd_speed;
-    }
-    else if(event->key() == Qt::Key_Q)
-    {
-        displacement_vector += QVector3D(sinf(qDegreesToRadians(gl_widget->GetCamera()->yaw)),
-                                         -cosf(qDegreesToRadians(gl_widget->GetCamera()->pitch)) ,
-                                         -cosf(qDegreesToRadians(gl_widget->GetCamera()->yaw)) * sinf(qDegreesToRadians(gl_widget->GetCamera()->pitch)));
-        displacement_vector *= UPDATE_DT * wasd_speed;
+        QVector3D displacement_vector;
+        if(event->key() == Qt::Key_W)
+        {
+            displacement_vector += QVector3D(-sinf(qDegreesToRadians(gl_widget->GetCamera()->yaw)) * cosf(qDegreesToRadians(gl_widget->GetCamera()->pitch)),
+                                             sinf(qDegreesToRadians(gl_widget->GetCamera()->pitch)),
+                                             -cosf(qDegreesToRadians(gl_widget->GetCamera()->yaw)) * cosf(qDegreesToRadians(gl_widget->GetCamera()->pitch)));
+            displacement_vector *= UPDATE_DT * wasd_speed;
+        }
+        else if(event->key() == Qt::Key_S)
+        {
+            displacement_vector += QVector3D(sinf(qDegreesToRadians(gl_widget->GetCamera()->yaw)) * cosf(qDegreesToRadians(gl_widget->GetCamera()->pitch)),
+                                             -sinf(qDegreesToRadians(gl_widget->GetCamera()->pitch)),
+                                             cosf(qDegreesToRadians(gl_widget->GetCamera()->yaw)) * cosf(qDegreesToRadians(gl_widget->GetCamera()->pitch)));
+            displacement_vector *= UPDATE_DT * wasd_speed;
+        }
+        else if(event->key() == Qt::Key_A)
+        {
+            displacement_vector += QVector3D(-cosf(qDegreesToRadians(gl_widget->GetCamera()->yaw)),
+                                             0.0f,
+                                             sinf(qDegreesToRadians(gl_widget->GetCamera()->yaw)));
+            displacement_vector *= UPDATE_DT * wasd_speed;
+        }
+        else if(event->key() == Qt::Key_D)
+        {
+            displacement_vector += QVector3D(cosf(qDegreesToRadians(gl_widget->GetCamera()->yaw)),
+                                             0.0f,
+                                             -sinf(qDegreesToRadians(gl_widget->GetCamera()->yaw)));
+            displacement_vector *= UPDATE_DT * wasd_speed;
+        }
+        else if(event->key() == Qt::Key_E)
+        {
+            displacement_vector += QVector3D(-sinf(qDegreesToRadians(gl_widget->GetCamera()->yaw)),
+                                             cosf(qDegreesToRadians(gl_widget->GetCamera()->pitch)) ,
+                                             cosf(qDegreesToRadians(gl_widget->GetCamera()->yaw)) * sinf(qDegreesToRadians(gl_widget->GetCamera()->pitch)));
+            displacement_vector *= UPDATE_DT * wasd_speed;
+        }
+        else if(event->key() == Qt::Key_Q)
+        {
+            displacement_vector += QVector3D(sinf(qDegreesToRadians(gl_widget->GetCamera()->yaw)),
+                                             -cosf(qDegreesToRadians(gl_widget->GetCamera()->pitch)) ,
+                                             -cosf(qDegreesToRadians(gl_widget->GetCamera()->yaw)) * sinf(qDegreesToRadians(gl_widget->GetCamera()->pitch)));
+            displacement_vector *= UPDATE_DT * wasd_speed;
+        }
+
+        gl_widget->GetCamera()->position += displacement_vector;
     }
 
-    else if(event->key() == Qt::Key_F)
+    if(event->key() == Qt::Key_F)
     {
         Entity* target_entity = customApp->main_scene()->GetSelectedEntity();
         if(target_entity != nullptr)
@@ -90,22 +93,13 @@ void Input::keyPressEvent(QKeyEvent *event)
             std::cout<<pitch_angle<<std::endl;
             gl_widget->GetCamera()->yaw += yaw_angle;
             gl_widget->GetCamera()->pitch += pitch_angle;
-
-            /*
-            target_pos-=gl_widget->GetCameraPosition();
-            target_pos+= gl_widget->GetCameraFront();
-
-            gl_widget->TranslateCamera(target_pos.x(),target_pos.y(),target_pos.z());*/
         }
     }
-    else if(event->key() == Qt::Key_Alt)
+
+    if(event->key() == Qt::Key_Alt)
     {
         alt_key = true;
     }
-
-    //displacement_vector *= 0.05f;
-
-    gl_widget->GetCamera()->position += displacement_vector;
 }
 
 void Input::keyReleaseEvent(QKeyEvent *event)
@@ -113,7 +107,7 @@ void Input::keyReleaseEvent(QKeyEvent *event)
     if(event->key() == Qt::Key_Alt)
     {
         alt_key = false;
-    }
+    } 
 }
 
 void Input::mouseMoveEvent(QMouseEvent *event)
@@ -133,64 +127,58 @@ void Input::mouseMoveEvent(QMouseEvent *event)
 
     if(mouse_mid)
     {
-        if(alt_key)
+        if(mouse_x_delta < 0)
         {
-            if(mouse_x_delta != 0 || mouse_y_delta != 0)
-            {
-                //gl_widget->GetCamera()
+            //D move
+            QVector3D cur_displacement_vector = QVector3D(cosf(qDegreesToRadians(gl_widget->GetCamera()->yaw)),
+                                             0.0f,
+                                             -sinf(qDegreesToRadians(gl_widget->GetCamera()->yaw)));
 
-                yaw -= rotation_speed * mouse_x_delta * UPDATE_DT;
-                pitch -= rotation_speed * mouse_y_delta * UPDATE_DT;
-                while(yaw < 0.0f)yaw += 360.0f;
-                while(yaw > 360.0f)yaw -= 360.0f;
-                if(pitch > 89.0f)pitch = 89.0f;
-                if(pitch < -89.0f)pitch = -89.0f;
-            }
+            cur_displacement_vector *= UPDATE_DT * drag_speed * abs(mouse_x_delta);
+            displacement_vector += cur_displacement_vector;
         }
-        else
+        else if(mouse_x_delta > 0)
         {
-            //gl_widget->GetCamera()->position += QVector3D(mouse_x_delta * drag_speed * UPDATE_DT, -mouse_y_delta * drag_speed * UPDATE_DT, 0.0f);
+            //A move
+            QVector3D cur_displacement_vector = QVector3D(-cosf(qDegreesToRadians(gl_widget->GetCamera()->yaw)),
+                                             0.0f,
+                                             sinf(qDegreesToRadians(gl_widget->GetCamera()->yaw)));
 
-            if(mouse_x_delta < 0)
-            {
-                //D move
-                QVector3D cur_displacement_vector = QVector3D(cosf(qDegreesToRadians(gl_widget->GetCamera()->yaw)),
-                                                 0.0f,
-                                                 -sinf(qDegreesToRadians(gl_widget->GetCamera()->yaw)));
+            cur_displacement_vector *= UPDATE_DT * drag_speed * abs(mouse_x_delta);
+            displacement_vector += cur_displacement_vector;
+        }
+        if(mouse_y_delta < 0)
+        {
+            //Q move
+            QVector3D cur_displacement_vector = QVector3D(sinf(qDegreesToRadians(gl_widget->GetCamera()->yaw)),
+                                             -cosf(qDegreesToRadians(gl_widget->GetCamera()->pitch)) ,
+                                             -cosf(qDegreesToRadians(gl_widget->GetCamera()->yaw)) * sinf(qDegreesToRadians(gl_widget->GetCamera()->pitch)));
 
-                cur_displacement_vector *= UPDATE_DT * drag_speed * abs(mouse_x_delta);
-                displacement_vector += cur_displacement_vector;
-            }
-            else if(mouse_x_delta > 0)
-            {
-                //A move
-                QVector3D cur_displacement_vector = QVector3D(-cosf(qDegreesToRadians(gl_widget->GetCamera()->yaw)),
-                                                 0.0f,
-                                                 sinf(qDegreesToRadians(gl_widget->GetCamera()->yaw)));
+            cur_displacement_vector *= UPDATE_DT * drag_speed * abs(mouse_y_delta);
+            displacement_vector += cur_displacement_vector;
+        }
+        else if(mouse_y_delta > 0)
+        {
+            //E move
+            QVector3D cur_displacement_vector = QVector3D(-sinf(qDegreesToRadians(gl_widget->GetCamera()->yaw)),
+                                             cosf(qDegreesToRadians(gl_widget->GetCamera()->pitch)) ,
+                                             cosf(qDegreesToRadians(gl_widget->GetCamera()->yaw)) * sinf(qDegreesToRadians(gl_widget->GetCamera()->pitch)));
 
-                cur_displacement_vector *= UPDATE_DT * drag_speed * abs(mouse_x_delta);
-                displacement_vector += cur_displacement_vector;
-            }
-            if(mouse_y_delta < 0)
-            {
-                //Q move
-                QVector3D cur_displacement_vector = QVector3D(sinf(qDegreesToRadians(gl_widget->GetCamera()->yaw)),
-                                                 -cosf(qDegreesToRadians(gl_widget->GetCamera()->pitch)) ,
-                                                 -cosf(qDegreesToRadians(gl_widget->GetCamera()->yaw)) * sinf(qDegreesToRadians(gl_widget->GetCamera()->pitch)));
+            cur_displacement_vector *= UPDATE_DT * drag_speed * abs(mouse_y_delta);
+            displacement_vector += cur_displacement_vector;
+        }
+    }
 
-                cur_displacement_vector *= UPDATE_DT * drag_speed * abs(mouse_y_delta);
-                displacement_vector += cur_displacement_vector;
-            }
-            else if(mouse_y_delta > 0)
-            {
-                //E move
-                QVector3D cur_displacement_vector = QVector3D(-sinf(qDegreesToRadians(gl_widget->GetCamera()->yaw)),
-                                                 cosf(qDegreesToRadians(gl_widget->GetCamera()->pitch)) ,
-                                                 cosf(qDegreesToRadians(gl_widget->GetCamera()->yaw)) * sinf(qDegreesToRadians(gl_widget->GetCamera()->pitch)));
-
-                cur_displacement_vector *= UPDATE_DT * drag_speed * abs(mouse_y_delta);
-                displacement_vector += cur_displacement_vector;
-            }
+    if(alt_key && left_mouse)
+    {
+        if(mouse_x_delta != 0 || mouse_y_delta != 0)
+        {
+            yaw -= rotation_speed * mouse_x_delta * UPDATE_DT;
+            pitch -= rotation_speed * mouse_y_delta * UPDATE_DT;
+            while(yaw < 0.0f)yaw += 360.0f;
+            while(yaw > 360.0f)yaw -= 360.0f;
+            if(pitch > 89.0f)pitch = 89.0f;
+            if(pitch < -89.0f)pitch = -89.0f;
         }
     }
 
@@ -205,8 +193,17 @@ void Input::mousePressEvent(QMouseEvent *event)
 
     if(event->button() == Qt::MidButton)
     {
-        std::cout<<"on"<<std::endl;
         mouse_mid = true;
+    }
+
+    if(event->button() == Qt::RightButton)
+    {
+        right_mouse = true;
+    }
+
+    if(event->button() == Qt::LeftButton)
+    {
+        left_mouse = true;
     }
 }
 
@@ -214,8 +211,17 @@ void Input::mouseReleaseEvent(QMouseEvent *event)
 {
     if(event->button() == Qt::MidButton)
     {
-        std::cout<<"off"<<std::endl;
         mouse_mid = false;
+    }
+
+    if(event->button() == Qt::RightButton)
+    {
+        right_mouse = false;
+    }
+
+    if(event->button() == Qt::LeftButton)
+    {
+        left_mouse = false;
     }
 }
 
