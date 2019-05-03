@@ -32,6 +32,7 @@ public:
     QVBoxLayout* GetLayout() const {return layout;}
 
     void AddMeshToWidget(const char* name);
+    void AddMaterialToWidget(const char* name);
 
 private:
 

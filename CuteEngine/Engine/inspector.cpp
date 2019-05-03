@@ -182,10 +182,16 @@ void Inspector::UIReadEntity(Entity *selected_entity)
         mesh_renderer_widget->show();
         add_mesh_renderer->hide();
 
-        //Update Combo Box
+        //Update mesh Combo Box
         if(!entity_renderer->GetCurrentMesh())
-            mesh_renderer_widget->ResetComboBox();
-        else mesh_renderer_widget->UpdateComboBox(entity_renderer->GetCurrentMesh()->GetName());
+            mesh_renderer_widget->ResetComboBox(RESOURCE_MESH);
+        else mesh_renderer_widget->UpdateComboBox(RESOURCE_MESH, entity_renderer->GetCurrentMesh()->GetName());
+
+        //Updtae material Combo Box
+       if(!entity_renderer->GetCurrentMaterial())
+           mesh_renderer_widget->ResetComboBox(RESOURCE_MATERIAL);
+       else mesh_renderer_widget->UpdateComboBox(RESOURCE_MATERIAL, entity_renderer->GetCurrentMesh()->GetName());
+
     }
     else
     {
@@ -197,6 +203,11 @@ void Inspector::UIReadEntity(Entity *selected_entity)
 void Inspector::AddMeshToWidget(const char *name)
 {
     mesh_renderer_widget->AddMesh(name);
+}
+
+void Inspector::AddMaterialToWidget(const char *name)
+{
+    mesh_renderer_widget->AddMaterial(name);
 }
 
 void Inspector::AddMeshRenderer()
@@ -211,6 +222,7 @@ void Inspector::AddMeshRenderer()
         mesh_renderer_widget->show();
         add_mesh_renderer->hide();
 
-        mesh_renderer_widget->ResetComboBox();
+        mesh_renderer_widget->ResetComboBox(RESOURCE_MESH);
+        mesh_renderer_widget->ResetComboBox(RESOURCE_MATERIAL);
     }
 }
