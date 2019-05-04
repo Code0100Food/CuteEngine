@@ -16,6 +16,22 @@
 ///////////////////////////////////////FRAME BUFFER OBJECT////////////////////////////////////
 FrameBufferObject::FrameBufferObject(int width, int height, bool has_depth_texture)
 {
+    Create(width, height);
+}
+
+FrameBufferObject::~FrameBufferObject()
+{
+    this->Destroy();
+}
+
+void FrameBufferObject::Resize(int width, int height)
+{
+    Destroy();
+    Create(width, height);
+}
+
+void FrameBufferObject::Create(int width, int height)
+{
     viewport_width = width;
     viewport_height = height;
 
@@ -84,10 +100,12 @@ FrameBufferObject::FrameBufferObject(int width, int height, bool has_depth_textu
     QOpenGLFramebufferObject::bindDefault();
 }
 
-FrameBufferObject::~FrameBufferObject()
+void FrameBufferObject::Destroy()
 {
     QOpenGLFunctions* gl_functions = QOpenGLContext::currentContext()->functions();
     gl_functions->glDeleteTextures(1, &color_texture);
+
+    gl_functions->glDeleteTextures(1, &normals_texture);
 
     if(depth_texture != 0)
         gl_functions->glDeleteTextures(1, &depth_texture);
@@ -173,6 +191,11 @@ void DeferredRenderer::Render(Camera *camera)
     PassMeshes(camera);
 
     main_buffer->UnBind();
+}
+
+void DeferredRenderer::Resize(int width, int height)
+{
+    main_buffer->Resize(width, height);
 }
 
 void DeferredRenderer::SetMainBuffer(int width, int height)

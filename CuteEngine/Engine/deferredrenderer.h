@@ -17,6 +17,9 @@ public:
     void Bind();
     void UnBind();
 
+    void Create(int width, int height);
+    void Destroy();
+
     unsigned int GetColorTexture() const { return color_texture; }
     unsigned int GetNormalTexture() const { return normals_texture; }
     unsigned int GetDepthTexture() const { return depth_texture; }
@@ -42,6 +45,7 @@ public:
     void SetMainBuffer(int width, int height);
 
     void Render(Camera *camera);
+    void Resize(int width, int height);
 
     void PassMeshes(Camera* camera);
     bool PassGrid(Camera* camera);

@@ -34,11 +34,11 @@ public:
     QMatrix4x4 view_matrix =  QMatrix4x4(1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1);
     QMatrix4x4 projection_matrix;
 
-/*    QMatrix4x4* GetWorldMatrix(){return &world_matrix;}
-    QMatrix4x4* GetViewMatrix(){return &view_matrix;}
-    QMatrix4x4* GetProjectionMatrix(){return &projection_matrix;}
+    /*    QMatrix4x4* GetWorldMatrix(){return &world_matrix;}
+        QMatrix4x4* GetViewMatrix(){return &view_matrix;}
+        QMatrix4x4* GetProjectionMatrix(){return &projection_matrix;}
 
-    void SetProjectionMatrix(QMatrix4x4 value) { projection_matrix = value; }*/
+        void SetProjectionMatrix(QMatrix4x4 value) { projection_matrix = value; }*/
 
 };
 

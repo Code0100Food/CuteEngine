@@ -46,6 +46,7 @@ void Inspector::Start()
 
     //Mesh Renderer Settings
     mesh_renderer_widget = new MeshRendereWidget();
+    mesh_renderer_widget->hide();
 
     //ButTons
     add_mesh_renderer = new QPushButton("Add Mesh Renderer");
