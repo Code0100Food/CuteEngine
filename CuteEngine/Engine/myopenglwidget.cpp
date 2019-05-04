@@ -87,7 +87,22 @@ void myopenglwidget::paintGL()
     {
         program.setUniformValue(program.uniformLocation("color_texture"), 0);
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, deferred_renderer->main_buffer->GetColorTexture());
+
+        switch (render_mode)
+        {
+            case FINAL_COLOR:
+                glBindTexture(GL_TEXTURE_2D, deferred_renderer->main_buffer->GetColorTexture());
+                break;
+
+            case NORMALS:
+                glBindTexture(GL_TEXTURE_2D, deferred_renderer->main_buffer->GetNormalTexture());
+                break;
+
+            case DEPTH:
+                glBindTexture(GL_TEXTURE_2D, deferred_renderer->main_buffer->GetDepthTexture());
+                break;
+        }
+
 
         customApp->main_window()->resource_manager()->ScreenQuad()->Draw();
 
@@ -98,6 +113,21 @@ void myopenglwidget::paintGL()
 void myopenglwidget::finalizeGL()
 {
     std::cout<<"finalizeGL()" <<std::endl;
+}
+
+void myopenglwidget::ChangeRenderModeColor()
+{
+    render_mode = RENDERMODE::FINAL_COLOR;
+}
+
+void myopenglwidget::ChangeRenderModeNormals()
+{
+    render_mode = RENDERMODE::NORMALS;
+}
+
+void myopenglwidget::ChangeRenderModeDepth()
+{
+    render_mode = RENDERMODE::DEPTH;
 }
 
 void myopenglwidget::keyPressEvent(QKeyEvent *event)

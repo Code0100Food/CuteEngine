@@ -17,6 +17,13 @@ class QTimer;
 class Mesh;
 class DeferredRenderer;
 
+enum RENDERMODE
+{
+    FINAL_COLOR = 0,
+    NORMALS,
+    DEPTH
+};
+
 class myopenglwidget : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
 {
     Q_OBJECT
@@ -68,16 +75,15 @@ private:
     DeferredRenderer* deferred_renderer;
     QOpenGLShaderProgram program_grid;
 
-    // Frame buffer object Textures
-    GLuint colorTexture;
-    GLuint depthTexture;
-    GLuint fbo;
-
-signals:
+    RENDERMODE render_mode = FINAL_COLOR;
 
 public slots:
 
     void finalizeGL();
+
+    void ChangeRenderModeColor();
+    void ChangeRenderModeNormals();
+    void ChangeRenderModeDepth();
 
 };
 

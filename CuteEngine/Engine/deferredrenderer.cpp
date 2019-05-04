@@ -11,16 +11,26 @@
 #include "resourcemanager.h"
 #include "../Data/mesh.h"
 
+#include "qopenglextrafunctions.h"
+
 ///////////////////////////////////////FRAME BUFFER OBJECT////////////////////////////////////
 FrameBufferObject::FrameBufferObject(int width, int height, bool has_depth_texture)
 {
     viewport_width = width;
     viewport_height = height;
 
-    QOpenGLFunctions* gl_functions = QOpenGLContext::currentContext()->functions();
+    QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
 
     glGenTextures(1, &color_texture);
     glBindTexture(GL_TEXTURE_2D, color_texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
+    glGenTextures(1, &normals_texture);
+    glBindTexture(GL_TEXTURE_2D, normals_texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
@@ -38,9 +48,12 @@ FrameBufferObject::FrameBufferObject(int width, int height, bool has_depth_textu
     gl_functions->glGenFramebuffers(1, &frame_buffer);
     gl_functions->glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
     gl_functions->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_texture, 0);
+    gl_functions->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, normals_texture, 0);
     gl_functions->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_texture, 0);
 
-    glDrawBuffer(GL_COLOR_ATTACHMENT0);
+
+    GLenum buffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+    gl_functions->glDrawBuffers(2, buffers);
 
     GLenum status = gl_functions->glCheckFramebufferStatus(GL_FRAMEBUFFER);
      switch(status)
@@ -169,6 +182,10 @@ void DeferredRenderer::SetMainBuffer(int width, int height)
 
 void DeferredRenderer::PassMeshes(Camera *camera)
 {
+    QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
+    GLenum buffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+    gl_functions->glDrawBuffers(2, buffers);
+
     if(standard_program.bind())
     {
         standard_program.setUniformValue(standard_program.uniformLocation("projection_matrix"), camera->projection_matrix);

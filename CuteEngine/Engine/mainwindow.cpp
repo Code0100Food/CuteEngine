@@ -45,6 +45,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(_uiMain->actionExit,SIGNAL(triggered()),this,SLOT(customExit()));
     connect(_uiMain->actionScreenshot,SIGNAL(triggered()),this,SLOT(takeScreenshot()));
 
+    connect(_uiMain->actionFinal_Color, SIGNAL(triggered()), _uiMain->openGLWidget, SLOT(ChangeRenderModeColor()));
+    connect(_uiMain->actionNormals, SIGNAL(triggered()), _uiMain->openGLWidget, SLOT(ChangeRenderModeNormals()));
+    connect(_uiMain->actionDepth, SIGNAL(triggered()), _uiMain->openGLWidget, SLOT(ChangeRenderModeDepth()));
+
     //Set Resource Manager
     QDockWidget* resource_dock = new QDockWidget();
     resource_dock->setWindowTitle("Resources");
@@ -52,6 +56,9 @@ MainWindow::MainWindow(QWidget *parent) :
     resource_dock->setWidget(_resource_manager);
     addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, resource_dock);
     tabifyDockWidget(_uiMain->Hierarchy, resource_dock);
+
+    //Connect Menu bar
+    //_uiMain->menuBar->
 
     timer = new QTimer(this);
     connect(timer, SIGNAL(timeout()), this, SLOT(Update()));

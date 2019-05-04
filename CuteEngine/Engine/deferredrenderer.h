@@ -18,13 +18,16 @@ public:
     void UnBind();
 
     unsigned int GetColorTexture() const { return color_texture; }
+    unsigned int GetNormalTexture() const { return normals_texture; }
     unsigned int GetDepthTexture() const { return depth_texture; }
+
     int GetViewportWidth() const { return viewport_width; }
     int GetViewportHeight() const { return viewport_height; }
 
 private:
     unsigned int frame_buffer = 0;
     unsigned int color_texture = 0;
+    unsigned int normals_texture = 0;
     unsigned int depth_texture = 0;
     int viewport_width = 0;
     int viewport_height = 0;
