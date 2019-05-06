@@ -10,6 +10,7 @@ class TransformWidget;
 class Entity;
 class MeshRendereWidget;
 class QPushButton;
+class LightWidget;
 
 class Inspector : public QWidget
 {
@@ -45,6 +46,7 @@ private:
 
     TransformWidget* transform_widget = nullptr;
     MeshRendereWidget* mesh_renderer_widget = nullptr;
+    LightWidget* light_settings_widget = nullptr;
 
 public slots:
 
@@ -55,6 +57,7 @@ public slots:
     void Rename();
 
     void AddMeshRenderer();
+    void AddLightComponent();
 
 };
 

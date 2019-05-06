@@ -51,7 +51,9 @@ SOURCES += \
     Data/texture.cpp \
     Widgets/transformwidget.cpp \
     Widgets/meshrenderewidget.cpp \
-    Data/material.cpp
+    Data/material.cpp \
+    Widgets/lightwidget.cpp \
+    Components/light.cpp
 
 HEADERS += \
     Components/component.h \
@@ -75,7 +77,9 @@ HEADERS += \
     Data/texture.h \
     Widgets/transformwidget.h \
     Widgets/meshrenderewidget.h \
-    Data/material.h
+    Data/material.h \
+    Widgets/lightwidget.h \
+    Components/light.h
 
 FORMS += \
         mainwindow.ui

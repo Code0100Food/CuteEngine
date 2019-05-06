@@ -16,6 +16,8 @@
 #include <QPushButton>
 #include "Widgets/meshrenderewidget.h"
 #include "Data/mesh.h"
+#include "Widgets/lightwidget.h"
+#include "light.h"
 
 Inspector::Inspector(QWidget* parent) : QWidget(parent)
 {
@@ -48,17 +50,23 @@ void Inspector::Start()
     mesh_renderer_widget = new MeshRendereWidget();
     mesh_renderer_widget->hide();
 
+    //Light Component
+    light_settings_widget = new LightWidget();
+    light_settings_widget->hide();
+
     //ButTons
     add_mesh_renderer = new QPushButton("Add Mesh Renderer");
     connect(add_mesh_renderer, SIGNAL(released()), this, SLOT(AddMeshRenderer()));
 
     add_light_source = new QPushButton("Add Light Source");
+    connect(add_light_source, SIGNAL(released()), this, SLOT(AddLightComponent()));
 
     QSplitter* tmp = new QSplitter();
 
     layout->addWidget(name_display);
     layout->addWidget(transform_widget);
     layout->addWidget(mesh_renderer_widget);
+    layout->addWidget(light_settings_widget);
     layout->addWidget(tmp);
 
     layout->addWidget(add_mesh_renderer);
@@ -176,8 +184,8 @@ void Inspector::UIReadEntity(Entity *selected_entity)
     transform_widget->SetSelectedTransform(entity_transform);
     transform_widget->GetEntityValues(entity_transform->GetPosition(), entity_transform->GetRotation(), entity_transform->GetScale());
 
+    //Read Mesh Renderer
     MeshRenderer* entity_renderer = (MeshRenderer*)selected_entity->FindComponent(COMPONENT_TYPE::COMPONENT_MESHRENDERER);
-
     if(entity_renderer)
     {
         mesh_renderer_widget->show();
@@ -198,6 +206,19 @@ void Inspector::UIReadEntity(Entity *selected_entity)
     {
         add_mesh_renderer->show();
         mesh_renderer_widget->hide();
+    }
+
+    //Read Light component
+    Light* light_component = (Light*)selected_entity->FindComponent(COMPONENT_TYPE::COMPONENT_LIGHT);
+    if(light_component)
+    {
+        light_settings_widget->show();
+        add_light_source->hide();
+    }
+    else
+    {
+        add_light_source->show();
+        light_settings_widget->hide();
     }
 }
 
@@ -225,5 +246,19 @@ void Inspector::AddMeshRenderer()
 
         mesh_renderer_widget->ResetComboBox(RESOURCE_MESH);
         mesh_renderer_widget->ResetComboBox(RESOURCE_MATERIAL);
+    }
+}
+
+void Inspector::AddLightComponent()
+{
+    Entity* tmp = customApp->main_scene()->GetSelectedEntity();
+
+    if(tmp)
+    {
+        Light* new_light_component = new Light();
+        tmp->AddComponent(new_light_component);
+
+        light_settings_widget->show();
+        add_light_source->hide();
     }
 }
