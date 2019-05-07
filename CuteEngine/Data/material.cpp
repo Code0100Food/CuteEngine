@@ -21,7 +21,7 @@ void SubMaterial::BindTextures() const
     unsigned int i = 0;
     for(std::vector<Texture*>::const_iterator item = textures.begin();  item != textures.end(); item++)
     {
-        if((*item)->NeedsReload())
+        if((*item) == nullptr || (*item)->NeedsReload())
             continue;
 
         gl_functions->glActiveTexture(GL_TEXTURE0 + i);
