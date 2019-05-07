@@ -21,6 +21,10 @@ public:
 
 private:
     LIGHTTYPE light_type;
+    QVector4D LIGHT_COLOR;
+
+    int intensity = 1;
+    float radius = 0.0f;
 };
 
 #endif // LIGHT_H
