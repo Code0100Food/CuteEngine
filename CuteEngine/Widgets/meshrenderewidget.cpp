@@ -99,6 +99,7 @@ void MeshRendereWidget::ResetComboBox(int type)
 
         case RESOURCE_MATERIAL:
             texture_selector->setCurrentIndex(0);
+            std::cout<< "Texture Reset"<< std::endl;
             break;
     }
 }
@@ -106,16 +107,21 @@ void MeshRendereWidget::ResetComboBox(int type)
 void MeshRendereWidget::UpdateComboBox(int type, const char *name)
 {
 
-    switch(type)
+    if((RESOURCE_TYPE)type == RESOURCE_MESH)
     {
-        case RESOURCE_MESH:
-             mesh_selector->setCurrentIndex( mesh_selector->findText(name));
-            break;
-
-        case RESOURCE_MATERIAL:
-            texture_selector->setCurrentIndex(texture_selector->findText(name));
-            break;
+        mesh_selector->setCurrentIndex( mesh_selector->findText(name));
+        std::cout<< "Update mesh ComboBox "<< name << std::endl;
+        return;
     }
+
+    if((RESOURCE_TYPE)type == RESOURCE_MATERIAL)
+    {
+        texture_selector->setCurrentIndex(texture_selector->findText(name));
+        std::cout<< "Update material ComboBox "<< name << std::endl;
+        return;
+    }
+
+
 }
 
 

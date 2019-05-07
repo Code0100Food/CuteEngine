@@ -117,13 +117,13 @@ void MainScene::AddEntity(Entity *new_entity)
         {
             selected_entity->Select();
             customApp->main_window()->inspector()->UIReadEntity(selected_entity);
-            std::cout<<selected_entity->GetName() + " selected!"<<std::endl;
+
         }
     }
     else
     {
         customApp->main_window()->inspector()->HideUI();
-        std::cout<<"Entity selected is null"<<std::endl;
+
     }
 
  }

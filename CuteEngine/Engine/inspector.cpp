@@ -18,6 +18,7 @@
 #include "Data/mesh.h"
 #include "Widgets/lightwidget.h"
 #include "light.h"
+#include "Data/material.h"
 
 Inspector::Inspector(QWidget* parent) : QWidget(parent)
 {
@@ -192,14 +193,16 @@ void Inspector::UIReadEntity(Entity *selected_entity)
         add_mesh_renderer->hide();
 
         //Update mesh Combo Box
-        if(!entity_renderer->GetCurrentMesh())
+        Mesh* tmp_mesh = entity_renderer->GetCurrentMesh();
+        if(!tmp_mesh)
             mesh_renderer_widget->ResetComboBox(RESOURCE_MESH);
-        else mesh_renderer_widget->UpdateComboBox(RESOURCE_MESH, entity_renderer->GetCurrentMesh()->GetName());
+        else mesh_renderer_widget->UpdateComboBox(RESOURCE_MESH, tmp_mesh->GetName());
 
         //Updtae material Combo Box
-       if(!entity_renderer->GetCurrentMaterial())
-           mesh_renderer_widget->ResetComboBox(RESOURCE_MATERIAL);
-       else mesh_renderer_widget->UpdateComboBox(RESOURCE_MATERIAL, entity_renderer->GetCurrentMesh()->GetName());
+        Material* tmp_material = entity_renderer->GetCurrentMaterial();
+        if(!tmp_material)
+            mesh_renderer_widget->ResetComboBox(RESOURCE_MATERIAL);
+        else mesh_renderer_widget->UpdateComboBox(RESOURCE_MATERIAL, tmp_material->GetName());
 
     }
     else
