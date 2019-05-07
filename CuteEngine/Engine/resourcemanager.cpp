@@ -44,6 +44,7 @@ ResourceManager::ResourceManager(QWidget* parent) : QWidget(parent)
 
     //Load Materials
     LoadPatrickMaterial();
+    LoadPalmeraMaterial();
 }
 
 void ResourceManager::Import(std::string path)
@@ -194,6 +195,23 @@ void ResourceManager::LoadPatrickMaterial()
 
     Material* new_material = new Material(patrick_textures);
     new_material->SetName("Patrick_Material.mtl");
+
+    //Add the new mesh to the resources list
+    resources.push_back(new_material);
+
+    //Add the new mesh to the UI
+    widget_resources_list->addItem(new_material->GetName());
+}
+
+void ResourceManager::LoadPalmeraMaterial()
+{
+    std::vector<Texture*> palmera_textures;
+
+    palmera_textures.push_back((Texture*)GetResourceByName("ENV_MP_Iraq_palm_tree_01_D.png", RESOURCE_TYPE::RESOURCE_TEXTURE));
+    palmera_textures.push_back((Texture*)GetResourceByName("ENV_MP_Iraq_PlantsSansTrans_D.png", RESOURCE_TYPE::RESOURCE_TEXTURE));
+
+    Material* new_material = new Material(palmera_textures);
+    new_material->SetName("PalmTree_Material.mtl");
 
     //Add the new mesh to the resources list
     resources.push_back(new_material);

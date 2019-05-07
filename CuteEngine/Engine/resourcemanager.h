@@ -60,6 +60,7 @@ public:
 
     //Custom functions
     void LoadPatrickMaterial();
+    void LoadPalmeraMaterial();
 
 private:
     Mesh* screen_quad = nullptr;
