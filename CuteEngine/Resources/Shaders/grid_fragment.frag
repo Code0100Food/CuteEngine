@@ -20,11 +20,13 @@ float grid(vec3 worldPos, float gridStep)
 
 void main(void)
 {
+    outColor = vec4(1.0f, 1.0f, 1.0f, 1.0f);
+
     // Eye Direction
     vec3 eyeDirEyeSpace;
     eyeDirEyeSpace.x = left + texCoord.x * (right -left);
     eyeDirEyeSpace.y = bottom + texCoord.y * (top - bottom);
-    eyeDirEyeSpace.z = znear;
+    eyeDirEyeSpace.z = -znear;
     vec3 eyeDirWorldSpace = normalize(mat3(worldMatrix) * eyeDirEyeSpace);
 
     // Eye Position

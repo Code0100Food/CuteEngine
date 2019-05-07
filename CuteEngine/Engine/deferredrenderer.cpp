@@ -131,8 +131,13 @@ DeferredRenderer::DeferredRenderer()
 
 bool DeferredRenderer::PassGrid(Camera *camera)
 {
-    /* GLenum draw_buffers = GL_COLOR_ATTACHMENT0;
+     GLenum draw_buffers = GL_COLOR_ATTACHMENT0;
      glDrawBuffer(draw_buffers);
+
+     glDepthFunc(GL_DEPTH_TEST);
+     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+     glEnable(GL_SRC_ALPHA);
+     glEnable(GL_ONE_MINUS_SRC_ALPHA);
 
      if (program_grid.bind())
      {
@@ -149,7 +154,7 @@ bool DeferredRenderer::PassGrid(Camera *camera)
         customApp->main_window()->resource_manager()->ScreenQuad()->Draw();
 
          program_grid.release();
-     }*/
+     }
     return true;
 }
 
