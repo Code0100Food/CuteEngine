@@ -8,6 +8,7 @@
 class QComboBox;
 class QLabel;
 class QPushButton;
+class Entity;
 
 class LightWidget : public QWidget
 {
@@ -34,6 +35,8 @@ private:
     QLabel* radius_label = nullptr;
     QLabel* radius_label_value = nullptr;
     QSlider* light_radius = nullptr;
+
+    void ChangeLightType(int);
 
 public slots:
 

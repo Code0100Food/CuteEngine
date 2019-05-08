@@ -7,6 +7,10 @@
 #include <QColorDialog>
 #include <QPushButton>
 #include <QPalette>
+#include "qt_application.h"
+#include "mainscene.h"
+#include "entity.h"
+#include "light.h"
 
 LightWidget::LightWidget()
 {
@@ -82,16 +86,27 @@ LightWidget::LightWidget()
 void LightWidget::ChangedIntensity()
 {
     intensity->setText(QString::number(light_intensity->value()));
+
+    Light* light_component = (Light*)customApp->main_scene()->GetSelectedEntity()->FindComponent(COMPONENT_TYPE::COMPONENT_LIGHT);
+    if(light_component)
+    {
+        light_component->SetIntensity(light_intensity->value());
+    }
 }
 
 void LightWidget::ChangedRadius()
 {
     radius_label_value->setText(QString::number(light_radius->value()));
+
+    Light* light_component = (Light*)customApp->main_scene()->GetSelectedEntity()->FindComponent(COMPONENT_TYPE::COMPONENT_LIGHT);
+    if(light_component)
+    {
+        light_component->SetRadius(light_radius->value());
+    }
 }
 
 void LightWidget::ChangedColor()
 {
-    //QColorDialog tmp;
     QColor col = QColorDialog::getColor(Qt::white);
     if(col.isValid())
     {
@@ -99,7 +114,15 @@ void LightWidget::ChangedColor()
         color_picker->setStyleSheet(qss);
 
         //Update color
-        color = col;
+        int red, green, blue, alpha;
+        col.getRgb(&red, &green, &blue, &alpha);
+        QVector4D new_color((red/255.0f), (green/255.0f), (blue/255.0f), (alpha/255.0f));
+
+        Light* light_component = (Light*)customApp->main_scene()->GetSelectedEntity()->FindComponent(COMPONENT_TYPE::COMPONENT_LIGHT);
+        if(light_component)
+        {
+            light_component->SetColor(new_color);
+        }
     }
 
 }
@@ -110,8 +133,10 @@ void LightWidget::ChangedLightType(int value)
     {
         radius_label->hide();
         light_radius->hide();
+        radius_label_value->hide();
 
         //Update entity
+        ChangeLightType(0);
     }
 
     if(value == 1) //point
@@ -119,7 +144,18 @@ void LightWidget::ChangedLightType(int value)
         radius_label->show();
         light_radius->show();
         radius_label_value->show();
+
+         ChangeLightType(1);
     }
 
 
+}
+
+void LightWidget::ChangeLightType(int new_type)
+{
+    Light* light_component = (Light*)customApp->main_scene()->GetSelectedEntity()->FindComponent(COMPONENT_TYPE::COMPONENT_LIGHT);
+    if(light_component)
+    {
+        light_component->SetType((LIGHTTYPE)new_type);
+    }
 }

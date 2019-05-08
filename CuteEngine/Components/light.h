@@ -6,8 +6,7 @@
 
 enum LIGHTTYPE
 {
-    OFF = 0,
-    DIRECTIONAL,
+    DIRECTIONAL = 0,
     SPOT
 };
 
@@ -17,14 +16,23 @@ public:
     Light();
 
     void SetType(LIGHTTYPE _type) { light_type = _type; }
+    void SetColor(QVector4D _color) { light_color = _color; }
+    void SetIntensity(int _intensity) { intensity = _intensity; }
+    void SetRadius(int _radius) { radius = _radius; }
+
     LIGHTTYPE GetType() const { return light_type; }
+    QVector4D GetColor() const { return light_color; }
+    int GetIntensity() const { return intensity; }
+    int GetRadius() const { return radius; }
+
+    void Update() override;
 
 private:
-    LIGHTTYPE light_type;
-    QVector4D LIGHT_COLOR;
+    LIGHTTYPE light_type = DIRECTIONAL;
+    QVector4D light_color;
 
     int intensity = 1;
-    float radius = 0.0f;
+    int radius = 0.0f;
 };
 
 #endif // LIGHT_H
