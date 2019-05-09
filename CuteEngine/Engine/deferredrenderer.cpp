@@ -131,6 +131,11 @@ DeferredRenderer::DeferredRenderer()
 
 bool DeferredRenderer::PassGrid(Camera *camera)
 {
+    if(!customApp->main_scene()->IsGridPrint())
+    {
+        return false;
+    }
+
      GLenum draw_buffers = GL_COLOR_ATTACHMENT0;
      glDrawBuffer(draw_buffers);
 

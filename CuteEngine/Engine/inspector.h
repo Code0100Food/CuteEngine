@@ -9,6 +9,7 @@ class QComboBox;
 class TransformWidget;
 class Entity;
 class MeshRendereWidget;
+class QCheckBox;
 class QPushButton;
 class LightWidget;
 
@@ -41,6 +42,8 @@ private:
     QTextEdit* name_display = nullptr;
     QComboBox* add_component_button = nullptr;
 
+    QCheckBox* show_grid_checkbox = nullptr;
+
     QPushButton* add_mesh_renderer = nullptr;
     QPushButton* add_light_source = nullptr;
 
@@ -55,6 +58,8 @@ public slots:
     void CreateMeshRenderer();
     void CreateBasicPrimitive();
     void Rename();
+
+    void SetShowGrid(bool is_checked);
 
     void AddMeshRenderer();
     void AddLightComponent();

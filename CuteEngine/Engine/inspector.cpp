@@ -14,6 +14,7 @@
 #include "meshrenderer.h"
 #include <QGridLayout>
 #include <QPushButton>
+#include <QCheckBox>
 #include "Widgets/meshrenderewidget.h"
 #include "Data/mesh.h"
 #include "Widgets/lightwidget.h"
@@ -55,7 +56,12 @@ void Inspector::Start()
     light_settings_widget = new LightWidget();
     light_settings_widget->hide();
 
-    //ButTons
+    // Grid Checkbox
+    show_grid_checkbox = new QCheckBox("Show grid");
+    show_grid_checkbox->setCheckable(true);
+    connect(show_grid_checkbox, SIGNAL(toggled(bool)), this, SLOT(SetShowGrid(bool)));
+
+    //Buttons
     add_mesh_renderer = new QPushButton("Add Mesh Renderer");
     connect(add_mesh_renderer, SIGNAL(released()), this, SLOT(AddMeshRenderer()));
 
@@ -69,6 +75,8 @@ void Inspector::Start()
     layout->addWidget(mesh_renderer_widget);
     layout->addWidget(light_settings_widget);
     layout->addWidget(tmp);
+
+    layout->addWidget(show_grid_checkbox);
 
     layout->addWidget(add_mesh_renderer);
     layout->addWidget(add_light_source);
@@ -249,6 +257,18 @@ void Inspector::AddMeshRenderer()
 
         mesh_renderer_widget->ResetComboBox(RESOURCE_MESH);
         mesh_renderer_widget->ResetComboBox(RESOURCE_MATERIAL);
+    }
+}
+
+void Inspector::SetShowGrid(bool is_checked)
+{
+    if(is_checked)
+    {
+        customApp->main_scene()->SetGridPrint(true);
+    }
+    else
+    {
+        customApp->main_scene()->SetGridPrint(false);
     }
 }
 

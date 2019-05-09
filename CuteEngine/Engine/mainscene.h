@@ -37,12 +37,16 @@ public:
     void SetBackgroundColor(const QVector4D new_color);
     const QVector4D GetBackgroundColor()const;
 
+    bool IsGridPrint()const;
+    void SetGridPrint(bool _print_grid);
+
 private:
 
     std::list<Entity*> entities;
     Entity* selected_entity = nullptr;
     qt_Application* app = nullptr;
     QVector4D BackgroundColor;
+    bool print_grid = false;
 
 };
 

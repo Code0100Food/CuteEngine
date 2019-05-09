@@ -157,3 +157,13 @@ void MainScene::AddEntity(Entity *new_entity)
  {
     return BackgroundColor;
  }
+
+ bool MainScene::IsGridPrint()const
+ {
+     return print_grid;
+ }
+
+ void MainScene::SetGridPrint(bool _print_grid)
+ {
+     print_grid = _print_grid;
+ }
