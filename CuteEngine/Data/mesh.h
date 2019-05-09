@@ -29,11 +29,17 @@ public:
 
     unsigned int debug = 0;
 
+    Material* GetMaterial() const { return mesh_mat; }
+    void ResetMaterial() { mesh_mat = nullptr; }
+
 private:
     //Load Stuff
     std::queue<aiNode*> nodes;
+    void ProcessNodes(const aiScene* scene);
     void ProcessNode(aiNode* node, const aiScene* scene);
     Submesh* ProcessSubMesh(aiMesh* mesh, const aiScene* scene);
+
+    Material* mesh_mat = nullptr;
 };
 
 #endif // MESH_H

@@ -2,6 +2,9 @@
 #include "texture.h"
 #include "iostream"
 #include <QOpenGLFunctions>
+#include "qt_application.h"
+#include "mainwindow.h"
+#include "resourcemanager.h"
 
 //----------------------SubMaterial-------------------------------
 SubMaterial::SubMaterial()
@@ -9,9 +12,37 @@ SubMaterial::SubMaterial()
 
 }
 
+bool SubMaterial::Reload()
+{
+    bool ret = true;
+    for(std::vector<std::string>::iterator i = texture_names.begin(); i != texture_names.end();)
+    {
+        Texture* loaded_tex = (Texture*)customApp->main_window()->resource_manager()->GetResourceByName((*i), RESOURCE_TYPE::RESOURCE_TEXTURE);
+        if(loaded_tex)
+        {
+            i = texture_names.erase(i);
+            AddTexture(loaded_tex);
+            continue;
+        }
+        else ret = false;
+
+        i++;
+    }
+
+    if(ret)
+        needs_reload = false;
+
+    return ret;
+}
+
 void SubMaterial::AddTexture(Texture *new_texture)
 {
     textures.push_back(new_texture);
+}
+
+void SubMaterial::AddTexture(std::string texture_name)
+{
+    texture_names.push_back(texture_name);
 }
 
 void SubMaterial::BindTextures() const
@@ -31,16 +62,8 @@ void SubMaterial::BindTextures() const
 }
 
 //------------------------Material--------------------------------
-Material::Material(const std::vector<Texture*>& textures) : Resource(RESOURCE_TYPE::RESOURCE_MATERIAL)
+Material::Material() : Resource(RESOURCE_TYPE::RESOURCE_MATERIAL)
 {
-
-    for(unsigned int i = 0; i < textures.size(); i++)
-    {
-        SubMaterial* new_sub_material = new SubMaterial();
-        new_sub_material->AddTexture(textures[i]);
-
-        mesh_materials.push_back(new_sub_material);
-    }
 
     SetReload(true);
 
@@ -48,7 +71,14 @@ Material::Material(const std::vector<Texture*>& textures) : Resource(RESOURCE_TY
 
 void Material::Reload()
 {
-    SetReload(false);
+    bool ret = false;
+    foreach(SubMaterial* sub_mat, mesh_materials)
+    {
+        if(!sub_mat->Reload())
+            ret = true;
+    }
+
+    SetReload(ret);
 }
 
 void Material::Draw(int texture_index)

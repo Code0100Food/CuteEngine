@@ -8,6 +8,6 @@ Light::Light()
 
 void Light::Update()
 {
-    std::cout<< "intensity: " << intensity << " radius: " << radius << " type: " << light_type << " Color: " << light_color.x()<< light_color.y()<< light_color.z()<< light_color.w()<< std::endl;
+
 
 }

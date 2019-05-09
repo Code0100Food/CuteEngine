@@ -43,8 +43,8 @@ ResourceManager::ResourceManager(QWidget* parent) : QWidget(parent)
     LoadScreenQuad();
 
     //Load Materials
-    LoadPatrickMaterial();
-    LoadPalmeraMaterial();
+    //LoadPatrickMaterial();
+    //LoadPalmeraMaterial();
 }
 
 void ResourceManager::Import(std::string path)
@@ -53,6 +53,9 @@ void ResourceManager::Import(std::string path)
     std::string file_type = path.substr(path.find_last_of("."));
 
     if(file_type == ".obj")
+        ImportMesh(path);
+
+    if(file_type == ".fbx")
         ImportMesh(path);
 
     if(file_type == ".png")
@@ -71,6 +74,21 @@ void ResourceManager::ImportMesh(std::string path)
 
     //Add the new mesh to the UI
     widget_resources_list->addItem(new_mesh->GetName());
+
+    Material* mesh_material = new_mesh->GetMaterial();
+    if(mesh_material)
+    {
+        resources.push_back(mesh_material);
+        new_mesh->ResetMaterial();
+
+        int start = path.find_last_of("/") + 1;
+        int end = path.find_last_of(".");
+
+        std::string name = path.substr(start, end-start).c_str();
+        name += ".mtl";
+        mesh_material->SetName(name.c_str());
+        widget_resources_list->addItem(name.c_str());
+    }
 
 }
 
@@ -95,7 +113,7 @@ void ResourceManager::UpdateResources()
             if((*i)->GetType() == RESOURCE_TYPE::RESOURCE_MESH)
                 customApp->main_window()->inspector()->AddMeshToWidget((*i)->GetName());
 
-             if((*i)->GetType() == RESOURCE_TYPE::RESOURCE_MATERIAL)
+             if((*i)->GetType() == RESOURCE_TYPE::RESOURCE_MATERIAL && !(*i)->NeedsReload())
                   customApp->main_window()->inspector()->AddMaterialToWidget((*i)->GetName());
         }
 
@@ -169,10 +187,10 @@ Resource* ResourceManager::GetResourceByName(std::string name, RESOURCE_TYPE typ
 
 void ResourceManager::ImportTexture(std::string path)
 {
-   Texture* new_texture = new Texture(path.c_str());
+   Texture* new_texture = new Texture(path.c_str(), TEXTURE_TYPE::ALBEDO);
    new_texture->SetName(path.substr(path.find_last_of("/") + 1).c_str());
 
-   std::cout<< "LOADED TEXTURE: " << new_texture->GetName() <<std::endl;
+   std::cout<< "Imported TEXTURE: " << new_texture->GetName() <<std::endl;
 
    //Add the new mesh to the resources list
    resources.push_back(new_texture);
@@ -193,7 +211,15 @@ void ResourceManager::LoadPatrickMaterial()
     patrick_textures.push_back((Texture*)GetResourceByName("Skin_Patrick.png", RESOURCE_TYPE::RESOURCE_TEXTURE));
     patrick_textures.push_back(colors);
 
-    Material* new_material = new Material(patrick_textures);
+    std::vector<SubMaterial*> submaterials;
+
+
+    SubMaterial* tmp = new SubMaterial();
+    tmp->AddTexture("Color.png");
+
+    Material* new_material = new Material();
+
+
     new_material->SetName("Patrick_Material.mtl");
 
     //Add the new mesh to the resources list
@@ -205,17 +231,17 @@ void ResourceManager::LoadPatrickMaterial()
 
 void ResourceManager::LoadPalmeraMaterial()
 {
-    std::vector<Texture*> palmera_textures;
-
-    palmera_textures.push_back((Texture*)GetResourceByName("ENV_MP_Iraq_palm_tree_01_D.png", RESOURCE_TYPE::RESOURCE_TEXTURE));
-    palmera_textures.push_back((Texture*)GetResourceByName("ENV_MP_Iraq_PlantsSansTrans_D.png", RESOURCE_TYPE::RESOURCE_TEXTURE));
-
-    Material* new_material = new Material(palmera_textures);
-    new_material->SetName("PalmTree_Material.mtl");
-
-    //Add the new mesh to the resources list
-    resources.push_back(new_material);
-
-    //Add the new mesh to the UI
-    widget_resources_list->addItem(new_material->GetName());
+ //  std::vector<Texture*> palmera_textures;
+ //
+ //  palmera_textures.push_back((Texture*)GetResourceByName("ENV_MP_Iraq_palm_tree_01_D.png", RESOURCE_TYPE::RESOURCE_TEXTURE));
+ //  palmera_textures.push_back((Texture*)GetResourceByName("ENV_MP_Iraq_PlantsSansTrans_D.png", RESOURCE_TYPE::RESOURCE_TEXTURE));
+ //
+ //  Material* new_material = new Material(palmera_textures);
+ //  new_material->SetName("PalmTree_Material.mtl");
+ //
+ //  //Add the new mesh to the resources list
+ //  resources.push_back(new_material);
+ //
+ //  //Add the new mesh to the UI
+ //  widget_resources_list->addItem(new_material->GetName());
 }

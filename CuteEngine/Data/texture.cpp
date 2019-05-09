@@ -4,9 +4,10 @@
 #include <iostream>
 #include <QGLWidget>
 
-Texture::Texture(const char* image_path) : Resource (RESOURCE_TYPE::RESOURCE_TEXTURE)
+Texture::Texture(const char* image_path, TEXTURE_TYPE text_type) : Resource (RESOURCE_TYPE::RESOURCE_TEXTURE)
 {
     texture_path = image_path;
+    texture_type = text_type;
 
     SetReload(true);
 }

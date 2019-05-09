@@ -9,6 +9,7 @@
 #include <QIODevice>
 #include "Data/material.h"
 #include <QOpenGLFunctions>
+#include <QFileInfo>
 
 Mesh::Mesh() : Resource(RESOURCE_MESH)
 {
@@ -82,22 +83,56 @@ void Mesh::LoadModel(const char *path)
 
     QByteArray data = file.readAll();
 
-    const aiScene* scene = importer.ReadFileFromMemory(data.data(), (unsigned int)data.size(),
-                                                       aiProcess_Triangulate |
-                                                       aiProcess_GenSmoothNormals |
-                                                       aiProcess_PreTransformVertices |
-                                                       aiProcess_ImproveCacheLocality, ".obj");
+    QFileInfo file_info(file);
+    const aiScene* scene = nullptr;
 
-    if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode )
+    if(file_info.suffix() == "obj")
     {
-        std::cout<< "ASSIMP ERROR: "<< importer.GetErrorString() << std::endl;
-        return;
+        scene = importer.ReadFileFromMemory(data.data(), (unsigned int)data.size(),
+                                                           aiProcess_Triangulate |
+                                                           aiProcess_GenSmoothNormals |
+                                                           aiProcess_PreTransformVertices |
+                                                           aiProcess_ImproveCacheLocality, ".obj");
+
+        if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode )
+        {
+            std::cout<< "ASSIMP ERROR: "<< importer.GetErrorString() << std::endl;
+            return;
+        }
+
+        ProcessNodes(scene);
     }
+
+    if(file_info.suffix() == "fbx")
+    {
+        scene = importer.ReadFileFromMemory(data.data(), (unsigned int)data.size(),
+                                                           aiProcess_Triangulate |
+                                                           aiProcess_GenSmoothNormals |
+                                                           aiProcess_PreTransformVertices |
+                                                           aiProcess_ImproveCacheLocality, ".fbx");
+
+        if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode )
+        {
+            std::cout<< "ASSIMP ERROR: "<< importer.GetErrorString() << std::endl;
+            return;
+        }
+
+        ProcessNodes(scene);
+    }
+
+   SetReload(true);
+}
+
+void Mesh::ProcessNodes(const aiScene *scene)
+{
+    if(scene->HasMaterials())
+        mesh_mat = new Material();
 
     //Read all nodes iterative
     nodes.push(scene->mRootNode);
     while(!nodes.empty())
     {
+
         ProcessNode(nodes.front(), scene);
 
         for(unsigned int i = 0; i < nodes.front()->mNumChildren; i++)
@@ -105,8 +140,6 @@ void Mesh::LoadModel(const char *path)
 
         nodes.pop();
     }
-
-   SetReload(true);
 }
 
 void Mesh::ProcessNode(aiNode *node, const aiScene *scene)
@@ -116,6 +149,27 @@ void Mesh::ProcessNode(aiNode *node, const aiScene *scene)
     {
         aiMesh* assimp_mesh = scene->mMeshes[node->mMeshes[i]];
         AddSubMesh(ProcessSubMesh(assimp_mesh, scene));
+
+        //Process Material
+
+        if(scene->HasMaterials())
+        {
+            aiMaterial* mesh_material = scene->mMaterials[assimp_mesh->mMaterialIndex];
+            SubMaterial* submesh_material = new SubMaterial();
+
+            for(unsigned int j = 0; j < mesh_material->GetTextureCount(aiTextureType_DIFFUSE); j++)
+            {
+                std::cout<< "SubMaterial: " << i;
+                aiString texture_name;
+                mesh_material->GetTexture(aiTextureType_DIFFUSE, j, &texture_name);
+
+                submesh_material->AddTexture(texture_name.C_Str());
+                std::cout<< " name: " << texture_name.C_Str() << std::endl;
+            }
+
+            mesh_mat->AddSubMaterial(submesh_material);
+
+        }
     }
 
 }
