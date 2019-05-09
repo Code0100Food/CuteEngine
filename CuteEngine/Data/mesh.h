@@ -32,6 +32,7 @@ public:
     Material* GetMaterial() const { return mesh_mat; }
     void ResetMaterial() { mesh_mat = nullptr; }
 
+    unsigned int GetNumSubMeshes()const { return meshes.size(); }
 private:
     //Load Stuff
     std::queue<aiNode*> nodes;

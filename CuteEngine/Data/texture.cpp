@@ -30,8 +30,8 @@ void Texture::Reload()
 
     gl_functions->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     gl_functions->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    gl_functions->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-    gl_functions->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    gl_functions->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_REPEAT);
+    gl_functions->glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     gl_functions->glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image_able_for_OpenGL.width(), image_able_for_OpenGL.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image_able_for_OpenGL.bits());
 
     SetReload(false);

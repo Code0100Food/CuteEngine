@@ -47,8 +47,15 @@ void Mesh::Draw(Material* material)
         {
             material->Draw(material_index);
             material_index++;
+
         }
         submesh->Draw();
+
+        if(material)
+        {
+
+            material->UnBind();
+        }
     }
 }
 
@@ -126,7 +133,10 @@ void Mesh::LoadModel(const char *path)
 void Mesh::ProcessNodes(const aiScene *scene)
 {
     if(scene->HasMaterials())
+       {
         mesh_mat = new Material();
+        std::cout << "new materialñ"<<std::endl;
+    }
 
     //Read all nodes iterative
     nodes.push(scene->mRootNode);
@@ -159,12 +169,11 @@ void Mesh::ProcessNode(aiNode *node, const aiScene *scene)
 
             for(unsigned int j = 0; j < mesh_material->GetTextureCount(aiTextureType_DIFFUSE); j++)
             {
-                std::cout<< "SubMaterial: " << i;
                 aiString texture_name;
                 mesh_material->GetTexture(aiTextureType_DIFFUSE, j, &texture_name);
 
                 submesh_material->AddTexture(texture_name.C_Str());
-                std::cout<< " name: " << texture_name.C_Str() << std::endl;
+                std::cout<<"Adding Texture to DubMaterial: " << texture_name.C_Str()<<std::endl;
             }
 
             mesh_mat->AddSubMaterial(submesh_material);

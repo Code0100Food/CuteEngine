@@ -12,27 +12,19 @@ SubMaterial::SubMaterial()
 
 }
 
-bool SubMaterial::Reload()
+void SubMaterial::Reload()
 {
-    bool ret = true;
-    for(std::vector<std::string>::iterator i = texture_names.begin(); i != texture_names.end();)
+    for(std::vector<std::string>::iterator i = texture_names.begin(); i != texture_names.end(); i++)
     {
         Texture* loaded_tex = (Texture*)customApp->main_window()->resource_manager()->GetResourceByName((*i), RESOURCE_TYPE::RESOURCE_TEXTURE);
         if(loaded_tex)
         {
-            i = texture_names.erase(i);
             AddTexture(loaded_tex);
-            continue;
         }
-        else ret = false;
-
-        i++;
+        else std::cout<< "TEXTURE NULL: " << (*i)<< std::endl;
     }
 
-    if(ret)
-        needs_reload = false;
-
-    return ret;
+    needs_reload = false;
 }
 
 void SubMaterial::AddTexture(Texture *new_texture)
@@ -52,8 +44,18 @@ void SubMaterial::BindTextures() const
     unsigned int i = 0;
     for(std::vector<Texture*>::const_iterator item = textures.begin();  item != textures.end(); item++)
     {
-        if((*item) == nullptr || (*item)->NeedsReload())
+        if((*item) == nullptr)
+         {
+            std::cout<< "Texture is null" << std::endl;
             continue;
+        }
+
+        if((*item)->NeedsReload())
+        {
+            std::cout<< "Texture is no load" << std::endl;
+            continue;
+        }
+        //std::cout<< "Binding Texture: " << (*item)->GetName() <<  std::endl;
 
         gl_functions->glActiveTexture(GL_TEXTURE0 + i);
         gl_functions->glBindTexture(GL_TEXTURE_2D, (*item)->GetIndex());
@@ -74,11 +76,11 @@ void Material::Reload()
     bool ret = false;
     foreach(SubMaterial* sub_mat, mesh_materials)
     {
-        if(!sub_mat->Reload())
-            ret = true;
+        if(sub_mat->NeedsReload())
+            sub_mat->Reload();
     }
 
-    SetReload(ret);
+    SetReload(false);
 }
 
 void Material::Draw(int texture_index)
@@ -87,4 +89,10 @@ void Material::Draw(int texture_index)
         return;
 
     mesh_materials[texture_index]->BindTextures();
+
+}
+
+void Material::UnBind()
+{
+    glBindTexture(GL_TEXTURE_2D, 0);
 }

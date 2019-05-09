@@ -13,7 +13,7 @@ class SubMaterial
 public:
     SubMaterial();
 
-    bool Reload();
+    void Reload();
 
     void AddTexture(std::string texture_name);
     void BindTextures() const;
@@ -37,6 +37,7 @@ public:
 
     void Reload() override;
     void Draw(int texture_index);
+    void UnBind();
 
     void AddSubMaterial(SubMaterial* new_submaterial) { mesh_materials.push_back(new_submaterial); }
 

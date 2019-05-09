@@ -58,7 +58,7 @@ void ResourceManager::Import(std::string path)
     if(file_type == ".fbx")
         ImportMesh(path);
 
-    if(file_type == ".png")
+    if(file_type == ".png" || file_type == ".jpg" || file_type == ".JPG" || file_type == ".PNG")
         ImportTexture(path);
 }
 
