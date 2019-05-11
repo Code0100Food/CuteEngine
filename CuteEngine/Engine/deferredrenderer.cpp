@@ -53,6 +53,14 @@ void FrameBufferObject::Create(int width, int height)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
+    glGenTextures(1, &shaded_color);
+    glBindTexture(GL_TEXTURE_2D, shaded_color);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
     glGenTextures(1, &depth_texture);
     glBindTexture(GL_TEXTURE_2D, depth_texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -65,11 +73,12 @@ void FrameBufferObject::Create(int width, int height)
     gl_functions->glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
     gl_functions->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_texture, 0);
     gl_functions->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, normals_texture, 0);
+    gl_functions->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, shaded_color, 0);
     gl_functions->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_texture, 0);
 
 
-    GLenum buffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
-    gl_functions->glDrawBuffers(2, buffers);
+    GLenum buffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 , GL_COLOR_ATTACHMENT2};
+    gl_functions->glDrawBuffers(3, buffers);
 
     GLenum status = gl_functions->glCheckFramebufferStatus(GL_FRAMEBUFFER);
      switch(status)
@@ -106,6 +115,8 @@ void FrameBufferObject::Destroy()
     gl_functions->glDeleteTextures(1, &color_texture);
 
     gl_functions->glDeleteTextures(1, &normals_texture);
+
+    gl_functions->glDeleteTextures(1, &shaded_color);
 
     if(depth_texture != 0)
         gl_functions->glDeleteTextures(1, &depth_texture);
@@ -192,6 +203,10 @@ void DeferredRenderer::Render(Camera *camera)
 
     main_buffer->Bind();
 
+    QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
+    GLenum buffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 }; //Albedo, Normals
+    gl_functions->glDrawBuffers(3, buffers);
+
     glClearDepth(1.0);
     glClearColor(0.4f,0.4f,0.4f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -199,6 +214,7 @@ void DeferredRenderer::Render(Camera *camera)
     PassGrid(camera);
     PassBackground(camera);
     PassMeshes(camera);
+    PassLights(camera);
 
     main_buffer->UnBind();
 }
@@ -216,7 +232,7 @@ void DeferredRenderer::SetMainBuffer(int width, int height)
 void DeferredRenderer::PassMeshes(Camera *camera)
 {
     QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
-    GLenum buffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+    GLenum buffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 }; //Albedo, Normals
     gl_functions->glDrawBuffers(2, buffers);
 
     if(standard_program.bind())
@@ -236,11 +252,46 @@ void DeferredRenderer::PassMeshes(Camera *camera)
     }
 }
 
+void DeferredRenderer::PassLights(Camera *camera)
+{
+    QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
+    GLenum buffers =  GL_COLOR_ATTACHMENT2 ; //Shaded
+    glDrawBuffer(buffers);
+
+    if(program_lights.bind())
+    {
+        //Textures to shader
+        program_lights.setUniformValue(program_lights.uniformLocation("color_texture"), 0);
+        gl_functions->glActiveTexture(GL_TEXTURE0); //Color
+        gl_functions->glBindTexture(GL_TEXTURE_2D, main_buffer->GetColorTexture());
+
+        program_lights.setUniformValue(program_lights.uniformLocation("normal_texture"), 1);
+        gl_functions->glActiveTexture(GL_TEXTURE1); //Normals
+        glBindTexture(GL_TEXTURE_2D, main_buffer->GetNormalTexture());
+
+        //Variables to shadfer
+        program_lights.setUniformValue(program_lights.uniformLocation("camera_position"), camera->position);
+        program_lights.setUniformValue(program_lights.uniformLocation("projection_matrix_transposed"), camera->projection_matrix.transposed());
+        program_lights.setUniformValue(program_lights.uniformLocation("view_matrix_transposed"), camera->view_matrix.transposed());
+        program_lights.setUniformValue(program_lights.uniformLocation("viewport_width"), main_buffer->GetViewportWidth());
+        program_lights.setUniformValue(program_lights.uniformLocation("viewport_height"), main_buffer->GetViewportHeight());
+        program_lights.setUniformValue(program_lights.uniformLocation("near"), camera->z_near);
+        program_lights.setUniformValue(program_lights.uniformLocation("far"), camera->z_far);
+
+
+        customApp->main_window()->resource_manager()->ScreenQuad()->Draw();
+
+        //std::cout << "LOL" << std::endl;
+        program_lights.release();
+    }
+}
+
 void DeferredRenderer::LoadShaders(const char *char_path)
 {
     LoadStandardShader(char_path);
     LoadGridShader(char_path);
     LoadBackgroundShader(char_path);
+    LoadLightsShader(char_path);
 }
 
 void DeferredRenderer::LoadStandardShader(const char* char_path)
@@ -286,4 +337,19 @@ void DeferredRenderer::LoadBackgroundShader(const char* char_path)
     program_background.addShaderFromSourceFile(QOpenGLShader::Fragment, frag_path.c_str());
 
     program_background.link();
+}
+
+void DeferredRenderer::LoadLightsShader(const char *char_path)
+{
+    std::string vertex_path = char_path;
+    vertex_path += "/../../CuteEngine/Resources/Shaders/IluminationVertex.vert";
+
+    std::string frag_path = char_path;
+    frag_path += "/../../CuteEngine/Resources/Shaders/IluminationFragment.frag";
+
+    program_lights.create();
+    program_lights.addShaderFromSourceFile(QOpenGLShader::Vertex, vertex_path.c_str());
+    program_lights.addShaderFromSourceFile(QOpenGLShader::Fragment, frag_path.c_str());
+
+    program_lights.link();
 }

@@ -95,7 +95,7 @@ void myopenglwidget::paintGL()
 
         switch (render_mode)
         {
-            case FINAL_COLOR:
+            case ALBEDO_COLOR:
                 glBindTexture(GL_TEXTURE_2D, deferred_renderer->main_buffer->GetColorTexture());
                 break;
 
@@ -105,6 +105,10 @@ void myopenglwidget::paintGL()
 
             case DEPTH:
                 glBindTexture(GL_TEXTURE_2D, deferred_renderer->main_buffer->GetDepthTexture());
+                break;
+
+            case FINAL_COLOR:
+                glBindTexture(GL_TEXTURE_2D, deferred_renderer->main_buffer->GetShadedTexture());
                 break;
         }
 
@@ -122,7 +126,7 @@ void myopenglwidget::finalizeGL()
 
 void myopenglwidget::ChangeRenderModeColor()
 {
-    render_mode = RENDERMODE::FINAL_COLOR;
+    render_mode = RENDERMODE::ALBEDO_COLOR;
 }
 
 void myopenglwidget::ChangeRenderModeNormals()
@@ -133,6 +137,12 @@ void myopenglwidget::ChangeRenderModeNormals()
 void myopenglwidget::ChangeRenderModeDepth()
 {
     render_mode = RENDERMODE::DEPTH;
+}
+
+void myopenglwidget::ChangeRenderModeShaded()
+{
+    std::cout << "Render Shaded" << std::endl;
+    render_mode = RENDERMODE::FINAL_COLOR;
 }
 
 void myopenglwidget::keyPressEvent(QKeyEvent *event)

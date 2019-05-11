@@ -22,6 +22,7 @@ public:
 
     unsigned int GetColorTexture() const { return color_texture; }
     unsigned int GetNormalTexture() const { return normals_texture; }
+    unsigned int GetShadedTexture() const { return shaded_color; }
     unsigned int GetDepthTexture() const { return depth_texture; }
 
     int GetViewportWidth() const { return viewport_width; }
@@ -29,9 +30,12 @@ public:
 
 private:
     unsigned int frame_buffer = 0;
+
     unsigned int color_texture = 0;
     unsigned int normals_texture = 0;
+    unsigned int shaded_color = 0;
     unsigned int depth_texture = 0;
+
     int viewport_width = 0;
     int viewport_height = 0;
 };
@@ -50,6 +54,7 @@ public:
     void PassMeshes(Camera* camera);
     bool PassGrid(Camera* camera);
     void PassBackground(Camera* camera);
+    void PassLights(Camera* camera);
 
      FrameBufferObject* main_buffer;
 
@@ -64,6 +69,9 @@ private:
 
     QOpenGLShaderProgram program_background;
     void LoadBackgroundShader(const char* char_path);
+
+    QOpenGLShaderProgram program_lights;
+    void LoadLightsShader(const char* char_path);
 };
 
 #endif // DEFERREDRENDERER_H

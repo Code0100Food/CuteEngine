@@ -496,9 +496,10 @@ QRadioButton::indicator:hover, QCheckBox::indicator:hover
     <property name="title">
      <string>Render Mode</string>
     </property>
-    <addaction name="actionFinal_Color"/>
+    <addaction name="actionShaded_Color"/>
     <addaction name="actionNormals"/>
     <addaction name="actionDepth"/>
+    <addaction name="actionAlbedo_Color"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuWindow"/>
@@ -572,9 +573,9 @@ QRadioButton::indicator:hover, QCheckBox::indicator:hover
     <string>Screenshot</string>
    </property>
   </action>
-  <action name="actionFinal_Color">
+  <action name="actionShaded_Color">
    <property name="text">
-    <string>Final Color</string>
+    <string>Shaded Color</string>
    </property>
   </action>
   <action name="actionNormals">
@@ -585,6 +586,16 @@ QRadioButton::indicator:hover, QCheckBox::indicator:hover
   <action name="actionDepth">
    <property name="text">
     <string>Depth</string>
+   </property>
+  </action>
+  <action name="actionAlbedo_Color">
+   <property name="text">
+    <string>Albedo Color</string>
+   </property>
+  </action>
+  <action name="actionPosition">
+   <property name="text">
+    <string>Position</string>
    </property>
   </action>
  </widget>

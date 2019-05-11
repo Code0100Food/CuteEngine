@@ -45,9 +45,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(_uiMain->actionExit,SIGNAL(triggered()),this,SLOT(customExit()));
     connect(_uiMain->actionScreenshot,SIGNAL(triggered()),this,SLOT(takeScreenshot()));
 
-    connect(_uiMain->actionFinal_Color, SIGNAL(triggered()), _uiMain->openGLWidget, SLOT(ChangeRenderModeColor()));
+    connect(_uiMain->actionAlbedo_Color, SIGNAL(triggered()), _uiMain->openGLWidget, SLOT(ChangeRenderModeColor()));
     connect(_uiMain->actionNormals, SIGNAL(triggered()), _uiMain->openGLWidget, SLOT(ChangeRenderModeNormals()));
     connect(_uiMain->actionDepth, SIGNAL(triggered()), _uiMain->openGLWidget, SLOT(ChangeRenderModeDepth()));
+    connect(_uiMain->actionShaded_Color, SIGNAL(triggered()), _uiMain->openGLWidget, SLOT(ChangeRenderModeShaded()));
 
     //Set Resource Manager
     QDockWidget* resource_dock = new QDockWidget();

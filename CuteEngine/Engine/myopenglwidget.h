@@ -19,9 +19,10 @@ class DeferredRenderer;
 
 enum RENDERMODE
 {
-    FINAL_COLOR = 0,
+    ALBEDO_COLOR = 0,
     NORMALS,
-    DEPTH
+    DEPTH,
+    FINAL_COLOR
 };
 
 class myopenglwidget : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
@@ -84,6 +85,8 @@ public slots:
     void ChangeRenderModeColor();
     void ChangeRenderModeNormals();
     void ChangeRenderModeDepth();
+    void ChangeRenderModeShaded();
+
 
 };
 
