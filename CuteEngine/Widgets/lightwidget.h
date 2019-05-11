@@ -20,6 +20,11 @@ public:
     int GetIntensity() const { return light_intensity->value(); }
     int GetRadius() const { return light_radius->value(); }
 
+    void SetIntensity(int value);
+    void SetColor(QColor value);
+    void SetType(int value);
+    void SetRadius(int value);
+
 private:
     QLabel* select_light_type = nullptr;
     QComboBox* light_type = nullptr;

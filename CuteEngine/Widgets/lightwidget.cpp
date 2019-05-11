@@ -40,8 +40,8 @@ LightWidget::LightWidget()
     grid->addWidget(select_light_intensity, 1, 0);
 
     light_intensity = new QSlider(Qt::Orientation::Horizontal);
-    light_intensity->setRange(0, 1000);
-    light_intensity->setValue(1);
+    light_intensity->setRange(0, 200);
+    light_intensity->setValue(10);
     //light_intensity->setTracking(true);
     grid->addWidget(light_intensity, 1, 1);
 
@@ -158,4 +158,25 @@ void LightWidget::ChangeLightType(int new_type)
     {
         light_component->SetType((LIGHTTYPE)new_type);
     }
+}
+
+void LightWidget::SetIntensity(int value)
+{
+    light_intensity->setValue(value);
+    intensity->setText(QString::number(value));
+}
+
+void LightWidget::SetColor(QColor color)
+{
+    QString qss = QString("background-color: %1").arg(color.name());
+    color_picker->setStyleSheet(qss);
+}
+void LightWidget::SetType(int value)
+{
+    light_type->setCurrentIndex(value);
+}
+void LightWidget::SetRadius(int value)
+{
+    light_radius->setValue(value);
+    radius_label_value->setText(QString::number(value));
 }

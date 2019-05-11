@@ -63,6 +63,16 @@ void MainScene::AddEntity(Entity *new_entity)
 
  void MainScene::RemoveEntity(std::string entity_to_remove)
   {
+     //Erase Lights
+     for(std::list<Entity*>::iterator item = lights.begin(); item != lights.end(); item++)
+     {
+         if((*item)->GetName() == entity_to_remove)
+         {
+             entities.erase(item);
+             break;
+         }
+     }
+
       for(std::list<Entity*>::iterator item = entities.begin(); item != entities.end(); item++)
       {
           if((*item)->GetName() == entity_to_remove)

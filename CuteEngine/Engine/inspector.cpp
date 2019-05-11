@@ -225,6 +225,19 @@ void Inspector::UIReadEntity(Entity *selected_entity)
     {
         light_settings_widget->show();
         add_light_source->hide();
+
+        //Update Light Widget to match light values
+        light_settings_widget->SetType(light_component->GetType());
+        light_settings_widget->SetIntensity(light_component->GetIntensity());
+
+        QVector4D light_col = light_component->GetColor() * 255;
+        QColor light_color(light_col.x(), light_col.y(), light_col.z(), light_col.w());
+        light_settings_widget->SetColor(light_color);
+
+        if(light_component->GetType() == LIGHTTYPE::SPOT)
+        {
+            light_settings_widget->SetRadius(light_component->GetRadius());
+        }
     }
     else
     {
@@ -280,6 +293,11 @@ void Inspector::AddLightComponent()
     {
         Light* new_light_component = new Light();
         tmp->AddComponent(new_light_component);
+
+        customApp->main_scene()->AddLight(tmp);
+
+        light_settings_widget->SetIntensity(10);
+        light_settings_widget->SetColor(QColor(255, 255, 255));
 
         light_settings_widget->show();
         add_light_source->hide();

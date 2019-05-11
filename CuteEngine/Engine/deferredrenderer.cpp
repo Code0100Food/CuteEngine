@@ -10,6 +10,7 @@
 #include "myopenglwidget.h"
 #include "resourcemanager.h"
 #include "../Data/mesh.h"
+#include "light.h"
 
 #include "qopenglextrafunctions.h"
 
@@ -279,11 +280,24 @@ void DeferredRenderer::PassLights(Camera *camera)
         program_lights.setUniformValue(program_lights.uniformLocation("far"), camera->z_far);
 
 
+        foreach(Entity* light, customApp->main_scene()->GetLights())
+        {
+            Light* light_component = (Light*)light->FindComponent(COMPONENT_LIGHT);
+
+            program_lights.setUniformValue(program_lights.uniformLocation("light_type"), light_component->GetType());
+            program_lights.setUniformValue(program_lights.uniformLocation("light_color"), light_component->GetColor());
+            program_lights.setUniformValue(program_lights.uniformLocation("light_intensity"), light_component->GetIntensity());
+            program_lights.setUniformValue(program_lights.uniformLocation("light_direction"), light->GetTransform()->GetLocalTransform()->column(2).toVector3D());
+
+        }
+
         customApp->main_window()->resource_manager()->ScreenQuad()->Draw();
 
         //std::cout << "LOL" << std::endl;
         program_lights.release();
     }
+
+    glDisable(GL_BLEND);
 }
 
 void DeferredRenderer::LoadShaders(const char *char_path)

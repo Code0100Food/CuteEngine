@@ -22,11 +22,13 @@ public:
     void Draw();
 
     void AddEntity(Entity* new_entity);
+    void AddLight(Entity* new_light) { lights.push_back(new_light); }
     void RemoveEntities();
     void RemoveEntity(std::string entity_to_remove);
 
     std::list<Entity*> GetSelectedEntities()const;
     const std::list<Entity*> GetEntities()const { return entities; }
+    const std::list<Entity*> GetLights()const { return lights; }
     Entity* GetSelectedEntity()const;
 
     Entity* FindEntity(std::string entity_name);
@@ -42,6 +44,7 @@ public:
 
 private:
 
+    std::list<Entity*> lights;
     std::list<Entity*> entities;
     Entity* selected_entity = nullptr;
     qt_Application* app = nullptr;

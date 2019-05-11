@@ -3,6 +3,7 @@
 
 #include <QVector4D>
 #include "component.h"
+#include <iostream>
 
 enum LIGHTTYPE
 {
@@ -17,7 +18,7 @@ public:
 
     void SetType(LIGHTTYPE _type) { light_type = _type; }
     void SetColor(QVector4D _color) { light_color = _color; }
-    void SetIntensity(int _intensity) { intensity = _intensity; }
+    void SetIntensity(int _intensity) { intensity = _intensity; std::cout<< "Setting light intensity " << _intensity << std::endl;}
     void SetRadius(int _radius) { radius = _radius; }
 
     LIGHTTYPE GetType() const { return light_type; }
@@ -26,12 +27,13 @@ public:
     int GetRadius() const { return radius; }
 
     void Update() override;
+    void Draw();
 
 private:
     LIGHTTYPE light_type = DIRECTIONAL;
     QVector4D light_color;
 
-    int intensity = 1;
+    int intensity = 10;
     int radius = 0.0f;
 };
 

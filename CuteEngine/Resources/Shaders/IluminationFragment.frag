@@ -17,12 +17,14 @@ uniform sampler2D color_texture;
 uniform sampler2D normal_texture;
 uniform vec3 camera_position;
 
-vec3 light_direction = normalize(vec3(0.0, 1.0, 0.0));
-vec3 light_color = vec3(1.0, 1.0, 1.0);
+uniform vec3 light_direction;
+uniform vec4 light_color;
+uniform int light_intensity;
 
+uniform int light_type;
 out vec4 outShadedColor;
 
-void main(void)
+vec3 FragmentToWorld()
 {
 	//Transform FragmentPos to WorldPos
 	vec2 viewport_size = vec2(viewport_width, viewport_height);
@@ -33,17 +35,37 @@ void main(void)
 	normalized_device_coordinate  = normalized_device_coordinate / gl_FragCoord.w;
 	vec3 world_space_fragment = (view_matrix_transposed * projection_matrix_transposed * normalized_device_coordinate ).xyz; 
 
+	return world_space_fragment;
+}
+
+vec4 CalculateDirectional()
+{
+	vec3 light_dir_normalized = normalize(light_direction);
+
 	vec4 albedo_color = texture(color_texture, FSIn.UV_coords);
 	vec3 normal_vector = texture(normal_texture, FSIn.UV_coords).xyz;
 	
-	vec3 eye_dir = normalize(camera_position - world_space_fragment);
-	vec3 H = normalize(eye_dir + light_direction);
+	vec3 eye_dir = normalize(camera_position - FragmentToWorld());
+	vec3 H = normalize(eye_dir + light_dir_normalized );
 		
 
 	vec4 ambient_color =  vec4(albedo_color.rgb * 0.05, 1.0);
-	vec4 difuse_color = albedo_color * dot(normal_vector  , light_direction);
-	vec4 specular =  0.5 * pow(max(dot(normal_vector  , H), 0.0), 32) * vec4(light_color, 1.0);
+	vec4 difuse_color = albedo_color * dot(normal_vector, light_dir_normalized );
+	vec4 specular =  0.5 * pow(max(dot(normal_vector  , H), 0.0), 32) * light_color;
 
-	outShadedColor = ((ambient_color + difuse_color) * vec4(light_color, 1.0)) + specular;
+	return ((ambient_color + difuse_color) * light_color) + specular;
+}
 
+vec4 CalculatePoint()
+{
+	return vec4(1.0);
+}
+
+void main(void)
+{
+	if(light_type == 0)
+		outShadedColor = vec4(CalculateDirectional().xyz * (light_intensity * 0.1), 1.0);
+
+	if(light_type == 1)
+		outShadedColor = CalculatePoint();
 }
