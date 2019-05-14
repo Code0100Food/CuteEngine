@@ -62,6 +62,14 @@ void FrameBufferObject::Create(int width, int height)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 
+    glGenTextures(1, &selection_texture);
+    glBindTexture(GL_TEXTURE_2D, selection_texture);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+
     glGenTextures(1, &depth_texture);
     glBindTexture(GL_TEXTURE_2D, depth_texture);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -75,11 +83,11 @@ void FrameBufferObject::Create(int width, int height)
     gl_functions->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_texture, 0);
     gl_functions->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, normals_texture, 0);
     gl_functions->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, shaded_color, 0);
+    gl_functions->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, selection_texture, 0);
     gl_functions->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_texture, 0);
 
-
-    GLenum buffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 , GL_COLOR_ATTACHMENT2};
-    gl_functions->glDrawBuffers(3, buffers);
+    GLenum buffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 , GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3};
+    gl_functions->glDrawBuffers(4, buffers);
 
     GLenum status = gl_functions->glCheckFramebufferStatus(GL_FRAMEBUFFER);
      switch(status)
@@ -233,8 +241,8 @@ void DeferredRenderer::Render(Camera *camera)
     main_buffer->Bind();
 
     QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
-    GLenum buffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 }; //Albedo, Normals
-    gl_functions->glDrawBuffers(3, buffers);
+    GLenum buffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 }; //Albedo, Normals
+    gl_functions->glDrawBuffers(4, buffers);
 
     glEnable(GL_DEPTH_TEST);
     glClearDepth(1.0);
@@ -242,9 +250,11 @@ void DeferredRenderer::Render(Camera *camera)
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     PassMeshes(camera);
+    //ProcessSelection(camera);
     PassLights(camera);
     PassGrid(camera);
     PassBackground(camera);
+    ProcessSelection(camera);
 
     main_buffer->UnBind();
 }
@@ -333,12 +343,54 @@ void DeferredRenderer::PassLights(Camera *camera)
     glDisable(GL_BLEND);
 }
 
+void DeferredRenderer::ProcessSelection(Camera *camera)
+{
+    glClearColor(0.8f,0.4f,0.4f,1.0f);
+
+    std::cout<<"hola1"<<std::endl;
+    Entity* target_entity = customApp->main_scene()->GetSelectedEntity();
+    if(target_entity== nullptr)
+    {
+        return;
+    }
+
+    std::cout<<"hola2"<<std::endl;
+
+    QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
+    GLenum buffers[] = {GL_COLOR_ATTACHMENT3 }; //Albedo, Normals
+    gl_functions->glDrawBuffers(1, buffers);
+
+    if(program_mask.bind())
+    {
+        program_mask.setUniformValue(program_mask.uniformLocation("projection_matrix"), camera->projection_matrix);
+        program_mask.setUniformValue(program_mask.uniformLocation("view_matrix"), camera->view_matrix);
+        program_mask.setUniformValue(program_mask.uniformLocation("model_matrix"), (*target_entity->GetTransform()->GetLocalTransform()));
+
+        target_entity->Draw();
+
+        program_mask.release();
+    }
+
+    //GLenum new_draw_buffers = GL_COLOR_ATTACHMENT3;
+    //glDrawBuffer(new_draw_buffers);
+
+    /*if(program_selection.bind())
+    {
+        std::cout<<"hola3"<<std::endl;
+        program_selection.setUniformValue(program_selection.uniformLocation("mask"), main_buffer->GetNormalTexture());
+
+        program_selection.release();
+    }*/
+}
+
 void DeferredRenderer::LoadShaders(const char *char_path)
 {
     LoadStandardShader(char_path);
     LoadGridShader(char_path);
     LoadBackgroundShader(char_path);
     LoadLightsShader(char_path);
+    LoadSelectionShader(char_path);
+    LoadMaskShader(char_path);
 }
 
 void DeferredRenderer::LoadStandardShader(const char* char_path)
@@ -399,4 +451,34 @@ void DeferredRenderer::LoadLightsShader(const char *char_path)
     program_lights.addShaderFromSourceFile(QOpenGLShader::Fragment, frag_path.c_str());
 
     program_lights.link();
+}
+
+void DeferredRenderer::LoadSelectionShader(const char *char_path)
+{
+    std::string vertex_path = char_path;
+    vertex_path += "/../../CuteEngine/Resources/Shaders/selection_vertex.vert";
+
+    std::string frag_path = char_path;
+    frag_path += "/../../CuteEngine/Resources/Shaders/selection_fragment.frag";
+
+    program_selection.create();
+    program_selection.addShaderFromSourceFile(QOpenGLShader::Vertex, vertex_path.c_str());
+    program_selection.addShaderFromSourceFile(QOpenGLShader::Fragment, frag_path.c_str());
+
+    program_selection.link();
+}
+
+void DeferredRenderer::LoadMaskShader(const char *char_path)
+{
+    std::string vertex_path = char_path;
+    vertex_path += "/../../CuteEngine/Resources/Shaders/mask_vertex.vert";
+
+    std::string frag_path = char_path;
+    frag_path += "/../../CuteEngine/Resources/Shaders/mask_fragment.frag";
+
+    program_mask.create();
+    program_mask.addShaderFromSourceFile(QOpenGLShader::Vertex, vertex_path.c_str());
+    program_mask.addShaderFromSourceFile(QOpenGLShader::Fragment, frag_path.c_str());
+
+    program_mask.link();
 }

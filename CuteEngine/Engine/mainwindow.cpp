@@ -49,6 +49,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(_uiMain->actionNormals, SIGNAL(triggered()), _uiMain->openGLWidget, SLOT(ChangeRenderModeNormals()));
     connect(_uiMain->actionDepth, SIGNAL(triggered()), _uiMain->openGLWidget, SLOT(ChangeRenderModeDepth()));
     connect(_uiMain->actionShaded_Color, SIGNAL(triggered()), _uiMain->openGLWidget, SLOT(ChangeRenderModeShaded()));
+    connect(_uiMain->actionSelection, SIGNAL(triggered()), _uiMain->openGLWidget, SLOT(ChangeRenderModeSelection()));
 
     //Set Resource Manager
     QDockWidget* resource_dock = new QDockWidget();

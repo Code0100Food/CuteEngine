@@ -500,6 +500,7 @@ QRadioButton::indicator:hover, QCheckBox::indicator:hover
     <addaction name="actionNormals"/>
     <addaction name="actionDepth"/>
     <addaction name="actionAlbedo_Color"/>
+    <addaction name="actionSelection"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuWindow"/>
@@ -596,6 +597,11 @@ QRadioButton::indicator:hover, QCheckBox::indicator:hover
   <action name="actionPosition">
    <property name="text">
     <string>Position</string>
+   </property>
+  </action>
+  <action name="actionSelection">
+   <property name="text">
+    <string>Selection</string>
    </property>
   </action>
  </widget>

@@ -22,7 +22,8 @@ enum RENDERMODE
     ALBEDO_COLOR = 0,
     NORMALS,
     DEPTH,
-    FINAL_COLOR
+    FINAL_COLOR,
+    SELECTION
 };
 
 class myopenglwidget : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
@@ -86,7 +87,7 @@ public slots:
     void ChangeRenderModeNormals();
     void ChangeRenderModeDepth();
     void ChangeRenderModeShaded();
-
+    void ChangeRenderModeSelection();
 
 };
 

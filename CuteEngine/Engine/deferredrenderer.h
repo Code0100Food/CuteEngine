@@ -24,6 +24,7 @@ public:
     unsigned int GetNormalTexture() const { return normals_texture; }
     unsigned int GetShadedTexture() const { return shaded_color; }
     unsigned int GetDepthTexture() const { return depth_texture; }
+    unsigned int GetSelectionTexture() const {return selection_texture;}
 
     int GetViewportWidth() const { return viewport_width; }
     int GetViewportHeight() const { return viewport_height; }
@@ -35,6 +36,8 @@ private:
     unsigned int normals_texture = 0;
     unsigned int shaded_color = 0;
     unsigned int depth_texture = 0;
+    unsigned int selection_texture = 0;
+    unsigned int mask_texture = 0;
 
     int viewport_width = 0;
     int viewport_height = 0;
@@ -55,6 +58,7 @@ public:
     bool PassGrid(Camera* camera);
     void PassBackground(Camera* camera);
     void PassLights(Camera* camera);
+    void ProcessSelection(Camera *camera);
 
      FrameBufferObject* main_buffer;
 
@@ -72,6 +76,12 @@ private:
 
     QOpenGLShaderProgram program_lights;
     void LoadLightsShader(const char* char_path);
+
+    QOpenGLShaderProgram program_selection;
+    void LoadSelectionShader(const char* char_path);
+
+    QOpenGLShaderProgram program_mask;
+    void LoadMaskShader(const char* char_path);
 
     GLuint CubeMapId;
     GLsizei resolution;

@@ -111,6 +111,10 @@ void myopenglwidget::paintGL()
             case FINAL_COLOR:
                 glBindTexture(GL_TEXTURE_2D, deferred_renderer->main_buffer->GetShadedTexture());
                 break;
+
+            case SELECTION:
+                glBindTexture(GL_TEXTURE_2D, deferred_renderer->main_buffer->GetSelectionTexture());
+                break;
         }
 
 
@@ -144,6 +148,11 @@ void myopenglwidget::ChangeRenderModeShaded()
 {
     std::cout << "Render Shaded" << std::endl;
     render_mode = RENDERMODE::FINAL_COLOR;
+}
+
+void myopenglwidget::ChangeRenderModeSelection()
+{
+    render_mode = RENDERMODE::SELECTION;
 }
 
 void myopenglwidget::keyPressEvent(QKeyEvent *event)
