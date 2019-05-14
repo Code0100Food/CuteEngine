@@ -54,11 +54,11 @@ vec4 CalculateDirectional()
 	vec3 eye_dir = normalize(camera_position - FragmentToWorld());
 	vec3 H = normalize(eye_dir + light_dir_normalized);
 		
-	vec4 ambient_color =  vec4(albedo_color.rgb * 0.1, 1.0);
-	vec4 difuse_color = albedo_color * max(dot(light_dir_normalized, normal_vector), 0.0);
+	vec4 ambient_color =  vec4(albedo_color.rgb * 0.1, 1.0) * light_color;
+	vec4 difuse_color = albedo_color * max(dot(light_dir_normalized, normal_vector), 0.0) * light_color;
 	vec4 specular =  0.5 * pow(max(dot(normal_vector, H), 0.0), 32)  * light_color;
 
-	vec4 final_color = (ambient_color + difuse_color + specular);
+	vec4 final_color = vec4((ambient_color + difuse_color + specular).rgb * (light_intensity * 0.1), 1.0);
 
 	return final_color;
 }
