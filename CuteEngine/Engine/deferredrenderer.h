@@ -72,6 +72,9 @@ private:
 
     QOpenGLShaderProgram program_lights;
     void LoadLightsShader(const char* char_path);
+
+    GLuint CubeMapId;
+    GLsizei resolution;
 };
 
 #endif // DEFERREDRENDERER_H

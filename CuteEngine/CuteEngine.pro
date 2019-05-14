@@ -79,7 +79,8 @@ HEADERS += \
     Widgets/meshrenderewidget.h \
     Data/material.h \
     Widgets/lightwidget.h \
-    Components/light.h
+    Components/light.h \
+    Widgets/stb_image.h
 
 FORMS += \
         mainwindow.ui
