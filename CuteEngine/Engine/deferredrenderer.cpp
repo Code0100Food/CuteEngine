@@ -299,6 +299,10 @@ void DeferredRenderer::PassLights(Camera *camera)
         gl_functions->glActiveTexture(GL_TEXTURE1); //Normals
         glBindTexture(GL_TEXTURE_2D, main_buffer->GetNormalTexture());
 
+        program_lights.setUniformValue(program_lights.uniformLocation("depth_texture"), 2);
+        gl_functions->glActiveTexture(GL_TEXTURE2); //Depth
+        glBindTexture(GL_TEXTURE_2D, main_buffer->GetDepthTexture());
+
         //Variables to shadfer
         program_lights.setUniformValue(program_lights.uniformLocation("camera_position"), camera->position);
         program_lights.setUniformValue(program_lights.uniformLocation("projection_matrix_transposed"), camera->projection_matrix.inverted());
