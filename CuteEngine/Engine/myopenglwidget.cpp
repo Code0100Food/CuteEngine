@@ -74,8 +74,8 @@ void myopenglwidget::resizeGL(int width, int height)
     camera->projection_matrix.setRow(1, second);
     camera->projection_matrix.setRow(2, third);
 
-    camera->viewport_width = width;
-    camera->viewport_height = height;
+   // camera->viewport_width = width;
+   // camera->viewport_height = height;
 
     deferred_renderer->Resize(width, height);
 }

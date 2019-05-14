@@ -143,18 +143,22 @@ DeferredRenderer::DeferredRenderer()
 
 bool DeferredRenderer::PassGrid(Camera *camera)
 {
-    if(!customApp->main_scene()->IsGridPrint())
+    /*if(!customApp->main_scene()->IsGridPrint())
     {
         return false;
-    }
+    }*/
 
-     GLenum draw_buffers = GL_COLOR_ATTACHMENT0;
+     GLenum draw_buffers = GL_COLOR_ATTACHMENT2;
      glDrawBuffer(draw_buffers);
 
-     glDepthFunc(GL_DEPTH_TEST);
-     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-     glEnable(GL_SRC_ALPHA);
+
+     glEnable(GL_BLEND);
+     glEnable(GL_DEPTH_TEST);
+     /*glEnable(GL_SRC_ALPHA);
      glEnable(GL_ONE_MINUS_SRC_ALPHA);
+     glEnable(GL_DEPTH_TEST);*/
+     glDepthFunc(GL_LESS);
+     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
      if (program_grid.bind())
      {
@@ -172,13 +176,22 @@ bool DeferredRenderer::PassGrid(Camera *camera)
 
          program_grid.release();
      }
+
+
     return true;
 }
 
 void DeferredRenderer::PassBackground(Camera *camera)
 {
-    GLenum draw_buffers = GL_COLOR_ATTACHMENT0;
+    GLenum draw_buffers = GL_COLOR_ATTACHMENT2;
     glDrawBuffer(draw_buffers);
+
+    //glEnable(GL_DEPTH_TEST);
+    //glEnable(GL_BLEND);
+   // glEnable(GL_SRC_ALPHA);
+    //glEnable(GL_ONE_MINUS_SRC_ALPHA);
+    //glDepthFunc(GL_LEQUAL);
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     if (program_background.bind())
     {
@@ -196,6 +209,8 @@ void DeferredRenderer::PassBackground(Camera *camera)
 
         program_background.release();
     }
+
+
 }
 
 void DeferredRenderer::Render(Camera *camera)
@@ -208,14 +223,15 @@ void DeferredRenderer::Render(Camera *camera)
     GLenum buffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2 }; //Albedo, Normals
     gl_functions->glDrawBuffers(3, buffers);
 
+    glEnable(GL_DEPTH_TEST);
     glClearDepth(1.0);
     glClearColor(0.4f,0.4f,0.4f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    PassGrid(camera);
-    PassBackground(camera);
     PassMeshes(camera);
     PassLights(camera);
+    PassGrid(camera);
+    PassBackground(camera);
 
     main_buffer->UnBind();
 }
