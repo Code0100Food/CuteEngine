@@ -52,7 +52,7 @@ void FrameBufferObject::Create(int width, int height)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
 
     glGenTextures(1, &shaded_color);
     glBindTexture(GL_TEXTURE_2D, shaded_color);
@@ -301,8 +301,8 @@ void DeferredRenderer::PassLights(Camera *camera)
 
         //Variables to shadfer
         program_lights.setUniformValue(program_lights.uniformLocation("camera_position"), camera->position);
-        program_lights.setUniformValue(program_lights.uniformLocation("projection_matrix_transposed"), camera->projection_matrix.transposed());
-        program_lights.setUniformValue(program_lights.uniformLocation("view_matrix_transposed"), camera->view_matrix.transposed());
+        program_lights.setUniformValue(program_lights.uniformLocation("projection_matrix_transposed"), camera->projection_matrix.inverted());
+        program_lights.setUniformValue(program_lights.uniformLocation("view_matrix_transposed"), camera->view_matrix.inverted());
         program_lights.setUniformValue(program_lights.uniformLocation("viewport_width"), main_buffer->GetViewportWidth());
         program_lights.setUniformValue(program_lights.uniformLocation("viewport_height"), main_buffer->GetViewportHeight());
         program_lights.setUniformValue(program_lights.uniformLocation("near"), camera->z_near);
