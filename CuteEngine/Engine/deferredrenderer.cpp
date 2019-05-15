@@ -198,7 +198,6 @@ bool DeferredRenderer::PassGrid(Camera *camera)
          program_grid.release();
      }
 
-
     return true;
 }
 
@@ -253,9 +252,10 @@ void DeferredRenderer::Render(Camera *camera)
 
 
     PassMeshes(camera);
-
     PassLights(camera);
-        ProcessSelection(camera);
+
+    ProcessSelection();
+
     PassGrid(camera);
     PassBackground(camera);
 
@@ -348,23 +348,70 @@ void DeferredRenderer::PassLights(Camera *camera)
     glDisable(GL_BLEND);
 }
 
-void DeferredRenderer::ProcessSelection(Camera *camera)
+void DeferredRenderer::ProcessSelection()
 {
-   QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
-    GLenum buffers =  GL_COLOR_ATTACHMENT2 ; //Shaded
+    QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
+    GLenum draw_buffers = GL_COLOR_ATTACHMENT3;
+    glDrawBuffer(draw_buffers);
+
+    if (program_selection.bind())
+    {
+        program_selection.setUniformValue(program_selection.uniformLocation("mask"), 0);
+        gl_functions->glActiveTexture(GL_TEXTURE0); //Color
+        gl_functions->glBindTexture(GL_TEXTURE_2D, main_buffer->GetSelectionTexture());
+
+        //program_selection.setUniformValue(program_selection.uniformLocation("mask"));
+
+        customApp->main_window()->resource_manager()->ScreenQuad()->Draw();
+
+        program_selection.release();
+    }
+
+   /*return true;
+
+    QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
+    GLenum buffers =  GL_COLOR_ATTACHMENT3 ; //Shaded
     glDrawBuffer(buffers);
 
     if(program_selection.bind())
     {
-        program_selection.setUniformValue(program_selection.uniformLocation("mask"), 0);
+
+
+        gl_functions->glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, main_buffer->GetSelectionTexture());
+
+        //customApp->main_window()->resource_manager()->ScreenQuad()->Draw();
+
+        program_selection.release();
+    }
+
+
+    //if(program_selection.bind())
+    {
+        //program_selection.setUniformValue(program_selection.uniformLocation("mask"), 0);
         gl_functions->glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, main_buffer->GetSelectionTexture());
 
         customApp->main_window()->resource_manager()->ScreenQuad()->Draw();
 
-        program_mask.release();
+        //program_mask.release();
     }
 
+    //GLenum new_draw_buffers = GL_COLOR_ATTACHMENT3;
+    //glDrawBuffer(new_draw_buffers);
+
+    if(program_selection.bind())
+    {
+        std::cout<<"hola3"<<std::endl;
+        program_selection.setUniformValue(program_selection.uniformLocation("mask"), main_buffer->GetSelectionTexture());
+
+        //gl_functions->glActiveTexture(GL_TEXTURE0);
+        //glBindTexture(GL_TEXTURE_2D, main_buffer->GetSelectionTexture());
+
+        //customApp->main_window()->resource_manager()->ScreenQuad()->Draw();
+
+        program_selection.release();
+    }*/
 }
 
 void DeferredRenderer::LoadShaders(const char *char_path)

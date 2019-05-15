@@ -58,7 +58,7 @@ public:
     bool PassGrid(Camera* camera);
     void PassBackground(Camera* camera);
     void PassLights(Camera* camera);
-    void ProcessSelection(Camera *camera);
+    void ProcessSelection();
 
      FrameBufferObject* main_buffer;
 
