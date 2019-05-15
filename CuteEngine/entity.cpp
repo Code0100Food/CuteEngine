@@ -101,6 +101,9 @@ Component* Entity::FindComponent(COMPONENT_TYPE target_type)const
 
 void Entity::Select()
 {
+    is_selected = true;
+
+
     //if(components.empty())return;
     //
     //size_t len = components.size();
@@ -112,6 +115,8 @@ void Entity::Select()
 
 void Entity::Deselect()
 {
+   is_selected = false;
+
    //if(components.empty())return;
    //
    //size_t len = components.size();

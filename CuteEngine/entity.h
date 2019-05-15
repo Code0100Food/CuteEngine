@@ -21,6 +21,8 @@ public:
     void Update();
     void Draw();
 
+    bool is_selected = 0;
+
 private:
 
     int id;

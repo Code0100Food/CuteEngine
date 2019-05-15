@@ -249,12 +249,16 @@ void DeferredRenderer::Render(Camera *camera)
     glClearColor(0.4f,0.4f,0.4f,1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    glDrawBuffer(0);
+
+
     PassMeshes(camera);
-    //ProcessSelection(camera);
+
     PassLights(camera);
+        ProcessSelection(camera);
     PassGrid(camera);
     PassBackground(camera);
-    ProcessSelection(camera);
+
 
     main_buffer->UnBind();
 }
@@ -272,8 +276,8 @@ void DeferredRenderer::SetMainBuffer(int width, int height)
 void DeferredRenderer::PassMeshes(Camera *camera)
 {
     QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
-    GLenum buffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 }; //Albedo, Normals
-    gl_functions->glDrawBuffers(2, buffers);
+    GLenum buffers[] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT3 }; //Albedo, Normals
+    gl_functions->glDrawBuffers(3, buffers);
 
     if(standard_program.bind())
     {
@@ -283,13 +287,14 @@ void DeferredRenderer::PassMeshes(Camera *camera)
         foreach(Entity* entity, customApp->main_scene()->GetEntities())
         {
             standard_program.setUniformValue(standard_program.uniformLocation("model_matrix"), (*entity->GetTransform()->GetLocalTransform()));
+            standard_program.setUniformValue(standard_program.uniformLocation("is_selected"), entity->is_selected);
 
-            standard_program.setUniformValue(standard_program.uniformLocation("albedo_texture"), 0);
             entity->Draw();
         }
 
         standard_program.release();
     }
+
 }
 
 void DeferredRenderer::PassLights(Camera *camera)
@@ -345,42 +350,21 @@ void DeferredRenderer::PassLights(Camera *camera)
 
 void DeferredRenderer::ProcessSelection(Camera *camera)
 {
-    glClearColor(0.8f,0.4f,0.4f,1.0f);
+   QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
+    GLenum buffers =  GL_COLOR_ATTACHMENT2 ; //Shaded
+    glDrawBuffer(buffers);
 
-    std::cout<<"hola1"<<std::endl;
-    Entity* target_entity = customApp->main_scene()->GetSelectedEntity();
-    if(target_entity== nullptr)
+    if(program_selection.bind())
     {
-        return;
-    }
+        program_selection.setUniformValue(program_selection.uniformLocation("mask"), 0);
+        gl_functions->glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, main_buffer->GetSelectionTexture());
 
-    std::cout<<"hola2"<<std::endl;
-
-    QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
-    GLenum buffers[] = {GL_COLOR_ATTACHMENT3 }; //Albedo, Normals
-    gl_functions->glDrawBuffers(1, buffers);
-
-    if(program_mask.bind())
-    {
-        program_mask.setUniformValue(program_mask.uniformLocation("projection_matrix"), camera->projection_matrix);
-        program_mask.setUniformValue(program_mask.uniformLocation("view_matrix"), camera->view_matrix);
-        program_mask.setUniformValue(program_mask.uniformLocation("model_matrix"), (*target_entity->GetTransform()->GetLocalTransform()));
-
-        target_entity->Draw();
+        customApp->main_window()->resource_manager()->ScreenQuad()->Draw();
 
         program_mask.release();
     }
 
-    //GLenum new_draw_buffers = GL_COLOR_ATTACHMENT3;
-    //glDrawBuffer(new_draw_buffers);
-
-    /*if(program_selection.bind())
-    {
-        std::cout<<"hola3"<<std::endl;
-        program_selection.setUniformValue(program_selection.uniformLocation("mask"), main_buffer->GetNormalTexture());
-
-        program_selection.release();
-    }*/
 }
 
 void DeferredRenderer::LoadShaders(const char *char_path)
