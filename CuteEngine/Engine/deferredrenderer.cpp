@@ -252,9 +252,10 @@ void DeferredRenderer::Render(Camera *camera)
 
 
     PassMeshes(camera);
-    PassLights(camera);
 
-    ProcessSelection();
+    PassLights(camera);
+ProcessSelection();
+
 
     PassGrid(camera);
     PassBackground(camera);
@@ -303,6 +304,9 @@ void DeferredRenderer::PassLights(Camera *camera)
     GLenum buffers =  GL_COLOR_ATTACHMENT2 ; //Shaded
     glDrawBuffer(buffers);
 
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE,GL_ONE);
+
     if(program_lights.bind())
     {
         //Textures to shader
@@ -336,34 +340,39 @@ void DeferredRenderer::PassLights(Camera *camera)
             program_lights.setUniformValue(program_lights.uniformLocation("light_color"), light_component->GetColor());
             program_lights.setUniformValue(program_lights.uniformLocation("light_intensity"), light_component->GetIntensity());
             program_lights.setUniformValue(program_lights.uniformLocation("light_direction"), light->GetTransform()->GetLocalTransform()->column(2).toVector3D());
-
+            customApp->main_window()->resource_manager()->ScreenQuad()->Draw();
+            std::cout << "LOL" << std::endl;
         }
 
-        customApp->main_window()->resource_manager()->ScreenQuad()->Draw();
+        glDisable(GL_BLEND);
 
         //std::cout << "LOL" << std::endl;
         program_lights.release();
     }
-
-    glDisable(GL_BLEND);
 }
 
 void DeferredRenderer::ProcessSelection()
 {
+
     QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
     GLenum draw_buffers = GL_COLOR_ATTACHMENT3;
     glDrawBuffer(draw_buffers);
 
+   // glEnable(GL_BLEND);
+    //glBlendFunc(GL_ONE,GL_ONE);
+    //glBlendFunc(GL_DST_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     if (program_selection.bind())
     {
-        program_selection.setUniformValue(program_selection.uniformLocation("mask"), 0);
-        gl_functions->glActiveTexture(GL_TEXTURE0); //Color
-        gl_functions->glBindTexture(GL_TEXTURE_2D, main_buffer->GetSelectionTexture());
+        std::cout<<main_buffer->GetSelectionTexture()<<std::endl;
 
+        gl_functions->glActiveTexture(GL_TEXTURE0);
+        gl_functions->glBindTexture(GL_TEXTURE_2D, main_buffer->GetSelectionTexture());
+        program_selection.setUniformValue(program_selection.uniformLocation("mask"), 0);
         //program_selection.setUniformValue(program_selection.uniformLocation("mask"));
 
         customApp->main_window()->resource_manager()->ScreenQuad()->Draw();
-
+        //std::cout<<"hol2a1"<<std::endl;
         program_selection.release();
     }
 
