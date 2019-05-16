@@ -164,21 +164,12 @@ DeferredRenderer::DeferredRenderer()
 
 bool DeferredRenderer::PassGrid(Camera *camera)
 {
-    /*if(!customApp->main_scene()->IsGridPrint())
-    {
-        return false;
-    }*/
-
      GLenum draw_buffers = GL_COLOR_ATTACHMENT2;
      glDrawBuffer(draw_buffers);
 
 
      glEnable(GL_BLEND);
      glEnable(GL_DEPTH_TEST);
-     /*glEnable(GL_SRC_ALPHA);
-     glEnable(GL_ONE_MINUS_SRC_ALPHA);
-     glEnable(GL_DEPTH_TEST);*/
-     glDepthFunc(GL_LESS);
      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
      if (program_grid.bind())
@@ -198,6 +189,7 @@ bool DeferredRenderer::PassGrid(Camera *camera)
          program_grid.release();
      }
 
+     glDisable(GL_BLEND);
     return true;
 }
 
@@ -205,13 +197,6 @@ void DeferredRenderer::PassBackground(Camera *camera)
 {
     GLenum draw_buffers = GL_COLOR_ATTACHMENT2;
     glDrawBuffer(draw_buffers);
-
-    //glEnable(GL_DEPTH_TEST);
-    //glEnable(GL_BLEND);
-   // glEnable(GL_SRC_ALPHA);
-    //glEnable(GL_ONE_MINUS_SRC_ALPHA);
-    //glDepthFunc(GL_LEQUAL);
-    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     if (program_background.bind())
     {
@@ -245,19 +230,16 @@ void DeferredRenderer::Render(Camera *camera)
 
     glEnable(GL_DEPTH_TEST);
     glClearDepth(1.0);
-    glClearColor(0.4f,0.4f,0.4f,1.0f);
+    glClearColor(0.1f,0.1f,0.1f,0.1f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glDrawBuffer(0);
 
 
     PassMeshes(camera);
-
     PassLights(camera);
-ProcessSelection();
-
-
-    PassGrid(camera);
+    ProcessSelection();
+    //PassGrid(camera);
     PassBackground(camera);
 
 
@@ -306,6 +288,7 @@ void DeferredRenderer::PassLights(Camera *camera)
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE,GL_ONE);
+    glDepthMask(GL_FALSE);
 
     if(program_lights.bind())
     {
@@ -331,7 +314,6 @@ void DeferredRenderer::PassLights(Camera *camera)
         program_lights.setUniformValue(program_lights.uniformLocation("near"), camera->z_near);
         program_lights.setUniformValue(program_lights.uniformLocation("far"), camera->z_far);
 
-
         foreach(Entity* light, customApp->main_scene()->GetLights())
         {
             Light* light_component = (Light*)light->FindComponent(COMPONENT_LIGHT);
@@ -341,11 +323,10 @@ void DeferredRenderer::PassLights(Camera *camera)
             program_lights.setUniformValue(program_lights.uniformLocation("light_intensity"), light_component->GetIntensity());
             program_lights.setUniformValue(program_lights.uniformLocation("light_direction"), light->GetTransform()->GetLocalTransform()->column(2).toVector3D());
             customApp->main_window()->resource_manager()->ScreenQuad()->Draw();
-            std::cout << "LOL" << std::endl;
         }
 
         glDisable(GL_BLEND);
-
+        glDepthMask(GL_TRUE);
         //std::cout << "LOL" << std::endl;
         program_lights.release();
     }
@@ -355,16 +336,14 @@ void DeferredRenderer::ProcessSelection()
 {
 
     QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
-    GLenum draw_buffers = GL_COLOR_ATTACHMENT3;
+    GLenum draw_buffers = GL_COLOR_ATTACHMENT2;
     glDrawBuffer(draw_buffers);
 
-   // glEnable(GL_BLEND);
-    //glBlendFunc(GL_ONE,GL_ONE);
-    //glBlendFunc(GL_DST_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDisable(GL_DEPTH_TEST);
 
     if (program_selection.bind())
     {
-        std::cout<<main_buffer->GetSelectionTexture()<<std::endl;
+        //std::cout<<main_buffer->GetSelectionTexture()<<std::endl;
 
         gl_functions->glActiveTexture(GL_TEXTURE0);
         gl_functions->glBindTexture(GL_TEXTURE_2D, main_buffer->GetSelectionTexture());
@@ -376,51 +355,7 @@ void DeferredRenderer::ProcessSelection()
         program_selection.release();
     }
 
-   /*return true;
-
-    QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
-    GLenum buffers =  GL_COLOR_ATTACHMENT3 ; //Shaded
-    glDrawBuffer(buffers);
-
-    if(program_selection.bind())
-    {
-
-
-        gl_functions->glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, main_buffer->GetSelectionTexture());
-
-        //customApp->main_window()->resource_manager()->ScreenQuad()->Draw();
-
-        program_selection.release();
-    }
-
-
-    //if(program_selection.bind())
-    {
-        //program_selection.setUniformValue(program_selection.uniformLocation("mask"), 0);
-        gl_functions->glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, main_buffer->GetSelectionTexture());
-
-        customApp->main_window()->resource_manager()->ScreenQuad()->Draw();
-
-        //program_mask.release();
-    }
-
-    //GLenum new_draw_buffers = GL_COLOR_ATTACHMENT3;
-    //glDrawBuffer(new_draw_buffers);
-
-    if(program_selection.bind())
-    {
-        std::cout<<"hola3"<<std::endl;
-        program_selection.setUniformValue(program_selection.uniformLocation("mask"), main_buffer->GetSelectionTexture());
-
-        //gl_functions->glActiveTexture(GL_TEXTURE0);
-        //glBindTexture(GL_TEXTURE_2D, main_buffer->GetSelectionTexture());
-
-        //customApp->main_window()->resource_manager()->ScreenQuad()->Draw();
-
-        program_selection.release();
-    }*/
+   glEnable(GL_DEPTH_TEST);
 }
 
 void DeferredRenderer::LoadShaders(const char *char_path)
