@@ -53,7 +53,9 @@ SOURCES += \
     Widgets/meshrenderewidget.cpp \
     Data/material.cpp \
     Widgets/lightwidget.cpp \
-    Components/light.cpp
+    Components/light.cpp \
+    Components/environment.cpp \
+    Data/hdr_texture.cpp
 
 HEADERS += \
     Components/component.h \
@@ -80,7 +82,9 @@ HEADERS += \
     Data/material.h \
     Widgets/lightwidget.h \
     Components/light.h \
-    Widgets/stb_image.h
+    Widgets/stb_image.h \
+    Components/environment.h \
+    Data/hdr_texture.h
 
 FORMS += \
         mainwindow.ui

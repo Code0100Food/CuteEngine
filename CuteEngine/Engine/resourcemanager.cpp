@@ -14,6 +14,7 @@
 #include "inspector.h"
 #include "Data/texture.h"
 #include "Data/material.h"
+#include "Data/hdr_texture.h"
 
 ResourceManager::ResourceManager(QWidget* parent) : QWidget(parent)
 {
@@ -49,8 +50,10 @@ ResourceManager::ResourceManager(QWidget* parent) : QWidget(parent)
 
 void ResourceManager::Import(std::string path)
 {
+    std::cout << path.c_str() << std::endl;
     //Check file type
     std::string file_type = path.substr(path.find_last_of("."));
+    std::cout << file_type.c_str() << std::endl;
 
     if(file_type == ".obj")
         ImportMesh(path);
@@ -60,6 +63,9 @@ void ResourceManager::Import(std::string path)
 
     if(file_type == ".png" || file_type == ".jpg" || file_type == ".JPG" || file_type == ".PNG")
         ImportTexture(path);
+
+    if(file_type == ".hdr" || file_type == ".hdri")
+        ImportHDRTexture(path);
 }
 
 void ResourceManager::ImportMesh(std::string path)
@@ -197,6 +203,22 @@ void ResourceManager::ImportTexture(std::string path)
 
    //Add the new mesh to the UI
    widget_resources_list->addItem(new_texture->GetName());
+}
+
+void ResourceManager::ImportHDRTexture(std::string path)
+{
+    std::cout << path << std::endl;
+
+   hdr_texture* new_hdr_texture = new hdr_texture(path.c_str());
+   new_hdr_texture->SetName(path.substr(path.find_last_of("/") + 1).c_str());
+
+   std::cout<< "Imported HDR TEXTURE: " << new_hdr_texture->GetName() <<std::endl;
+
+   //Add the new mesh to the resources list
+   resources.push_back(new_hdr_texture);
+
+   //Add the new mesh to the UI
+   widget_resources_list->addItem(new_hdr_texture->GetName());
 }
 
 void ResourceManager::LoadPatrickMaterial()

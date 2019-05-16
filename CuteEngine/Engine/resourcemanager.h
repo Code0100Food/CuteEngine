@@ -12,7 +12,8 @@ enum RESOURCE_TYPE
 {
     RESOURCE_MESH = 0,
     RESOURCE_TEXTURE,
-    RESOURCE_MATERIAL
+    RESOURCE_MATERIAL,
+    RESOURCE_HDR_TEXTURE
 };
 
 class Resource
@@ -69,6 +70,7 @@ private:
 
     void ImportMesh(std::string path);
     void ImportTexture(std::string path);
+    void ImportHDRTexture(std::string path);
     void LoadScreenQuad();
 
     //UI

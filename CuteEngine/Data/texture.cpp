@@ -24,7 +24,7 @@ void Texture::Reload()
     QImage loader(texture_path.c_str());
     QImage image_able_for_OpenGL = QGLWidget::convertToGLFormat(loader);
 
-    std::cout<< "LOading Texture: "<< GetName()<< std::endl;
+    std::cout<< "Loading Texture: "<< GetName()<< std::endl;
     gl_functions->glGenTextures(1, &id);
     gl_functions->glBindTexture(GL_TEXTURE_2D, id);
 
