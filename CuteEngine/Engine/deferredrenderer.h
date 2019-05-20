@@ -64,7 +64,7 @@ public:
 
     void LoadShaders(const char* char_path);
 
-private:
+public:
     QOpenGLShaderProgram standard_program;
     void LoadStandardShader(const char* char_path);
 

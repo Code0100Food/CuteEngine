@@ -157,6 +157,11 @@ void myopenglwidget::ChangeRenderModeSelection()
 
 void myopenglwidget::keyPressEvent(QKeyEvent *event)
 {
+    if(event->key() == Qt::Key_R)
+    {
+        deferred_renderer->LoadGridShader(customApp->applicationDirPath().toStdString().c_str());
+    }
+
     customApp->input()->keyPressEvent(event);
 }
 

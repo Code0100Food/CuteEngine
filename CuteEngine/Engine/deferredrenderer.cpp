@@ -230,7 +230,7 @@ void DeferredRenderer::Render(Camera *camera)
 
     glEnable(GL_DEPTH_TEST);
     glClearDepth(1.0);
-    glClearColor(0.1f,0.1f,0.1f,0.1f);
+    glClearColor(0.01f,0.01f,0.01f,0.01f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     glDrawBuffer(0);
@@ -239,7 +239,7 @@ void DeferredRenderer::Render(Camera *camera)
     PassMeshes(camera);
     PassLights(camera);
     ProcessSelection();
-    //PassGrid(camera);
+    PassGrid(camera);
     PassBackground(camera);
 
 
@@ -390,6 +390,11 @@ void DeferredRenderer::LoadGridShader(const char* char_path)
 
     std::string frag_path = char_path;
     frag_path += "/../../CuteEngine/Resources/Shaders/grid_fragment.frag";
+
+    if(program_grid.isLinked())
+    {
+    program_grid.removeAllShaders();
+    }
 
     program_grid.create();
     program_grid.addShaderFromSourceFile(QOpenGLShader::Vertex, vertex_path.c_str());

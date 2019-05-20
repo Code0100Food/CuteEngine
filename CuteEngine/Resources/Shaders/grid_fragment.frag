@@ -43,6 +43,7 @@ void main(void)
     if(rayPlaneIntersection > 0.0) // Intersected in front of the eye
     {
         vec3 hitWorldSpace = eyePosWorldSpace + (eyeDirWorldSpace * rayPlaneIntersection);
+		gl_FragDepth = 0.99;
         outColor = vec4(grid(hitWorldSpace, 1.0));
     }
     else
