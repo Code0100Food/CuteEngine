@@ -164,6 +164,7 @@ DeferredRenderer::DeferredRenderer()
 
 bool DeferredRenderer::PassGrid(Camera *camera)
 {
+
      GLenum draw_buffers = GL_COLOR_ATTACHMENT2;
      glDrawBuffer(draw_buffers);
 
@@ -172,14 +173,17 @@ bool DeferredRenderer::PassGrid(Camera *camera)
      glEnable(GL_DEPTH_TEST);
      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+
      if (program_grid.bind())
      {
+
          QVector4D camera_parameters = camera->GetLeftRightBottomTop();
          program_grid.setUniformValue("left", camera_parameters.x());
          program_grid.setUniformValue("right", camera_parameters.y());
          program_grid.setUniformValue("bottom", camera_parameters.z());
          program_grid.setUniformValue("top", camera_parameters.w());
-         program_grid.setUniformValue("znear", camera->z_near);
+         program_grid.setUniformValue("z_near", camera->z_near);
+         program_grid.setUniformValue("z_far", camera->z_far);
          program_grid.setUniformValue("worldMatrix", camera->world_matrix);
          program_grid.setUniformValue("viewMatrix", camera->view_matrix);
          program_grid.setUniformValue("projectionMatrix", camera->projection_matrix);
