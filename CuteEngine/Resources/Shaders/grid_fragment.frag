@@ -7,6 +7,9 @@ uniform float top;
 uniform float znear;
 uniform mat4 worldMatrix;
 uniform mat4 viewMatrix;
+uniform mat4 projectionMatrix;
+uniform float z_far;
+uniform float z_near;
 
 in vec2 texCoord;
 out vec4 outColor;
@@ -26,7 +29,7 @@ void main(void)
     vec3 eyeDirEyeSpace;
     eyeDirEyeSpace.x = left + texCoord.x * (right -left);
     eyeDirEyeSpace.y = bottom + texCoord.y * (top - bottom);
-    eyeDirEyeSpace.z = -znear;
+    eyeDirEyeSpace.z = -z_near;
     vec3 eyeDirWorldSpace = normalize(mat3(worldMatrix) * eyeDirEyeSpace);
 
     // Eye Position
@@ -43,8 +46,13 @@ void main(void)
     if(rayPlaneIntersection > 0.0) // Intersected in front of the eye
     {
         vec3 hitWorldSpace = eyePosWorldSpace + (eyeDirWorldSpace * rayPlaneIntersection);
-		gl_FragDepth = 0.99;
-        outColor = vec4(grid(hitWorldSpace, 1.0));
+
+	outColor = vec4(grid(hitWorldSpace,1.0));
+
+	vec4 hitViewSpace = viewMatrix * vec4(hitWorldSpace, 1.0);
+	vec4 hitClipSpace = projectionMatrix *hitViewSpace;
+	vec4 hitNDC = hitClipSpace / hitClipSpace.w;
+	gl_FragDepth = hitNDC.z * 0.5 + 0.5;
     }
     else
     {
