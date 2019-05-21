@@ -58,6 +58,7 @@ public:
     bool PassGrid(Camera* camera);
     void PassBackground(Camera* camera);
     void PassLights(Camera* camera);
+    void PassSkybox(Camera* camera);
     void ProcessSelection();
 
      FrameBufferObject* main_buffer;
@@ -82,6 +83,9 @@ public:
 
     QOpenGLShaderProgram program_mask;
     void LoadMaskShader(const char* char_path);
+
+    QOpenGLShaderProgram program_skybox;
+    void LoadSkybox(const char* char_path);
 
     GLuint CubeMapId;
     GLsizei resolution;

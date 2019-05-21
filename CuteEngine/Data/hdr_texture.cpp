@@ -17,11 +17,11 @@ void hdr_texture::Reload()
     int w = 0;
     int h = 0;
     int comp = 0;
-    //if(stbi_is_hdr(filename))
-    //{
-    //    stbi_set_flip_vertically_on_load(true);
-    //    hdr_data = stbi_loadf(filename, &w, &h, &comp, 0);
-    //}
+    if(stbi_is_hdr(filename.c_str()))
+    {
+        stbi_set_flip_vertically_on_load(true);
+        hdr_data = stbi_loadf(filename.c_str(), &w, &h, &comp, 0);
+    }
 
     gl_functions->glGenTextures(1, &id);
     gl_functions->glBindTexture(GL_TEXTURE_2D, id);

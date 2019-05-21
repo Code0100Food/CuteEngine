@@ -18,8 +18,8 @@ public:
     void write(QJsonObject& json);
 
     Texture* texture = nullptr;
-    bool needsProcessing = false;
-
+    bool needs_processing = false;
+    //TextureCube* environment_map = nullptr;
 };
 
 #endif // ENVIRONMENT_H

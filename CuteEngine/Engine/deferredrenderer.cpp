@@ -240,6 +240,7 @@ void DeferredRenderer::Render(Camera *camera)
     PassLights(camera);
     ProcessSelection();
     PassGrid(camera);
+    //PassSkybox(camera);
     PassBackground(camera);
 
 
@@ -332,6 +333,36 @@ void DeferredRenderer::PassLights(Camera *camera)
     }
 }
 
+void DeferredRenderer::PassSkybox(Camera* camera)
+{
+    glDisable(GL_CULL_FACE);
+
+    if(program_skybox.bind())
+    {
+        program_skybox.setUniformValue("equirectangular_map", 0);
+        program_skybox.setUniformValue("projection_matrix", camera->projection_matrix);
+
+        //gl_functions->glActiveTexture(GL_TEXTURE0);
+        //glBindTexture(GL_TEXTURE_2D, customApp->main_scene()->environment->texture->textureId());
+
+        //glViewport(0, 0, environment->environment_map->resoultion, environment->environment_map->resoultion);
+        //glBindFrameBuffer()
+
+        for(unsigned int i = 0; i < 6; ++i)
+        {
+            //program_skybox.setUniformValue("view_matrix", captureViews[i]);
+            //glFramebufferTexture2d...
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            customApp->main_window()->resource_manager()->ScreenQuad()->Draw();
+        }
+    }
+
+    //glBindTexture(GL_TEXTURE_CUBE_MAP, environment->environment_map->TextureId());
+    //glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+
+    program_skybox.release();
+}
+
 void DeferredRenderer::ProcessSelection()
 {
 
@@ -366,6 +397,7 @@ void DeferredRenderer::LoadShaders(const char *char_path)
     LoadLightsShader(char_path);
     LoadSelectionShader(char_path);
     LoadMaskShader(char_path);
+    LoadSkybox(char_path);
 }
 
 void DeferredRenderer::LoadStandardShader(const char* char_path)
@@ -461,4 +493,19 @@ void DeferredRenderer::LoadMaskShader(const char *char_path)
     program_mask.addShaderFromSourceFile(QOpenGLShader::Fragment, frag_path.c_str());
 
     program_mask.link();
+}
+
+void DeferredRenderer::LoadSkybox(const char *char_path)
+{
+    std::string vertex_path = char_path;
+    vertex_path += "/../../CuteEngine/Resources/Shaders/skybox_vertex.vert";
+
+    std::string frag_path = char_path;
+    frag_path += "/../../CuteEngine/Resources/Shaders/skybox_fragment.frag";
+
+    program_skybox.create();
+    program_skybox.addShaderFromSourceFile(QOpenGLShader::Vertex, vertex_path.c_str());
+    program_skybox.addShaderFromSourceFile(QOpenGLShader::Fragment, frag_path.c_str());
+
+    program_skybox.link();
 }
