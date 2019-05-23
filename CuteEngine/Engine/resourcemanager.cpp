@@ -185,24 +185,31 @@ void ResourceManager::LoadScreenQuad()
 void ResourceManager::LoadSkyboxQuad()
 {
     // TODO: Rest of the faces
-    float vertex_attributes[20] = {
-        -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-        1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-        -1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-        1.0f, -1.0f, 0.0f, 1.0f, 0.0f
+    float vertex_attributes[24] = {
+        -1.0f, -1.0f, 1.0f,  //0
+         1.0f, 1.0f,  1.0f,  //1
+        -1.0f, 1.0f,  1.0f,  //2
+         1.0f, -1.0f, 1.0f,  //3
+        -1.0f, -1.0f, -1.0f, //4
+         1.0f, 1.0f,  -1.0f, //5
+        -1.0f, 1.0f,  -1.0f, //6
+         1.0f, -1.0f, -1.0f, //7
     };
 
-    unsigned int indices[6] = {
-      0, 1, 2,
-      0, 3, 1
+    unsigned int indices[36] = {
+      4, 6, 5, 4, 5, 7, //Back face
+      7, 5, 1, 7, 1, 3, //Right Face
+      1, 2, 0, 1, 0, 3, //Front
+      0, 2, 6, 0, 6, 4, //Left face
+      5, 6, 2, 5, 2, 1, //Up Face
+      7, 3, 0, 7, 0, 4  //Down Face
     };
 
     VertexFormat format;
     format.SetVertexAttribute(0, 0, 3);
-    format.SetVertexAttribute(1, 3 * sizeof(float), 2);
 
     skybox_quad = new Mesh();
-    Submesh* tmp = new Submesh(format, &vertex_attributes[0], 20 * sizeof(float), &indices[0], 6);
+    Submesh* tmp = new Submesh(format, &vertex_attributes[0], 24 * sizeof(float), &indices[0], 36);
     skybox_quad->AddSubMesh(tmp);
     skybox_quad->SetReload(true);
 }
