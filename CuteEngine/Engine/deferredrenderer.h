@@ -30,6 +30,7 @@ public:
     int GetViewportHeight() const { return viewport_height; }
 
 private:
+
     unsigned int frame_buffer = 0;
 
     unsigned int color_texture = 0;
@@ -41,6 +42,24 @@ private:
 
     int viewport_width = 0;
     int viewport_height = 0;
+};
+
+class SingleFrameBufferObject
+{
+    public:
+
+        SingleFrameBufferObject();
+        ~SingleFrameBufferObject();
+
+        void Bind();
+        void UnBind();
+
+        void Set(unsigned int id, unsigned int level);
+        void Destroy();
+
+        unsigned int frame_buffer = 0;
+        unsigned int color_texture = 0;
+        unsigned int level_mipmap = 0;
 };
 
 class DeferredRenderer
@@ -66,6 +85,24 @@ public:
     void LoadShaders(const char* char_path);
 
 public:
+
+    SingleFrameBufferObject bloom_buffers_a[5];
+    SingleFrameBufferObject bloom_buffers_b[5];
+
+    unsigned int bloom_texture_a = 0;
+    unsigned int bloom_texture_b = 0;
+
+    void InitializeBloomBuffers(int,int);
+
+    QOpenGLShaderProgram bright_pixels_program;
+    void LoadBrightPixelsShader(const char* char_path);
+
+    QOpenGLShaderProgram blur_program;
+    void LoadBlurShader(const char* char_path);
+
+    QOpenGLShaderProgram bloom_program;
+    void LoadBloomShader(const char* char_path);
+
     QOpenGLShaderProgram standard_program;
     void LoadStandardShader(const char* char_path);
 

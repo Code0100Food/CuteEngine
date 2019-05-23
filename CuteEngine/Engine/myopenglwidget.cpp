@@ -49,6 +49,7 @@ void myopenglwidget::initializeGL()
     makeCurrent();
     deferred_renderer->SetMainBuffer(width(), height());
     deferred_renderer->LoadShaders(customApp->applicationDirPath().toStdString().c_str());
+    deferred_renderer->InitializeBloomBuffers(width(),height());
 
     std::string path = customApp->applicationDirPath().toStdString();
     std::string vertex_path = path + "/../../CuteEngine/Resources/Shaders/screen_vertex.vert";
