@@ -43,6 +43,7 @@ ResourceManager::ResourceManager(QWidget* parent) : QWidget(parent)
 
     //Load the screen
     LoadScreenQuad();
+    LoadSkyboxQuad();
 
     //Load Materials
     //LoadPatrickMaterial();
@@ -131,6 +132,8 @@ void ResourceManager::UpdateResources()
     if(screen_quad->NeedsReload())
         screen_quad->Reload();
 
+    if(skybox_quad->NeedsReload())
+        skybox_quad->Reload();
 }
 
 Resource* ResourceManager::GetSelectedMesh() const
@@ -177,6 +180,31 @@ void ResourceManager::LoadScreenQuad()
     Submesh* tmp = new Submesh(format, &vertex_attributes[0], 20 * sizeof(float), &indices[0], 6);
     screen_quad->AddSubMesh(tmp);
     screen_quad->SetReload(true);
+}
+
+void ResourceManager::LoadSkyboxQuad()
+{
+    // TODO: Rest of the faces
+    float vertex_attributes[20] = {
+        -1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+        1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+        -1.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+        1.0f, -1.0f, 0.0f, 1.0f, 0.0f
+    };
+
+    unsigned int indices[6] = {
+      0, 1, 2,
+      0, 3, 1
+    };
+
+    VertexFormat format;
+    format.SetVertexAttribute(0, 0, 3);
+    format.SetVertexAttribute(1, 3 * sizeof(float), 2);
+
+    skybox_quad = new Mesh();
+    Submesh* tmp = new Submesh(format, &vertex_attributes[0], 20 * sizeof(float), &indices[0], 6);
+    skybox_quad->AddSubMesh(tmp);
+    skybox_quad->SetReload(true);
 }
 
 Resource* ResourceManager::GetResourceByName(std::string name, RESOURCE_TYPE type)

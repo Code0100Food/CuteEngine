@@ -55,6 +55,7 @@ public:
 
     Resource* GetSelectedMesh() const;
     Mesh* ScreenQuad() const { return screen_quad; }
+    Mesh* SkyboxQuad() const { return skybox_quad; }
 
     //New Functionality
     Resource* GetResourceByName(std::string name, RESOURCE_TYPE type);
@@ -65,6 +66,7 @@ public:
 
 private:
     Mesh* screen_quad = nullptr;
+    Mesh* skybox_quad = nullptr;
     std::list<Resource*> resources;
     QListWidget* widget_resources_list = nullptr;
 
@@ -72,6 +74,7 @@ private:
     void ImportTexture(std::string path);
     void ImportHDRTexture(std::string path);
     void LoadScreenQuad();
+    void LoadSkyboxQuad();
 
     //UI
 

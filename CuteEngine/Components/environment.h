@@ -27,6 +27,7 @@ public:
 private:
     QGridLayout* layout = nullptr;
     QComboBox* select_texture_combo_box = nullptr;
+    //GLTextureCube TextureCube;
 
 };
 

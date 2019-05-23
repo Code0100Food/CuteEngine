@@ -11,6 +11,8 @@
 #include "resourcemanager.h"
 #include "../Data/mesh.h"
 #include "light.h"
+#include "environment.h"
+#include "../Data/texture.h"
 
 #include "qopenglextrafunctions.h"
 
@@ -339,30 +341,50 @@ void DeferredRenderer::PassLights(Camera *camera)
 
 void DeferredRenderer::PassSkybox(Camera* camera)
 {
-    glDisable(GL_CULL_FACE);
+    QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
+
+    GLuint captureFBO;
+    gl_functions->glGenFramebuffers(1, &captureFBO);
+
+    gl_functions->glDisable(GL_CULL_FACE);
 
     if(program_skybox.bind())
     {
         program_skybox.setUniformValue("equirectangular_map", 0);
         program_skybox.setUniformValue("projection_matrix", camera->projection_matrix);
 
-        //gl_functions->glActiveTexture(GL_TEXTURE0);
-        //glBindTexture(GL_TEXTURE_2D, customApp->main_scene()->environment->texture->textureId());
+        gl_functions->glActiveTexture(GL_TEXTURE0);
+        gl_functions->glBindTexture(GL_TEXTURE_2D, customApp->main_window()->environment()->texture->GetIndex());
 
-        //glViewport(0, 0, environment->environment_map->resoultion, environment->environment_map->resoultion);
-        //glBindFrameBuffer()
+        //gl_functions->glViewport(0, 0, customApp->main_window()->environment()->environment_map->resoultion,
+        //                         customApp->main_window()->environment()->environment_map->resoultion);GLTextureCube
+        gl_functions->glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
+
+        //QMatrix4x4 captureViews[] =
+        //{
+        //   QVector4D(1, 0, 0, 1),
+        //
+        //   glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+        //   glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-1.0f,  0.0f,  0.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+        //   glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f,  1.0f,  0.0f), glm::vec3(0.0f,  0.0f,  1.0f)),
+        //   glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f, -1.0f,  0.0f), glm::vec3(0.0f,  0.0f, -1.0f)),
+        //   glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f,  0.0f,  1.0f), glm::vec3(0.0f, -1.0f,  0.0f)),
+        //   glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3( 0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
+        //};
 
         for(unsigned int i = 0; i < 6; ++i)
         {
             //program_skybox.setUniformValue("view_matrix", captureViews[i]);
-            //glFramebufferTexture2d...
+            gl_functions->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+                                                 customApp->main_window()->environment()->texture->GetIndex(), 0);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            customApp->main_window()->resource_manager()->ScreenQuad()->Draw();
+            customApp->main_window()->resource_manager()->SkyboxQuad()->Draw();
         }
     }
 
-    //glBindTexture(GL_TEXTURE_CUBE_MAP, environment->environment_map->TextureId());
-    //glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+    gl_functions->glBindTexture(GL_TEXTURE_CUBE_MAP, customApp->main_window()->environment()->texture->GetIndex());
+    gl_functions->glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+
 
     program_skybox.release();
 }
