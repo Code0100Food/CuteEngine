@@ -62,7 +62,7 @@ void FrameBufferObject::Create(int width, int height)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
 
     glGenTextures(1, &selection_texture);
     glBindTexture(GL_TEXTURE_2D, selection_texture);
@@ -129,6 +129,8 @@ void FrameBufferObject::Destroy()
 
     gl_functions->glDeleteTextures(1, &shaded_color);
 
+    gl_functions->glDeleteTextures(1,&selection_texture);
+
     if(depth_texture != 0)
         gl_functions->glDeleteTextures(1, &depth_texture);
 
@@ -145,6 +147,77 @@ void FrameBufferObject::UnBind()
 {
     QOpenGLFramebufferObject::bindDefault();
 }
+
+SingleFrameBufferObject::SingleFrameBufferObject()
+{
+
+}
+
+SingleFrameBufferObject::~SingleFrameBufferObject()
+{
+    this->Destroy();
+}
+
+void SingleFrameBufferObject::Bind()
+{
+    QOpenGLFunctions* gl_functions = QOpenGLContext::currentContext()->functions();
+    gl_functions->glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
+}
+
+void SingleFrameBufferObject::UnBind()
+{
+    QOpenGLFramebufferObject::bindDefault();
+}
+
+void SingleFrameBufferObject::Set(unsigned int id, unsigned int level)
+{
+    color_texture = id;
+    level_mipmap = level;
+
+    QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
+
+    gl_functions->glGenFramebuffers(1, &frame_buffer);
+    gl_functions->glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
+    gl_functions->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_texture, level_mipmap);
+
+    GLenum buffers[] = {GL_COLOR_ATTACHMENT0};
+    gl_functions->glDrawBuffers(1, buffers);
+
+    GLenum status = gl_functions->glCheckFramebufferStatus(GL_FRAMEBUFFER);
+      switch(status)
+      {
+      case GL_FRAMEBUFFER_COMPLETE: // OK
+                    std::cout<< "OK!" << std::endl;
+                    break;
+                case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+                    std::cout<< "Framebuffer ERROR: GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT" << std::endl;
+                    break;
+                case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+                    std::cout<< "Framebuffer ERROR: GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT" << std::endl;
+                     break;
+                case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
+                    std::cout<< "Framebuffer ERROR: GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER" << std::endl;
+                    break;
+                case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
+                    std::cout<< "Framebuffer ERROR: GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER" << std::endl;
+                    break;
+                case GL_FRAMEBUFFER_UNSUPPORTED:
+                    std::cout<< "Framebuffer ERROR: GL_FRAMEBUFFER_UNSUPPORTED" << std::endl;
+                    break;
+                default:
+                    std::cout<< "Framebuffer ERROR: Unknown ERROR" << std::endl;
+                    break;
+             }
+
+            QOpenGLFramebufferObject::bindDefault();
+}
+
+void SingleFrameBufferObject::Destroy()
+{
+    QOpenGLFunctions* gl_functions = QOpenGLContext::currentContext()->functions();
+    gl_functions->glDeleteTextures(1, &color_texture);
+}
+
 ////////////////////////////////////////DEFERRED RENDERER/////////////////////////////////////
 
 DeferredRenderer::DeferredRenderer()
@@ -424,6 +497,9 @@ void DeferredRenderer::LoadShaders(const char *char_path)
     LoadSelectionShader(char_path);
     LoadMaskShader(char_path);
     LoadSkybox(char_path);
+    LoadBrightPixelsShader(char_path);
+    LoadBlurShader(char_path);
+    LoadBloomShader(char_path);
 }
 
 void DeferredRenderer::LoadStandardShader(const char* char_path)
@@ -439,6 +515,39 @@ void DeferredRenderer::LoadStandardShader(const char* char_path)
     standard_program.addShaderFromSourceFile(QOpenGLShader::Fragment, frag_path.c_str());
 
     standard_program.link();
+}
+
+void DeferredRenderer::InitializeBloomBuffers(int width, int height)
+{
+    QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
+
+    glGenTextures(1, &bloom_texture_a);
+    glBindTexture(GL_TEXTURE_2D, bloom_texture_a);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 4);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    gl_functions->glGenerateMipmap(GL_TEXTURE_2D);
+
+    glGenTextures(1, &bloom_texture_b);
+    glBindTexture(GL_TEXTURE_2D, bloom_texture_b);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 4);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    gl_functions->glGenerateMipmap(GL_TEXTURE_2D);
+
+    for(int k = 0; k < 5; k++)
+    {
+        bloom_buffers_a[k].Set(bloom_texture_a,k);
+        bloom_buffers_b[k].Set(bloom_texture_b,k);
+    }
 }
 
 void DeferredRenderer::LoadGridShader(const char* char_path)
@@ -534,4 +643,49 @@ void DeferredRenderer::LoadSkybox(const char *char_path)
     program_skybox.addShaderFromSourceFile(QOpenGLShader::Fragment, frag_path.c_str());
 
     program_skybox.link();
+}
+
+void DeferredRenderer::LoadBrightPixelsShader(const char *char_path)
+{
+    std::string vertex_path = char_path;
+    vertex_path += "/../../CuteEngine/Resources/Shaders/bright_pixels_vertex.vert";
+
+    std::string frag_path = char_path;
+    frag_path += "/../../CuteEngine/Resources/Shaders/bright_pixels_fragment.frag";
+
+    bright_pixels_program.create();
+    bright_pixels_program.addShaderFromSourceFile(QOpenGLShader::Vertex, vertex_path.c_str());
+    bright_pixels_program.addShaderFromSourceFile(QOpenGLShader::Fragment, frag_path.c_str());
+
+    bright_pixels_program.link();
+}
+
+void DeferredRenderer::LoadBlurShader(const char *char_path)
+{
+    std::string vertex_path = char_path;
+    vertex_path += "/../../CuteEngine/Resources/Shaders/blur_vertex.vert";
+
+    std::string frag_path = char_path;
+    frag_path += "/../../CuteEngine/Resources/Shaders/blur_fragment.frag";
+
+    blur_program.create();
+    blur_program.addShaderFromSourceFile(QOpenGLShader::Vertex, vertex_path.c_str());
+    blur_program.addShaderFromSourceFile(QOpenGLShader::Fragment, frag_path.c_str());
+
+    blur_program.link();
+}
+
+void DeferredRenderer::LoadBloomShader(const char *char_path)
+{
+    std::string vertex_path = char_path;
+    vertex_path += "/../../CuteEngine/Resources/Shaders/bloom_vertex.vert";
+
+    std::string frag_path = char_path;
+    frag_path += "/../../CuteEngine/Resources/Shaders/bloom_fragment.frag";
+
+    bloom_program.create();
+    bloom_program.addShaderFromSourceFile(QOpenGLShader::Vertex, vertex_path.c_str());
+    bloom_program.addShaderFromSourceFile(QOpenGLShader::Fragment, frag_path.c_str());
+
+    bloom_program.link();
 }
