@@ -18,6 +18,7 @@ class QVBoxLayout;
 class QTimer;
 class QScrollArea;
 class ResourceManager;
+class Environment;
 
 #define UPDATE_DT 16
 
@@ -53,6 +54,7 @@ private:
     QScrollArea* _scroll = nullptr;
     QTimer* timer = nullptr;
     ResourceManager* _resource_manager = nullptr;
+    Environment* _environment = nullptr;
 
 public:
 
@@ -61,6 +63,7 @@ public:
     HierarchyWidget* hierarchy(){return _hierarchy;}
     Inspector* inspector() {return _inspector;}
     ResourceManager* resource_manager() { return _resource_manager; }
+    Environment* environment() {return _environment;}
 };
 
 #endif // MAINWINDOW_H

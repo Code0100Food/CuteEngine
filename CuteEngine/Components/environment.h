@@ -4,22 +4,30 @@
 #include "component.h"
 
 class Texture;
+class QComboBox;
+class QGridLayout;
 
-class Environment : public Component
+class Environment : public QWidget
 {
+    Q_OBJECT
+
 public:
-    Environment();
+    Environment(QWidget* parent = nullptr);
+    ~Environment();
 
-    void Update() override;
+    void UpdateComboBox(int type, const char *name);
 
-    void handleResourcesAboutToDie();
-
-    void read(const QJsonObject& json);
-    void write(QJsonObject& json);
+    void AddHDRTexture(const char *name);
+    void SetSelectedTexture(int value);
 
     Texture* texture = nullptr;
     bool needs_processing = false;
     //TextureCube* environment_map = nullptr;
+
+private:
+    QGridLayout* layout = nullptr;
+    QComboBox* select_texture_combo_box = nullptr;
+
 };
 
 #endif // ENVIRONMENT_H

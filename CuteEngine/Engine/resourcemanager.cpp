@@ -12,6 +12,7 @@
 #include "Data/mesh.h"
 #include "Data/submesh.h"
 #include "inspector.h"
+#include "environment.h"
 #include "Data/texture.h"
 #include "Data/material.h"
 #include "Data/hdr_texture.h"
@@ -119,11 +120,12 @@ void ResourceManager::UpdateResources()
             if((*i)->GetType() == RESOURCE_TYPE::RESOURCE_MESH)
                 customApp->main_window()->inspector()->AddMeshToWidget((*i)->GetName());
 
-             if((*i)->GetType() == RESOURCE_TYPE::RESOURCE_MATERIAL && !(*i)->NeedsReload())
-                  customApp->main_window()->inspector()->AddMaterialToWidget((*i)->GetName());
+            if((*i)->GetType() == RESOURCE_TYPE::RESOURCE_MATERIAL && !(*i)->NeedsReload())
+                 customApp->main_window()->inspector()->AddMaterialToWidget((*i)->GetName());
+
+            if((*i)->GetType() == RESOURCE_TYPE::RESOURCE_HDR_TEXTURE && !(*i)->NeedsReload())
+                 customApp->main_window()->environment()->AddHDRTexture((*i)->GetName());
         }
-
-
     }
 
     if(screen_quad->NeedsReload())

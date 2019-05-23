@@ -12,6 +12,7 @@
 #include <QMimeData>
 #include <QUrl>
 #include <resourcemanager.h>
+#include <environment.h>
 
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -58,6 +59,14 @@ MainWindow::MainWindow(QWidget *parent) :
     resource_dock->setWidget(_resource_manager);
     addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, resource_dock);
     tabifyDockWidget(_uiMain->Hierarchy, resource_dock);
+
+    //Set Environment Dock
+    QDockWidget* environment_dock = new QDockWidget();
+    environment_dock->setWindowTitle("Environment");
+    _environment = new Environment();
+    environment_dock->setWidget(_environment);
+    addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, environment_dock);
+    tabifyDockWidget(_uiMain->Hierarchy, environment_dock);
 
     //Connect Menu bar
     //_uiMain->menuBar->
