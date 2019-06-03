@@ -2,24 +2,17 @@
 
 in Data
 {
- vec3 normal;
  vec2 uv_coords;
 
 }FSIn;
 
-uniform sampler2D albedo_texture;
-uniform bool is_selected;
-
-layout(location = 0) out vec4 outColor;
-layout(location = 1) out vec4 outNormal;
-layout(location = 2) out vec4 outSelection;
+uniform sampler2D get_bright_pixels_texture;
 
 void main(void)
 {
-    outColor = texture(albedo_texture, FSIn.uv_coords);
-    outNormal = vec4(FSIn.normal,1.0);
+	vec4 color = texture(get_bright_pixels_texture, FSIn.uv_coords); 
 
-    if(is_selected)
-	outSelection = vec4(1.0);
-    else outSelection = vec4(0.0);
+	if(color.r >= 1.0 || color.g >= 1.0 || color.b >= 1.0)
+		outColor = color;
+	else outColor = vec4(0.0);
 }
