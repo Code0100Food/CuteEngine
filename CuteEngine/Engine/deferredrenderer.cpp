@@ -322,6 +322,7 @@ void DeferredRenderer::Render(Camera *camera)
     //PassSkybox(camera);
     PassBackground(camera);
 
+    PassBloom();
 
     main_buffer->UnBind();
 }
@@ -486,6 +487,43 @@ void DeferredRenderer::ProcessSelection()
     }
 
    glEnable(GL_DEPTH_TEST);
+}
+
+void DeferredRenderer::PassBloom()
+{
+    GetBrightestPixels();
+    PassBlur(true);
+    PassBlur(false);
+    ProcessBloom();
+}
+
+void DeferredRenderer::GetBrightestPixels()
+{
+    QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
+    main_buffer->UnBind();
+
+    bloom_buffers_a[0].Bind();
+
+    if(bright_pixels_program.bind())
+    {
+        gl_functions->glActiveTexture(GL_TEXTURE0);
+        gl_functions->glBindTexture(GL_TEXTURE_2D,main_buffer->GetSelectionTexture());
+        bright_pixels_program.setUniformValue(bright_pixels_program.uniformLocation("get_bright_pixels_texture"),0);
+
+        customApp->main_window()->resource_manager()->ScreenQuad()->Draw();
+
+        bright_pixels_program.release();
+    }
+}
+
+void DeferredRenderer::PassBlur(bool vertical)
+{
+//True vertical
+}
+
+void DeferredRenderer::ProcessBloom()
+{
+
 }
 
 void DeferredRenderer::LoadShaders(const char *char_path)

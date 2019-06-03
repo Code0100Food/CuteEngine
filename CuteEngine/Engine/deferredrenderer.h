@@ -80,6 +80,11 @@ public:
     void PassSkybox(Camera* camera);
     void ProcessSelection();
 
+    void PassBloom();
+    void GetBrightestPixels();
+    void PassBlur(bool vertical);
+    void ProcessBloom();
+
      FrameBufferObject* main_buffer;
 
     void LoadShaders(const char* char_path);

@@ -6,6 +6,7 @@ in Data
 
 }FSIn;
 
+out vec4 outColor;
 uniform sampler2D get_bright_pixels_texture;
 
 void main(void)
