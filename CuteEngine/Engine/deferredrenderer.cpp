@@ -494,7 +494,7 @@ void DeferredRenderer::PassBloom()
     GetBrightestPixels();
     PassBlur(true);
     PassBlur(false);
-    ProcessBloom();
+    //ProcessBloom();
 }
 
 void DeferredRenderer::GetBrightestPixels()
@@ -525,21 +525,26 @@ void DeferredRenderer::PassBlur(bool vertical)
 {
     QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
 
-    if(blur_program.bind())
+    for(int i = 0; i < 5; i++)
     {
-        for(int k = 0; k < 5; k++)
-        {
-            vertical ? bloom_buffers_b[k].Bind() : bloom_buffers_a[k].Bind();
+         vertical ? bloom_buffers_b[i].Bind() : bloom_buffers_a[i].Bind();
+         if(blur_program.bind())
+         {
+                 gl_functions->glActiveTexture(GL_TEXTURE0);
+                 gl_functions->glBindTexture(GL_TEXTURE_2D, vertical ? bloom_buffers_a[0].color_texture : bloom_buffers_b[0].color_texture);
+                 blur_program.setUniformValue(program_selection.uniformLocation("bright_pixels_texture"), 0);
 
-            gl_functions->glActiveTexture(GL_TEXTURE0);
-            gl_functions->glBindTexture(GL_TEXTURE_2D, vertical ? bloom_buffers_a[0].color_texture : bloom_buffers_b[0].color_texture);
-            blur_program.setUniformValue(program_selection.uniformLocation("bright_pixels_texture"),0);
-            blur_program.setUniformValue(blur_program.uniformLocation("mipmap_level"),k);
-            blur_program.setUniformValue(blur_program.uniformLocation("is_vertical_blur"),vertical);
-            bloom_buffers_b[k].UnBind();
-        }
-        blur_program.release();
+                 blur_program.setUniformValue(blur_program.uniformLocation("mipmap_level"), i);
+                 blur_program.setUniformValue(blur_program.uniformLocation("is_vertical_blur"), vertical);
+
+                 customApp->main_window()->resource_manager()->ScreenQuad()->Draw();
+
+
+             blur_program.release();
+         }
+         vertical ? bloom_buffers_b[i].UnBind() : bloom_buffers_a[i].UnBind();
     }
+
 }
 
 void DeferredRenderer::ProcessBloom()

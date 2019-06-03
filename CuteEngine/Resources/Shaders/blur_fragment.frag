@@ -1,25 +1,73 @@
 #version 330 core
 
-in Data
+uniform sampler2D bright_pixels_texture;
+uniform int mipmap_level;
+uniform bool is_vertical_blur;
+
+out vec4 outColor;
+
+vec4 PassVerticalBlur(float kernel[6])
 {
- vec3 normal;
- vec2 uv_coords;
+	vec2 viewportSize = textureSize(bright_pixels_texture, mipmap_level);
+	vec2 texCoords = gl_FragCoord.xy / viewportSize;
+	float texIncrement_y = 1.0 / viewportSize.y;
 
-}FSIn;
+	vec3 ret_color = textureLod(bright_pixels_texture, texCoords, mipmap_level).rgb * kernel[0];
 
-uniform sampler2D albedo_texture;
-uniform bool is_selected;
+	float sum = kernel[0];
 
-layout(location = 0) out vec4 outColor;
-layout(location = 1) out vec4 outNormal;
-layout(location = 2) out vec4 outSelection;
+	for(int i = 1; i < 6; i++)
+	{
+		ret_color += textureLod(bright_pixels_texture, texCoords + vec2(0.0, texIncrement_y * i), mipmap_level).rgb * kernel[i];
+		ret_color += textureLod(bright_pixels_texture, texCoords - vec2(0.0, texIncrement_y * i), mipmap_level).rgb * kernel[i];
+		sum += kernel[i] * 2;
+	}
+
+	ret_color /= sum;
+	return vec4(ret_color.rgb, 1.0);
+}
+
+vec4 PassHorizontalBlur(float kernel[6])
+{
+	vec2 viewportSize = textureSize(bright_pixels_texture, mipmap_level);
+	vec2 texCoords = gl_FragCoord.xy / viewportSize;
+	float texIncrement_x = 1.0 / viewportSize.x;
+
+	vec3 ret_color = textureLod(bright_pixels_texture, texCoords, mipmap_level).rgb * kernel[0];
+
+	float sum = kernel[0];
+
+	for(int i = 1; i < 6; i++)
+	{
+		ret_color += textureLod(bright_pixels_texture, texCoords + vec2(texIncrement_x* i, 0.0), mipmap_level).rgb * kernel[i];
+		ret_color += textureLod(bright_pixels_texture, texCoords - vec2(texIncrement_x* i, 0.0), mipmap_level).rgb * kernel[i];
+		sum += kernel[i] * 2;
+	}
+
+	ret_color /= sum;
+	return vec4(ret_color.rgb, 1.0);
+}
 
 void main(void)
 {
-    outColor = texture(albedo_texture, FSIn.uv_coords);
-    outNormal = vec4(FSIn.normal,1.0);
+	float kernel[6];
+	kernel[0] = 1.0; //Current Pixel
+	kernel[1] = 0.035822;
+	kernel[2] = 0.05879;
+	kernel[3] = 0.086425;
+	kernel[4] = 0.113806;
+	kernel[5] = 0.13424;
 
-    if(is_selected)
-	outSelection = vec4(1.0);
-    else outSelection = vec4(0.0);
+	if(is_vertical_blur)
+	{
+
+
+		outColor = PassVerticalBlur(kernel);
+
+	}
+	else
+	{
+		outColor = PassHorizontalBlur(kernel);
+	}
+
 }
