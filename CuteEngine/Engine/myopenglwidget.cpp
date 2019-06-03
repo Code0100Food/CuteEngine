@@ -114,7 +114,7 @@ void myopenglwidget::paintGL()
                 break;
 
             case SELECTION:
-            glBindTexture(GL_TEXTURE_2D, deferred_renderer->bloom_buffers_a[0].color_texture);
+                glBindTexture(GL_TEXTURE_2D, deferred_renderer->bloom_buffers_a[0].color_texture);
             //glBindTexture(GL_TEXTURE_2D, deferred_renderer->main_buffer->GetSelectionTexture());
                 break;
         }

@@ -514,11 +514,32 @@ void DeferredRenderer::GetBrightestPixels()
 
         bright_pixels_program.release();
     }
+
+    bloom_buffers_a[0].UnBind();
+
+    gl_functions->glBindTexture(GL_TEXTURE_2D, bloom_buffers_a[0].color_texture);
+    gl_functions->glGenerateMipmap(GL_TEXTURE_2D);
 }
 
 void DeferredRenderer::PassBlur(bool vertical)
 {
-//True vertical
+    QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
+
+    if(blur_program.bind())
+    {
+        for(int k = 0; k < 5; k++)
+        {
+            vertical ? bloom_buffers_b[k].Bind() : bloom_buffers_a[k].Bind();
+
+            gl_functions->glActiveTexture(GL_TEXTURE0);
+            gl_functions->glBindTexture(GL_TEXTURE_2D, vertical ? bloom_buffers_a[0].color_texture : bloom_buffers_b[0].color_texture);
+            blur_program.setUniformValue(program_selection.uniformLocation("bright_pixels_texture"),0);
+            blur_program.setUniformValue(blur_program.uniformLocation("mipmap_level"),k);
+            blur_program.setUniformValue(blur_program.uniformLocation("is_vertical_blur"),vertical);
+            bloom_buffers_b[k].UnBind();
+        }
+        blur_program.release();
+    }
 }
 
 void DeferredRenderer::ProcessBloom()
