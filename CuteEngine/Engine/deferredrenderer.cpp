@@ -320,7 +320,7 @@ void DeferredRenderer::Render(Camera *camera)
     ProcessSelection();
     PassGrid(camera);
     //PassSkybox(camera);
-    PassBackground(camera);
+    //PassBackground(camera);
 
     PassBloom();
 
@@ -492,9 +492,17 @@ void DeferredRenderer::ProcessSelection()
 void DeferredRenderer::PassBloom()
 {
     GetBrightestPixels();
+
     PassBlur(true);
     PassBlur(false);
-    //ProcessBloom();
+
+    PassBlur(true);
+    PassBlur(false);
+
+    PassBlur(true);
+    PassBlur(false);
+
+    ProcessBloom();
 }
 
 void DeferredRenderer::GetBrightestPixels()
@@ -549,7 +557,28 @@ void DeferredRenderer::PassBlur(bool vertical)
 
 void DeferredRenderer::ProcessBloom()
 {
+    main_buffer->Bind();
 
+    QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
+    GLenum draw_buffers = GL_COLOR_ATTACHMENT2;
+    glDrawBuffer(draw_buffers);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_ONE, GL_ONE);
+
+    if(bloom_program.bind())
+    {
+        gl_functions->glActiveTexture(GL_TEXTURE0);
+        gl_functions->glBindTexture(GL_TEXTURE_2D, bloom_buffers_a[0].color_texture);
+        blur_program.setUniformValue(bloom_program.uniformLocation("blurred_texture"), 0);
+        blur_program.setUniformValue(bloom_program.uniformLocation("mipmap_number"), 5);
+
+        customApp->main_window()->resource_manager()->ScreenQuad()->Draw();
+
+        bloom_program.release();
+    }
+
+    glDisable(GL_BLEND);
 }
 
 void DeferredRenderer::LoadShaders(const char *char_path)
@@ -593,7 +622,7 @@ void DeferredRenderer::InitializeBloomBuffers(int width, int height)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 4);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
     gl_functions->glGenerateMipmap(GL_TEXTURE_2D);
 
     glGenTextures(1, &bloom_texture_b);
@@ -604,7 +633,7 @@ void DeferredRenderer::InitializeBloomBuffers(int width, int height)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 4);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGBA, GL_FLOAT, nullptr);
     gl_functions->glGenerateMipmap(GL_TEXTURE_2D);
 
     for(int k = 0; k < 5; k++)
