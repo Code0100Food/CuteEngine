@@ -19,6 +19,7 @@ class QTimer;
 class QScrollArea;
 class ResourceManager;
 class Environment;
+class myopenglwidget;
 
 #define UPDATE_DT 16
 
@@ -64,6 +65,7 @@ public:
     Inspector* inspector() {return _inspector;}
     ResourceManager* resource_manager() { return _resource_manager; }
     Environment* environment() {return _environment;}
+    myopenglwidget* openglwidget();
 };
 
 #endif // MAINWINDOW_H

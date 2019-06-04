@@ -157,3 +157,8 @@ void MainWindow::dropEvent(QDropEvent *drop_event)
     }
     //std::cout<< "dropped something" <<std::endl;
 }
+
+myopenglwidget* MainWindow::openglwidget()
+{
+    return _uiMain->openGLWidget;
+}

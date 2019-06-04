@@ -3,7 +3,7 @@
 
 #include "component.h"
 
-class Texture;
+class hdr_texture;
 class QComboBox;
 class QGridLayout;
 
@@ -18,9 +18,11 @@ public:
     void UpdateComboBox(int type, const char *name);
 
     void AddHDRTexture(const char *name);
-    void SetSelectedTexture(int value);
 
-    Texture* texture = nullptr;
+    bool SkyBoxReady() const;
+    unsigned int GetSkyboxTexture() const;
+
+    hdr_texture* texture = nullptr;
     bool needs_processing = false;
     //TextureCube* environment_map = nullptr;
 
@@ -28,6 +30,9 @@ private:
     QGridLayout* layout = nullptr;
     QComboBox* select_texture_combo_box = nullptr;
     //GLTextureCube TextureCube;
+
+public slots:
+    void SetSelectedTexture(int value);
 
 };
 

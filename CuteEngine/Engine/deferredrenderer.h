@@ -6,6 +6,7 @@
 #include <QOpenGLFramebufferObject>
 
 class Camera;
+class hdr_texture;
 
 class FrameBufferObject
 {
@@ -129,8 +130,13 @@ public:
     QOpenGLShaderProgram program_skybox;
     void LoadSkybox(const char* char_path);
 
+    QOpenGLShaderProgram program_draw_skybox;
+    void LoadDrawSkybox(const char* char_path);
+
     GLuint CubeMapId;
     GLsizei resolution;
+
+    bool BakeHDRTexture(hdr_texture*);
 };
 
 #endif // DEFERREDRENDERER_H

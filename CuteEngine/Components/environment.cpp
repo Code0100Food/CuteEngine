@@ -4,7 +4,8 @@
 #include "qt_application.h"
 #include "mainwindow.h"
 #include "resourcemanager.h"
-#include "../Data/texture.h"
+#include "../Data/hdr_texture.h"
+#include <iostream>
 
 Environment::Environment(QWidget* parent) : QWidget(parent)
 {
@@ -35,7 +36,7 @@ void Environment::SetSelectedTexture(int value)
         return;
 
     //Esto no me gusta pero es fast de hacer (V2.0)
-    texture = (Texture*)customApp->main_window()->resource_manager()->GetResourceByName(select_texture_combo_box->currentText().toStdString(), RESOURCE_TYPE::RESOURCE_HDR_TEXTURE);
+    texture = (hdr_texture*)customApp->main_window()->resource_manager()->GetResourceByName(select_texture_combo_box->currentText().toStdString(), RESOURCE_TYPE::RESOURCE_HDR_TEXTURE);
 
     //Entity* tmp = customApp->main_scene()->GetSelectedEntity();
     //if(tmp)
@@ -52,4 +53,23 @@ void Environment::UpdateComboBox(int type, const char *name)
         select_texture_combo_box->setCurrentIndex(select_texture_combo_box->findText(name));
         return;
     }
+}
+
+unsigned int Environment::GetSkyboxTexture() const
+{
+    return texture->GetCubeMapexture();
+}
+
+bool Environment::SkyBoxReady() const
+{
+    if(texture == nullptr)
+       return false;
+
+    if(texture->GetCubeMapexture() == 0)
+    {
+        std::cout<< texture->GetCubeMapexture() << std::endl;
+        return false;
+    }
+
+    return true;
 }

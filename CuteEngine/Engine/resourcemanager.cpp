@@ -196,21 +196,38 @@ void ResourceManager::LoadSkyboxQuad()
          1.0f, -1.0f, -1.0f, //7
     };
 
-    unsigned int indices[36] = {
-      4, 6, 5, 4, 5, 7, //Back face
-      7, 5, 1, 7, 1, 3, //Right Face
-      1, 2, 0, 1, 0, 3, //Front
-      0, 2, 6, 0, 6, 4, //Left face
-      5, 6, 2, 5, 2, 1, //Up Face
-      7, 3, 0, 7, 0, 4  //Down Face
-    };
+    unsigned int indices_backface[6] = { 4, 6, 5, 4, 5, 7 };
+
+    unsigned int indices_rightface[6] = { 7, 5, 1, 7, 1, 3 };
+    unsigned int indices_frontface[6] = { 1, 2, 0, 1, 0, 3 };
+    unsigned int indices_leftface[6] = { 0, 2, 6, 0, 6, 4 };
+    unsigned int indices_upface[6] = { 5, 6, 2, 5, 2, 1 };
+    unsigned int indices_downface[6] = { 7, 3, 0, 7, 0, 4 };
+
+    /*unsigned int indices_backface[6] = { 7,6,5,7,4,6 };
+
+    unsigned int indices_rightface[6] = { 7, 5, 1, 7, 1, 3 };
+    unsigned int indices_frontface[6] = { 3,1,2,3,2,0 };
+    unsigned int indices_leftface[6] = { 2,6,4,2,4,0 };
+    unsigned int indices_upface[6] = { 2,5,6,2,1,5 };
+    unsigned int indices_downface[6] = {0,4,7,0,7,3 };*/
 
     VertexFormat format;
     format.SetVertexAttribute(0, 0, 3);
 
     skybox_quad = new Mesh();
-    Submesh* tmp = new Submesh(format, &vertex_attributes[0], 24 * sizeof(float), &indices[0], 36);
+    Submesh* tmp = new Submesh(format, &vertex_attributes[0], 24 * sizeof(float), &indices_backface[0],  6);
+    Submesh* tmp_1 = new Submesh(format, &vertex_attributes[0], 24 * sizeof(float), &indices_rightface[0], 6);
+    Submesh* tmp_2 = new Submesh(format, &vertex_attributes[0], 24 * sizeof(float), &indices_frontface[0], 6);
+    Submesh* tmp_3 = new Submesh(format, &vertex_attributes[0], 24 * sizeof(float), &indices_leftface[0],  6);
+    Submesh* tmp_4 = new Submesh(format, &vertex_attributes[0], 24 * sizeof(float), &indices_upface[0],    6);
+    Submesh* tmp_5 = new Submesh(format, &vertex_attributes[0], 24 * sizeof(float), &indices_downface[0],  6);
     skybox_quad->AddSubMesh(tmp);
+    skybox_quad->AddSubMesh(tmp_1);
+    skybox_quad->AddSubMesh(tmp_2);
+    skybox_quad->AddSubMesh(tmp_3);
+    skybox_quad->AddSubMesh(tmp_4);
+    skybox_quad->AddSubMesh(tmp_5);
     skybox_quad->SetReload(true);
 }
 

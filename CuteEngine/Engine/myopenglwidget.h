@@ -58,6 +58,8 @@ public:
 
     Mesh* patrick = nullptr;
 
+    DeferredRenderer* GetDeferred() const { return deferred_renderer; }
+
 private:
 
     //Camera settings

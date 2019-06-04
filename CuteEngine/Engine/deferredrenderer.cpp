@@ -13,6 +13,9 @@
 #include "light.h"
 #include "environment.h"
 #include "../Data/texture.h"
+#include "../Data/hdr_texture.h"
+#include "../Data/submesh.h"
+
 
 #include "qopenglextrafunctions.h"
 
@@ -314,12 +317,12 @@ void DeferredRenderer::Render(Camera *camera)
 
     glDrawBuffer(0);
 
-
+    PassSkybox(camera);
     PassMeshes(camera);
     PassLights(camera);
     ProcessSelection();
     PassGrid(camera);
-    //PassSkybox(camera);
+
     //PassBackground(camera);
 
     PassBloom();
@@ -415,7 +418,42 @@ void DeferredRenderer::PassLights(Camera *camera)
 
 void DeferredRenderer::PassSkybox(Camera* camera)
 {
+
+    if(!customApp->main_window()->environment()->SkyBoxReady())
+        return;
+
+    std::cout<< 2 << std::endl;
+
     QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
+    GLenum draw_buffers = GL_COLOR_ATTACHMENT0;
+    glDrawBuffer(draw_buffers);
+
+    glDepthMask(GL_FALSE);
+     glDisable(GL_CULL_FACE);
+
+std::cout<< 3 << std::endl;
+    if(program_draw_skybox.bind())
+    {
+        program_draw_skybox.setUniformValue(program_draw_skybox.uniformLocation("cubemap"), 0);
+        gl_functions->glActiveTexture(GL_TEXTURE0);
+        gl_functions->glBindTexture(GL_TEXTURE_CUBE_MAP, customApp->main_window()->environment()->GetSkyboxTexture());
+
+        program_draw_skybox.setUniformValue(program_draw_skybox.uniformLocation("projection_matrix"), camera->projection_matrix);
+        program_draw_skybox.setUniformValue(program_draw_skybox.uniformLocation("view_matrix"), camera->view_matrix);
+
+        QMatrix4x4 camera_no_rotation_matrix;
+        camera_no_rotation_matrix.translate(camera->position);
+
+        program_draw_skybox.setUniformValue(program_draw_skybox.uniformLocation("camera_pos_matrix"), camera_no_rotation_matrix);
+std::cout<< 4 << std::endl;
+        customApp->main_window()->resource_manager()->SkyboxQuad()->Draw();
+std::cout<< 5 << std::endl;
+        program_draw_skybox.release();
+    }
+glEnable(GL_CULL_FACE);
+glDepthMask(GL_TRUE);
+
+    /*QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
 
     GLuint captureFBO;
     gl_functions->glGenFramebuffers(1, &captureFBO);
@@ -460,7 +498,7 @@ void DeferredRenderer::PassSkybox(Camera* camera)
     gl_functions->glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
 
 
-    program_skybox.release();
+    program_skybox.release();*/
 }
 
 void DeferredRenderer::ProcessSelection()
@@ -593,6 +631,7 @@ void DeferredRenderer::LoadShaders(const char *char_path)
     LoadBrightPixelsShader(char_path);
     LoadBlurShader(char_path);
     LoadBloomShader(char_path);
+    LoadDrawSkybox(char_path);
 }
 
 void DeferredRenderer::LoadStandardShader(const char* char_path)
@@ -738,6 +777,21 @@ void DeferredRenderer::LoadSkybox(const char *char_path)
     program_skybox.link();
 }
 
+void DeferredRenderer::LoadDrawSkybox(const char *char_path)
+{
+    std::string vertex_path = char_path;
+    vertex_path += "/../../CuteEngine/Resources/Shaders/skybox_draw_vertex.vert";
+
+    std::string frag_path = char_path;
+    frag_path += "/../../CuteEngine/Resources/Shaders/skybox_draw_fragment.frag";
+
+    program_draw_skybox.create();
+    program_draw_skybox.addShaderFromSourceFile(QOpenGLShader::Vertex, vertex_path.c_str());
+    program_draw_skybox.addShaderFromSourceFile(QOpenGLShader::Fragment, frag_path.c_str());
+
+    program_draw_skybox.link();
+}
+
 void DeferredRenderer::LoadBrightPixelsShader(const char *char_path)
 {
     std::string vertex_path = char_path;
@@ -781,4 +835,82 @@ void DeferredRenderer::LoadBloomShader(const char *char_path)
     bloom_program.addShaderFromSourceFile(QOpenGLShader::Fragment, frag_path.c_str());
 
     bloom_program.link();
+}
+
+bool DeferredRenderer::BakeHDRTexture(hdr_texture* texture_to_bake)
+{
+    QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
+
+    //Framebuffer to draw cubemap texture
+    unsigned int capture_frame_buffer = 0;
+    gl_functions->glGenFramebuffers(1, &capture_frame_buffer);
+
+    //Projection Matrixs
+    QMatrix4x4 projection;
+    projection.setToIdentity();
+    projection.perspective(90.0f, 1.0f, 0.1f, 150.0f);
+
+    //View Matrixs, one for each face of the cube
+    QMatrix4x4 view_matrix_cubemap;
+    view_matrix_cubemap.setToIdentity();
+    view_matrix_cubemap.lookAt(QVector3D(1.0f, 0.0f, 0.0f), QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 1.0f, 0.0f));
+
+    QMatrix4x4 view_matrices[6];
+
+    //Load camera rotations
+    for(int i = 0; i < 6; i++)
+    {
+        if(i == 0)
+        {
+            view_matrices[i] = view_matrix_cubemap;
+            continue;
+        }
+
+        if(i < 4)
+        {
+            view_matrix_cubemap.rotate(90, QVector3D(0.0f, 1.0f, 0.0f));
+            view_matrices[i] = view_matrix_cubemap;
+            continue;
+        }
+
+        if(i == 4)
+        {
+            view_matrix_cubemap.rotate(90, QVector3D(0.0f, 0.0f, 1.0f));
+            view_matrices[i] = view_matrix_cubemap;
+        }
+
+        if(i == 5)
+        {
+            view_matrix_cubemap.rotate(180, QVector3D(0.0f, 0.0f, 1.0f));
+            view_matrices[i] = view_matrix_cubemap;
+        }
+    }
+
+    if(program_skybox.bind())
+    {
+        std::cout<< 2 << std::endl;
+        program_skybox.setUniformValue(program_skybox.uniformLocation("equirectangular_map"), 0);
+        program_skybox.setUniformValue(program_skybox.uniformLocation("projection_matrix"), projection);
+
+        gl_functions->glActiveTexture(GL_TEXTURE0);
+        gl_functions->glBindTexture(GL_TEXTURE_2D, texture_to_bake->GetHDRTexture());
+        gl_functions->glViewport(0, 0, texture_to_bake->GetCubeMapSize(), texture_to_bake->GetCubeMapSize());
+        gl_functions->glBindFramebuffer(GL_FRAMEBUFFER, capture_frame_buffer);
+
+        for(int i = 0; i < 6; i++)
+        {
+            program_skybox.setUniformValue(program_skybox.uniformLocation("view_matrix"), view_matrices[i]);
+            gl_functions->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, texture_to_bake->GetCubeMapexture(), 0);
+            gl_functions->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            if(customApp->main_window()->resource_manager()->SkyboxQuad()->NeedsReload())
+                return false;
+
+            customApp->main_window()->resource_manager()->SkyboxQuad()->meshes[i]->Draw();
+
+        }
+
+        program_skybox.release();
+    }
+    return true;
 }
