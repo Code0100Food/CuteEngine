@@ -6,98 +6,61 @@ A simple editor of scenes made of vector shapes.
 - [Ferran Martin](https://github.com/ferranmartinvila)
 - [Eric Solà](https://github.com/HeladodePistacho)
 
-## Features
-
-### Menu Bar
-
-- Open project: Open the project selected in the dialog window and close the current one.
-- Save project: The save button is a placeholder, it is not functional.
-- Close project: Close the project, also displays a security accept menu to avoid closing non saved projects(in this release save is not functional).
-
-![Hierarchy](https://github.com/Code0100Food/CuteEngine/blob/Assignment-1/Images/menu_bar.PNG)
+## User guide
 
 ### Hierarchy
 - Add Entity: With the button "Add Entity" you can add a new entity to the scene, that will appear in the hierarchy just as it is created.
 - Remove Entity: You can remove those entities with the "Remove Entity" button if the entity you want to remove is selected.
 
-![Hierarchy](https://github.com/Code0100Food/CuteEngine/blob/Assignment-1/Images/hierarchy.PNG)
+FOTO Hierarchy
 
 ### Inspector
-- Name: You can change the name of the entity in the inpector and it is updated in the hierarchhy as well.
-- Add Component: A button that allows to add a new component to the entity.
-![Inspector1](https://github.com/Code0100Food/CuteEngine/blob/Assignment-1/Images/Inspector1.PNG)
+FOTO INSPECTOR
 
-- List of Components: All the components that the entity has appear in the inspector
-  - Transform: Controls the position, rotation and scale of the entity. You can see the changes in the scene if you have something to render.
-  - Basic Primitive: Creates a basic primitve that renders in the scene. There are several options to change the primitive:
-    - Type of primitive
-      - Circle
-      - Rectangle
-    - Type of edge line
-      - Solid Line
-      - Dash Line
-      - Dot Line
-    - Edge Width: Controls the width of the edge. If 0, there is no edge in the primitive
-    - Pick Color: Opens a window to select a color. Can change the color of the primitive
-    - Pick Edge Color: Opens a window to select a color. Can change the color of the edge of the primitive.
+#### Name
+You can change the name of the entity in the inpector and it is updated in the hierarchhy as well.
 
-![Inspector2](https://github.com/Code0100Food/CuteEngine/blob/Assignment-1/Images/Inspector2.PNG)
+#### Transformation
+Controls the position, rotation and scale of the entity. You can see the changes in the scene if you have something to render.
 
+#### Mesh
+Selected mesh that is rendered on the scene from the loaded meshes on the resources.
+In order to change the mesh selected there is a droplist to choose from.
 
-### Scene
-- Renders all the primitives that are in the hierarchy with the options selected in the inspector of each entity.
+#### Light
+Adds a directional light into the scene.
+You can change the light color and intensity.
 
-![CuteEngine1](https://github.com/Code0100Food/CuteEngine/blob/Assignment-1/Images/CuteEngine1.PNG)
+#### Toggle grid
+A toggle to decide if the grid should be rendered or not in the scene.
 
+### Resources
+List of the loaded resources. Includes meshes and textures.
 
-## Qt Features used in the application
+#### Load resources
+In order to load a resource simply drag and drop them on the engine.
 
-### Style Sheets
-- QT Dark Orange
+FOTO RESOURCES
 
-![CuteEngine1](https://github.com/Code0100Food/CuteEngine/blob/Assignment-1/Images/style.PNG)
+### Menu Bar
 
-### Slots
-- Main Window
-  - void Update();
-  - void openProject();
-  - void saveProject();
-  - void customExit();
-  
-- Hierarchy
-  - void AddEntity();
-  - void RemoveEntity();
-  - void SelectedEntity();
-  
-- Inspector
-  - void AddComponent();
-  - void CreateTransformation();
-  - void CreateBasicPrimitive();
-  - void Rename();
-  
-- Transform
-  - void SetXPosition(double value);
-  - void SetYPosition(double value);
-  - void SetZPosition(double value);
-  - void SetXRotation(double value);
-  - void SetYRotation(double value);
-  - void SetZRotation(double value);
-  - void SetXScale(double value);
-  - void SetYScale(double value);
-  - void SetZScale(double value);
-  
-- Basic Primitive
-  - void SetXPosition(double x_pos);
-  - void SetYPosition(double y_pos)
-  - void SetXScale(double x_pos);
-  - void SetYScale(double y_pos)
-  - void ChangePrimitive();
-  - void SetLineTypeComboBox();
-  - void SetEdgeWidth(int value);
-  - void SetColorFromColorPicker();
-  - void SetEdgeColorFromColorPicker();
+- Open project: Open the project selected in the dialog window and close the current one.
+- Close project: Closes the actual project.
 
+![](FOTO MENU BAR)
 
-### Dialogs
-- Color Dialog
-  - QColorDialog::getColor(...);
+#### Render mode
+From the menu bar you can chose a render mode in order to show the resultant texture of a concrete render process. You can choose from the following:
+- Shaded color: All the textures mode combined, in other words the final result.
+- Normals: Shows the normals of the current rendered meshes.
+- Depth: Shows the depth buffer (Z buffer).
+- Albedo: Shows the color of the scene.
+- Selection: The texture used to generate the selected effect. In this mode we can see the selected object drawn in white.
+
+### Camera controls
+
+### Grid
+
+### Bloom
+
+### Selection
