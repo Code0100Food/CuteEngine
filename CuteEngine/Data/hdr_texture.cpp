@@ -24,7 +24,7 @@ void hdr_texture::Reload()
         int comp = 0;
         if(stbi_is_hdr(filename.c_str()))
         {
-            stbi_set_flip_vertically_on_load(true);
+            stbi_set_flip_vertically_on_load(false);
             hdr_data = stbi_loadf(filename.c_str(), &width, &height, &comp, 0);
             std::cout<< "IS HDR" << std::endl;
         }

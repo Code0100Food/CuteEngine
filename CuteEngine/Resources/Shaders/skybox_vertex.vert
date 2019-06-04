@@ -10,6 +10,6 @@ out vec3 local_position;
 void main()
 {
     	local_position = position;
-	vec4 pos  =   view_matrix * vec4(position, 1.0);
+	vec4 pos  =  view_matrix * vec4(position, 1.0);
 	gl_Position = pos.xyww;
 }

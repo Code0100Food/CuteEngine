@@ -317,16 +317,17 @@ void DeferredRenderer::Render(Camera *camera)
 
     glDrawBuffer(0);
 
-  PassSkybox(camera);
-    PassMeshes(camera);
-    PassLights(camera);
 
+    PassMeshes(camera);
+
+    PassLights(camera);
+    PassSkybox(camera);
     ProcessSelection();
     PassGrid(camera);
 
     //PassBackground(camera);
 
-    //PassBloom();
+    PassBloom();
 
     main_buffer->UnBind();
 }
@@ -372,7 +373,7 @@ void DeferredRenderer::PassLights(Camera *camera)
     glDrawBuffer(buffers);
 
     glEnable(GL_BLEND);
-    glBlendFunc(GL_ONE,GL_ONE);
+    glBlendFunc(GL_ONE, GL_ONE);
     glDepthMask(GL_FALSE);
 
     if(program_lights.bind())
@@ -419,11 +420,40 @@ void DeferredRenderer::PassLights(Camera *camera)
 
 void DeferredRenderer::PassSkybox(Camera* camera)
 {
-    if(!customApp->main_window()->environment()->SkyBoxReady())
-        return;
 
     QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
     GLenum draw_buffers = GL_COLOR_ATTACHMENT2;
+    glDrawBuffer(draw_buffers);
+
+    glDisable(GL_CULL_FACE);
+
+    QMatrix4x4 model;
+    model.translate(0.0f, 15.0f, -15.0f);
+
+    if(program_draw_skybox.bind())
+    {
+        program_draw_skybox.setUniformValue(program_draw_skybox.uniformLocation("Cubemap"), 0);
+        gl_functions->glActiveTexture(GL_TEXTURE0);
+        gl_functions->glBindTexture(GL_TEXTURE_CUBE_MAP, customApp->main_window()->environment()->GetSkyboxTexture());
+
+        program_draw_skybox.setUniformValue(program_draw_skybox.uniformLocation("projection_matrix"), camera->projection_matrix);
+        program_draw_skybox.setUniformValue(program_draw_skybox.uniformLocation("view_matrix"), camera->view_matrix);
+        program_draw_skybox.setUniformValue(program_draw_skybox.uniformLocation("camera_pos"), camera->position);
+        program_draw_skybox.setUniformValue(program_draw_skybox.uniformLocation("model_matrix"), model);
+
+
+        customApp->main_window()->resource_manager()->SkyboxQuad()->Draw();
+
+        program_draw_skybox.release();
+    }
+
+    glEnable(GL_CULL_FACE);
+
+   /* if(!customApp->main_window()->environment()->SkyBoxReady())
+        return;
+
+    QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
+    GLenum draw_buffers = GL_COLOR_ATTACHMENT0;
     glDrawBuffer(draw_buffers);
 
 
@@ -445,7 +475,7 @@ void DeferredRenderer::PassSkybox(Camera* camera)
         program_draw_skybox.release();
     }
    glEnable(GL_CULL_FACE);
-   glDepthMask(GL_TRUE);
+   glDepthMask(GL_TRUE);*/
 
     /*QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
 
