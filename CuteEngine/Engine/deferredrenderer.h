@@ -99,6 +99,7 @@ public:
     unsigned int bloom_texture_b = 0;
 
     void InitializeBloomBuffers(int,int);
+    void DestroyBloomBuffers();
 
     QOpenGLShaderProgram bright_pixels_program;
     void LoadBrightPixelsShader(const char* char_path);

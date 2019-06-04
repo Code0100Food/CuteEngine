@@ -137,7 +137,7 @@ void FrameBufferObject::Destroy()
     if(depth_texture != 0)
         gl_functions->glDeleteTextures(1, &depth_texture);
 
-    gl_functions->glDeleteBuffers(1, &frame_buffer);
+    //gl_functions->glDeleteBuffers(1, &frame_buffer);
 }
 
 void FrameBufferObject::Bind()
@@ -243,18 +243,20 @@ DeferredRenderer::DeferredRenderer()
 bool DeferredRenderer::PassGrid(Camera *camera)
 {
 
+    if(customApp->main_scene()->IsGridPrint() == false)
+    {
+        return true;
+    }
+
      GLenum draw_buffers = GL_COLOR_ATTACHMENT2;
      glDrawBuffer(draw_buffers);
-
 
      glEnable(GL_BLEND);
      glEnable(GL_DEPTH_TEST);
      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-
      if (program_grid.bind())
      {
-
          QVector4D camera_parameters = camera->GetLeftRightBottomTop();
          program_grid.setUniformValue("left", camera_parameters.x());
          program_grid.setUniformValue("right", camera_parameters.y());
@@ -323,6 +325,7 @@ void DeferredRenderer::Render(Camera *camera)
     PassLights(camera);
     PassSkybox(camera);
     ProcessSelection();
+
     PassGrid(camera);
 
     //PassBackground(camera);
@@ -335,6 +338,9 @@ void DeferredRenderer::Render(Camera *camera)
 void DeferredRenderer::Resize(int width, int height)
 {
     main_buffer->Resize(width, height);
+
+    DestroyBloomBuffers();
+    InitializeBloomBuffers(width,height);
 }
 
 void DeferredRenderer::SetMainBuffer(int width, int height)
@@ -705,6 +711,15 @@ void DeferredRenderer::InitializeBloomBuffers(int width, int height)
     {
         bloom_buffers_a[k].Set(bloom_texture_a,k);
         bloom_buffers_b[k].Set(bloom_texture_b,k);
+    }
+}
+
+void DeferredRenderer::DestroyBloomBuffers()
+{
+    for(int k = 0; k < 5; k++)
+    {
+        bloom_buffers_a[k].Destroy();
+        bloom_buffers_b[k].Destroy();
     }
 }
 
