@@ -2,12 +2,12 @@
 
 in vec3 local_position;
 
-uniform samplerCube cubemap;
+uniform samplerCube Cubemap;
 out vec4 out_color;
 
 void main()
 {
-    //out_color = texture(cubemap, local_position);
-	vec3 color = vec3(local_position); 
-	out_color = vec4(color.rgb, 1.0);
+    	out_color = texture(Cubemap, local_position);
+	//vec3 color = vec3(); 
+	//out_color = vec4(local_position.r, 0.0, 0.0, 1.0);
 }

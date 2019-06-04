@@ -21,6 +21,7 @@ public:
 
     bool SkyBoxReady() const;
     unsigned int GetSkyboxTexture() const;
+    unsigned int GetHDRTexture() const;
 
     hdr_texture* texture = nullptr;
     bool needs_processing = false;

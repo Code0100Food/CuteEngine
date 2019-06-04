@@ -317,15 +317,16 @@ void DeferredRenderer::Render(Camera *camera)
 
     glDrawBuffer(0);
 
-    PassSkybox(camera);
+  PassSkybox(camera);
     PassMeshes(camera);
     PassLights(camera);
+
     ProcessSelection();
     PassGrid(camera);
 
     //PassBackground(camera);
 
-    PassBloom();
+    //PassBloom();
 
     main_buffer->UnBind();
 }
@@ -422,33 +423,29 @@ void DeferredRenderer::PassSkybox(Camera* camera)
         return;
 
     QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
-    GLenum draw_buffers = GL_COLOR_ATTACHMENT0;
+    GLenum draw_buffers = GL_COLOR_ATTACHMENT2;
     glDrawBuffer(draw_buffers);
 
+
     glDepthMask(GL_FALSE);
-     glDisable(GL_CULL_FACE);
+    glDisable(GL_CULL_FACE);
 
 
     if(program_draw_skybox.bind())
     {
-        program_draw_skybox.setUniformValue(program_draw_skybox.uniformLocation("cubemap"), 0);
+        program_draw_skybox.setUniformValue(program_draw_skybox.uniformLocation("Cubemap"), 0);
         gl_functions->glActiveTexture(GL_TEXTURE0);
         gl_functions->glBindTexture(GL_TEXTURE_CUBE_MAP, customApp->main_window()->environment()->GetSkyboxTexture());
 
         program_draw_skybox.setUniformValue(program_draw_skybox.uniformLocation("projection_matrix"), camera->projection_matrix);
         program_draw_skybox.setUniformValue(program_draw_skybox.uniformLocation("view_matrix"), camera->view_matrix);
-
-        QMatrix4x4 camera_no_rotation_matrix;
-        camera_no_rotation_matrix.translate(camera->position);
-
-        program_draw_skybox.setUniformValue(program_draw_skybox.uniformLocation("camera_pos_matrix"), camera_no_rotation_matrix);
         program_draw_skybox.setUniformValue(program_draw_skybox.uniformLocation("camera_pos"), camera->position);
         customApp->main_window()->resource_manager()->SkyboxQuad()->Draw();
 
         program_draw_skybox.release();
     }
-glEnable(GL_CULL_FACE);
-glDepthMask(GL_TRUE);
+   glEnable(GL_CULL_FACE);
+   glDepthMask(GL_TRUE);
 
     /*QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
 
@@ -550,7 +547,7 @@ void DeferredRenderer::GetBrightestPixels()
     if(bright_pixels_program.bind())
     {
         gl_functions->glActiveTexture(GL_TEXTURE0);
-        gl_functions->glBindTexture(GL_TEXTURE_2D,main_buffer->GetSelectionTexture());
+        gl_functions->glBindTexture(GL_TEXTURE_2D,main_buffer->GetShadedTexture());
         bright_pixels_program.setUniformValue(bright_pixels_program.uniformLocation("get_bright_pixels_texture"),0);
 
         customApp->main_window()->resource_manager()->ScreenQuad()->Draw();
@@ -600,6 +597,7 @@ void DeferredRenderer::ProcessBloom()
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_ONE, GL_ONE);
+    glDepthMask(GL_FALSE);
 
     if(bloom_program.bind())
     {
@@ -614,6 +612,7 @@ void DeferredRenderer::ProcessBloom()
     }
 
     glDisable(GL_BLEND);
+    glDepthMask(GL_TRUE);
 }
 
 void DeferredRenderer::LoadShaders(const char *char_path)
@@ -838,9 +837,14 @@ bool DeferredRenderer::BakeHDRTexture(hdr_texture* texture_to_bake)
 {
     QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
 
+    if(customApp->main_window()->resource_manager()->SkyboxQuad()->NeedsReload())
+        return false;
+
     //Framebuffer to draw cubemap texture
     unsigned int capture_frame_buffer = 0;
     gl_functions->glGenFramebuffers(1, &capture_frame_buffer);
+
+    std::cout<< "BAKE: " << capture_frame_buffer << std::endl;
 
     //Projection Matrixs
     QMatrix4x4 projection;
@@ -849,65 +853,65 @@ bool DeferredRenderer::BakeHDRTexture(hdr_texture* texture_to_bake)
 
     //View Matrixs, one for each face of the cube
     QMatrix4x4 view_matrix_cubemap;
-    view_matrix_cubemap.setToIdentity();
-    view_matrix_cubemap.lookAt(QVector3D(1.0f, 0.0f, 0.0f), QVector3D(0.0f, 0.0f, 0.0f), QVector3D(0.0f, 1.0f, 0.0f));
+    QMatrix4x4 view_matrix_cubemap1;
+    QMatrix4x4 view_matrix_cubemap2;
+    QMatrix4x4 view_matrix_cubemap3;
+    QMatrix4x4 view_matrix_cubemap4;
+    QMatrix4x4 view_matrix_cubemap5;
+
 
     QMatrix4x4 view_matrices[6];
 
-    //Load camera rotations
-    for(int i = 0; i < 6; i++)
-    {
-        if(i == 0)
-        {
-            view_matrices[i] = view_matrix_cubemap;
-            continue;
-        }
+    view_matrix_cubemap.lookAt(QVector3D(1.0f, 0.0f, 0.0f), QVector3D(0.0f, 0.0f, 0.0f),  QVector3D(0.0f, 1.0f, 0.0f));
+    view_matrices[0] = (view_matrix_cubemap);
 
-        if(i < 4)
-        {
-            view_matrix_cubemap.rotate(90, QVector3D(0.0f, 1.0f, 0.0f));
-            view_matrices[i] = view_matrix_cubemap;
-            continue;
-        }
+    view_matrix_cubemap1.lookAt(QVector3D(-1.0f, 0.0f, 0.0f), QVector3D(0.0f, 0.0f, 0.0f),  QVector3D(0.0f, 1.0f, 0.0f));
+    view_matrices[1] = (view_matrix_cubemap1);
 
-        if(i == 4)
-        {
-            view_matrix_cubemap.rotate(90, QVector3D(0.0f, 0.0f, 1.0f));
-            view_matrices[i] = view_matrix_cubemap;
-        }
+    view_matrix_cubemap2.lookAt(QVector3D(0.0f, 1.0f, 0.0f), QVector3D(0.0f, 0.0f, 0.0f),  QVector3D(0.0f, 0.0f, -1.0f));
+    view_matrices[2] = (view_matrix_cubemap2);
 
-        if(i == 5)
-        {
-            view_matrix_cubemap.rotate(180, QVector3D(0.0f, 0.0f, 1.0f));
-            view_matrices[i] = view_matrix_cubemap;
-        }
-    }
+    view_matrix_cubemap3.lookAt(QVector3D(0.0f, -1.0f, 0.0f), QVector3D(0.0f, 0.0f, 0.0f),  QVector3D(0.0f, 0.0f, 1.0f));
+    view_matrices[3] = (view_matrix_cubemap3);
+
+    view_matrix_cubemap4.lookAt(QVector3D(0.0f, 0.0f, 1.0f), QVector3D(0.0f, 0.0f, 0.0f),  QVector3D(0.0f, 1.0f, 0.0f));
+    view_matrices[4] = (view_matrix_cubemap4);
+
+    view_matrix_cubemap5.lookAt(QVector3D(0.0f, 0.0f, -1.0f), QVector3D(0.0f, 0.0f, 0.0f),  QVector3D(0.0f, 1.0f, 0.0f));
+    view_matrices[5] = (view_matrix_cubemap5);
+
+
+    glDisable(GL_CULL_FACE);
+    glDepthMask(GL_FALSE);
 
     if(program_skybox.bind())
     {
-        std::cout<< 2 << std::endl;
-        program_skybox.setUniformValue(program_skybox.uniformLocation("equirectangular_map"), 0);
-        program_skybox.setUniformValue(program_skybox.uniformLocation("projection_matrix"), projection);
 
+        program_skybox.setUniformValue(program_skybox.uniformLocation("equirectangular_map"), 0);
         gl_functions->glActiveTexture(GL_TEXTURE0);
         gl_functions->glBindTexture(GL_TEXTURE_2D, texture_to_bake->GetHDRTexture());
+
         gl_functions->glViewport(0, 0, texture_to_bake->GetCubeMapSize(), texture_to_bake->GetCubeMapSize());
         gl_functions->glBindFramebuffer(GL_FRAMEBUFFER, capture_frame_buffer);
 
-        for(int i = 0; i < 6; i++)
+        program_skybox.setUniformValue(program_skybox.uniformLocation("projection_matrix"), projection);
+
+        for(unsigned int i = 0; i < 6; i++)
         {
             program_skybox.setUniformValue(program_skybox.uniformLocation("view_matrix"), view_matrices[i]);
+
+            std::cout<<  "CUBEMAP ID: " << texture_to_bake->GetCubeMapexture() << std::endl;
+
             gl_functions->glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, texture_to_bake->GetCubeMapexture(), 0);
             gl_functions->glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-            if(customApp->main_window()->resource_manager()->SkyboxQuad()->NeedsReload())
-                return false;
-
-            customApp->main_window()->resource_manager()->SkyboxQuad()->meshes[i]->Draw();
-
+            customApp->main_window()->resource_manager()->SkyboxQuad()->meshes[2]->Draw();
         }
 
         program_skybox.release();
     }
+
+    glDepthMask(GL_TRUE);
+    glEnable(GL_CULL_FACE);
     return true;
 }

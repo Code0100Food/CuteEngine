@@ -57,7 +57,20 @@ void Environment::UpdateComboBox(int type, const char *name)
 
 unsigned int Environment::GetSkyboxTexture() const
 {
-    return texture->GetCubeMapexture();
+    if(texture)
+    {
+        return texture->GetCubeMapexture();
+    }
+    return 0;
+}
+
+unsigned int Environment::GetHDRTexture() const
+{
+    if(texture)
+    {
+        return texture->GetHDRTexture();
+    }
+    return 0;
 }
 
 bool Environment::SkyBoxReady() const

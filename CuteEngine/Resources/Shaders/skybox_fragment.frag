@@ -22,5 +22,5 @@ void main()
     vec2 uv = SampleSphericalMap(normalize(local_position));
     vec3 color = min(vec3(1000.0), texture(equirectangular_map, uv).rgb);
 
-    out_color = vec4(color, 1.0);
+    out_color = vec4(color.rgb, 1.0);
 }

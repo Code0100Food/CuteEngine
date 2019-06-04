@@ -26,6 +26,7 @@ void hdr_texture::Reload()
         {
             stbi_set_flip_vertically_on_load(true);
             hdr_data = stbi_loadf(filename.c_str(), &width, &height, &comp, 0);
+            std::cout<< "IS HDR" << std::endl;
         }
 
         gl_functions->glGenTextures(1, &hdr_id);
@@ -44,7 +45,7 @@ void hdr_texture::Reload()
 
         for(unsigned int i = 0; i < 6; i++)
         {
-            gl_functions->glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, (width/4), (width/4), 0, GL_RGB, GL_FLOAT, nullptr);
+            gl_functions->glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, 256, 256, 0, GL_RGB, GL_FLOAT, nullptr);
         }
         gl_functions->glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         gl_functions->glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -54,11 +55,14 @@ void hdr_texture::Reload()
 
         std::cout<< "CUBEMAP ID: "<< cubemap_id << std::endl;
 
-    }
-    if(customApp->main_window()->openglwidget()->GetDeferred()->BakeHDRTexture(this))
+    }else
     {
-        SetReload(false);
+        if(customApp->main_window()->openglwidget()->GetDeferred()->BakeHDRTexture(this))
+        {
+            SetReload(false);
+        }
     }
+
 
 }
 

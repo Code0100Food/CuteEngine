@@ -14,6 +14,7 @@
 #include <QImage>
 #include "mainwindow.h"
 #include "resourcemanager.h"
+#include "environment.h"
 
 #pragma comment(lib, "OpenGL32.lib")
 
@@ -114,8 +115,10 @@ void myopenglwidget::paintGL()
                 break;
 
             case SELECTION:
-                glBindTexture(GL_TEXTURE_2D, deferred_renderer->bloom_buffers_a[0].color_texture);
+                //glBindTexture(GL_TEXTURE_2D, deferred_renderer->bloom_buffers_a[0].color_texture);
             //glBindTexture(GL_TEXTURE_2D, deferred_renderer->main_buffer->GetSelectionTexture());
+
+                glBindTexture(GL_TEXTURE_2D, customApp->main_window()->environment()->GetHDRTexture());
                 break;
         }
 
