@@ -418,11 +418,8 @@ void DeferredRenderer::PassLights(Camera *camera)
 
 void DeferredRenderer::PassSkybox(Camera* camera)
 {
-
     if(!customApp->main_window()->environment()->SkyBoxReady())
         return;
-
-    std::cout<< 2 << std::endl;
 
     QOpenGLExtraFunctions* gl_functions = QOpenGLContext::currentContext()->extraFunctions();
     GLenum draw_buffers = GL_COLOR_ATTACHMENT0;
@@ -431,7 +428,7 @@ void DeferredRenderer::PassSkybox(Camera* camera)
     glDepthMask(GL_FALSE);
      glDisable(GL_CULL_FACE);
 
-std::cout<< 3 << std::endl;
+
     if(program_draw_skybox.bind())
     {
         program_draw_skybox.setUniformValue(program_draw_skybox.uniformLocation("cubemap"), 0);
@@ -445,9 +442,9 @@ std::cout<< 3 << std::endl;
         camera_no_rotation_matrix.translate(camera->position);
 
         program_draw_skybox.setUniformValue(program_draw_skybox.uniformLocation("camera_pos_matrix"), camera_no_rotation_matrix);
-std::cout<< 4 << std::endl;
+        program_draw_skybox.setUniformValue(program_draw_skybox.uniformLocation("camera_pos"), camera->position);
         customApp->main_window()->resource_manager()->SkyboxQuad()->Draw();
-std::cout<< 5 << std::endl;
+
         program_draw_skybox.release();
     }
 glEnable(GL_CULL_FACE);
