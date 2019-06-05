@@ -33,7 +33,6 @@ public slots:
     void openProject();
     void saveProject();
     void customExit();
-    void takeScreenshot();
 
 public:
 

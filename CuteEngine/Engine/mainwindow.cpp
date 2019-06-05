@@ -42,9 +42,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //Conect action signals to slots
     connect(_uiMain->actionOpen_Project,SIGNAL(triggered()),this,SLOT(openProject()));
-    connect(_uiMain->actionSave_Project,SIGNAL(triggered()),this,SLOT(saveProject()));
     connect(_uiMain->actionExit,SIGNAL(triggered()),this,SLOT(customExit()));
-    connect(_uiMain->actionScreenshot,SIGNAL(triggered()),this,SLOT(takeScreenshot()));
 
     connect(_uiMain->actionAlbedo_Color, SIGNAL(triggered()), _uiMain->openGLWidget, SLOT(ChangeRenderModeColor()));
     connect(_uiMain->actionNormals, SIGNAL(triggered()), _uiMain->openGLWidget, SLOT(ChangeRenderModeNormals()));
@@ -126,13 +124,6 @@ void MainWindow::customExit()
     {
         printf("No exit");
     }
-}
-
-void MainWindow::takeScreenshot()
-{
-    //TODO
-    //makeCurrent();
-    //return grabFrameBuffer();
 }
 
 QWidget *MainWindow::scene_render()
