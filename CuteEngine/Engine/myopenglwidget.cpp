@@ -120,6 +120,10 @@ void myopenglwidget::paintGL()
 
                 //glBindTexture(GL_TEXTURE_2D, customApp->main_window()->environment()->GetHDRTexture());
                 break;
+
+            case BLOOM_BLUR:
+                glBindTexture(GL_TEXTURE_2D, deferred_renderer->bloom_buffers_a[0].color_texture);
+                break;
         }
 
 
@@ -158,6 +162,11 @@ void myopenglwidget::ChangeRenderModeShaded()
 void myopenglwidget::ChangeRenderModeSelection()
 {
     render_mode = RENDERMODE::SELECTION;
+}
+
+void myopenglwidget::ChangeRenderModeBloomBlur()
+{
+    render_mode = RENDERMODE::BLOOM_BLUR;
 }
 
 void myopenglwidget::keyPressEvent(QKeyEvent *event)

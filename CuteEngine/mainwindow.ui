@@ -501,6 +501,7 @@ QRadioButton::indicator:hover, QCheckBox::indicator:hover
     <addaction name="actionDepth"/>
     <addaction name="actionAlbedo_Color"/>
     <addaction name="actionSelection"/>
+    <addaction name="actionBloom_Blur"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuWindow"/>
@@ -602,6 +603,11 @@ QRadioButton::indicator:hover, QCheckBox::indicator:hover
   <action name="actionSelection">
    <property name="text">
     <string>Selection</string>
+   </property>
+  </action>
+  <action name="actionBloom_Blur">
+   <property name="text">
+    <string>Bloom Blur</string>
    </property>
   </action>
  </widget>

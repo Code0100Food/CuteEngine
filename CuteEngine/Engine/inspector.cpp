@@ -20,6 +20,8 @@
 #include "Widgets/lightwidget.h"
 #include "light.h"
 #include "Data/material.h"
+#include "myopenglwidget.h"
+#include "deferredrenderer.h"
 
 Inspector::Inspector(QWidget* parent) : QWidget(parent)
 {
@@ -59,7 +61,14 @@ void Inspector::Start()
     // Grid Checkbox
     show_grid_checkbox = new QCheckBox("Show grid");
     show_grid_checkbox->setCheckable(true);
+    show_grid_checkbox->setChecked(true);
     connect(show_grid_checkbox, SIGNAL(toggled(bool)), this, SLOT(SetShowGrid(bool)));
+
+    //Bloom Checkbox
+    show_bloom_checkbox = new QCheckBox("Bloom");
+    show_bloom_checkbox->setCheckable(true);
+    show_bloom_checkbox->setChecked(true);
+    connect(show_bloom_checkbox, SIGNAL(toggled(bool)), this, SLOT(SetShowBloom(bool)));
 
     //Buttons
     add_mesh_renderer = new QPushButton("Add Mesh Renderer");
@@ -71,12 +80,15 @@ void Inspector::Start()
     QSplitter* tmp = new QSplitter();
 
     layout->addWidget(name_display);
+
+    layout->addWidget(show_grid_checkbox);
+    layout->addWidget(show_bloom_checkbox);
+
     layout->addWidget(transform_widget);
     layout->addWidget(mesh_renderer_widget);
     layout->addWidget(light_settings_widget);
     layout->addWidget(tmp);
 
-    layout->addWidget(show_grid_checkbox);
 
     layout->addWidget(add_mesh_renderer);
     layout->addWidget(add_light_source);
@@ -283,6 +295,11 @@ void Inspector::SetShowGrid(bool is_checked)
     {
         customApp->main_scene()->SetGridPrint(false);
     }
+}
+
+void Inspector::SetShowBloom(bool is_checked)
+{
+    customApp->main_window()->openglwidget()->GetDeferred()->print_bloom = is_checked;
 }
 
 void Inspector::AddLightComponent()

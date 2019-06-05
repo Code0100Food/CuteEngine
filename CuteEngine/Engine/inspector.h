@@ -43,6 +43,7 @@ private:
     QComboBox* add_component_button = nullptr;
 
     QCheckBox* show_grid_checkbox = nullptr;
+    QCheckBox* show_bloom_checkbox = nullptr;
 
     QPushButton* add_mesh_renderer = nullptr;
     QPushButton* add_light_source = nullptr;
@@ -60,6 +61,7 @@ public slots:
     void Rename();
 
     void SetShowGrid(bool is_checked);
+    void SetShowBloom(bool is_checked);
 
     void AddMeshRenderer();
     void AddLightComponent();
@@ -67,3 +69,4 @@ public slots:
 };
 
 #endif // INSPECTOR_H
+

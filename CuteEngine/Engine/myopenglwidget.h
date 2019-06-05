@@ -23,7 +23,8 @@ enum RENDERMODE
     NORMALS,
     DEPTH,
     FINAL_COLOR,
-    SELECTION
+    SELECTION,
+    BLOOM_BLUR
 };
 
 class myopenglwidget : public QOpenGLWidget, protected QOpenGLFunctions_3_3_Core
@@ -90,6 +91,7 @@ public slots:
     void ChangeRenderModeDepth();
     void ChangeRenderModeShaded();
     void ChangeRenderModeSelection();
+    void ChangeRenderModeBloomBlur();
 
 };
 

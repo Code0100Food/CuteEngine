@@ -49,7 +49,7 @@ private:
     Entity* selected_entity = nullptr;
     qt_Application* app = nullptr;
     QVector4D BackgroundColor;
-    bool print_grid = false;
+    bool print_grid = true;
 
 };
 

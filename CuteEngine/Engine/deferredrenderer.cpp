@@ -330,7 +330,8 @@ void DeferredRenderer::Render(Camera *camera)
 
     //PassBackground(camera);
 
-    PassBloom();
+    if(print_bloom)
+        PassBloom();
 
     main_buffer->UnBind();
 }

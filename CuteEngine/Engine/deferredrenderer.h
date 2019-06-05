@@ -138,6 +138,8 @@ public:
     GLsizei resolution;
 
     bool BakeHDRTexture(hdr_texture*);
+
+    bool print_bloom = true;
 };
 
 #endif // DEFERREDRENDERER_H

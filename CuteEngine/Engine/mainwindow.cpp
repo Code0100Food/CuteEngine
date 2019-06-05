@@ -51,6 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(_uiMain->actionDepth, SIGNAL(triggered()), _uiMain->openGLWidget, SLOT(ChangeRenderModeDepth()));
     connect(_uiMain->actionShaded_Color, SIGNAL(triggered()), _uiMain->openGLWidget, SLOT(ChangeRenderModeShaded()));
     connect(_uiMain->actionSelection, SIGNAL(triggered()), _uiMain->openGLWidget, SLOT(ChangeRenderModeSelection()));
+    connect(_uiMain->actionBloom_Blur, SIGNAL(triggered()), _uiMain->openGLWidget, SLOT(ChangeRenderModeBloomBlur()));
 
     //Set Resource Manager
     QDockWidget* resource_dock = new QDockWidget();
@@ -64,9 +65,9 @@ MainWindow::MainWindow(QWidget *parent) :
     QDockWidget* environment_dock = new QDockWidget();
     environment_dock->setWindowTitle("Environment");
     _environment = new Environment();
-    environment_dock->setWidget(_environment);
-    addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, environment_dock);
-    tabifyDockWidget(_uiMain->Hierarchy, environment_dock);
+    //environment_dock->setWidget(_environment);
+    //addDockWidget(Qt::DockWidgetArea::RightDockWidgetArea, environment_dock);
+    //tabifyDockWidget(_uiMain->Hierarchy, environment_dock);
 
     //Connect Menu bar
     //_uiMain->menuBar->
