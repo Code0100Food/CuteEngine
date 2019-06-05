@@ -73,6 +73,9 @@ Closes the actual project.
 
 From the menu bar you can chose a render mode in order to show the resultant texture of a concrete render process. You can choose from the following:
 - Shaded color: All the textures mode combined, in other words the final result.
+
+
+![Shaded](https://github.com/Code0100Food/CuteEngine/blob/master/Images/shaded.PNG)
 - Normals: Shows the normals of the current rendered meshes.
 
 
